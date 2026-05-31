@@ -265,7 +265,7 @@ function WizardHelp({ step, isEditing }: { step: WizardStep; isEditing: boolean 
       title: t("Create the assignment"),
       body: [
         t("Experiments use multivariate feature flags to assign each visitor to one stable variant."),
-        t("Calling rybbit.flag records the exposure that powers experiment results."),
+        t("Calling hygo.flag records the exposure that powers experiment results."),
         t("A full split should add up to 100 percent unless you intentionally want unassigned traffic."),
       ],
     },
@@ -1016,8 +1016,8 @@ export function CreateExperimentWizard({
     const fallbackVariant = implementationState.variants[0] || "control";
     const alternateVariant = implementationState.variants.find(variant => variant !== fallbackVariant) || "variant_a";
     const variantUnion = implementationState.variants.map(variant => JSON.stringify(variant)).join(" | ");
-    const jsCode = `window.rybbit.onReady((rybbit) => {
-  const variant = rybbit.flag(${JSON.stringify(implementationState.flagKey)}, ${JSON.stringify(fallbackVariant)});
+    const jsCode = `window.hygo.onReady((hygo) => {
+  const variant = hygo.flag(${JSON.stringify(implementationState.flagKey)}, ${JSON.stringify(fallbackVariant)});
 
   if (variant === ${JSON.stringify(alternateVariant)}) {
     // Render the variant experience.
@@ -1027,8 +1027,8 @@ export function CreateExperimentWizard({
 });`;
     const tsCode = `type ExperimentVariant = ${variantUnion || JSON.stringify(fallbackVariant)};
 
-window.rybbit.onReady((rybbit) => {
-  const variant = rybbit.flag(${JSON.stringify(implementationState.flagKey)}, ${JSON.stringify(fallbackVariant)}) as ExperimentVariant;
+window.hygo.onReady((hygo) => {
+  const variant = hygo.flag(${JSON.stringify(implementationState.flagKey)}, ${JSON.stringify(fallbackVariant)}) as ExperimentVariant;
 
   switch (variant) {
     case ${JSON.stringify(alternateVariant)}:
@@ -1041,8 +1041,8 @@ window.rybbit.onReady((rybbit) => {
 });`;
     const eventGoalCode =
       implementationState.goalType === "event" && implementationState.goalLabel
-        ? `window.rybbit.onReady((rybbit) => {
-  rybbit.event(${JSON.stringify(implementationState.goalLabel)});
+        ? `window.hygo.onReady((hygo) => {
+  hygo.event(${JSON.stringify(implementationState.goalLabel)});
 });`
         : null;
 
@@ -1079,7 +1079,7 @@ window.rybbit.onReady((rybbit) => {
         ) : implementationState.goalType === "path" ? (
           <p className="rounded-md border border-neutral-150 bg-neutral-50 p-3 text-sm text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/40 dark:text-neutral-300">
             {t(
-              "No conversion event code is needed for this path goal. Rybbit will count sessions that reach {goalLabel}.",
+              "No conversion event code is needed for this path goal. Hygo will count sessions that reach {goalLabel}.",
               {
                 goalLabel: implementationState.goalLabel || "",
               }

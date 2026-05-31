@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "Visualize your conversion funnel step-by-step. Identify drop-off points and optimize conversion rates.",
     type: "website",
-    url: "https://rybbit.com/tools/funnel-visualizer",
+    url: "https://hygo.ai/tools/funnel-visualizer",
   },
   twitter: {
     card: "summary_large_image",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
       "Visualize your conversion funnel step-by-step. Identify drop-off points and optimize conversion rates.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/funnel-visualizer",
+    canonical: "https://hygo.ai/tools/funnel-visualizer",
   },
 };
 
@@ -32,7 +32,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Funnel Visualizer",
       description: "Free tool to visualize conversion funnels and analyze drop-off rates at each step",
-      url: "https://rybbit.com/tools/funnel-visualizer",
+      url: "https://hygo.ai/tools/funnel-visualizer",
       applicationCategory: "BusinessApplication",
       featureList: [
         "Step-by-step funnel visualization",
@@ -87,7 +87,7 @@ const structuredData = {
           name: "How can I improve my conversion funnel?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Optimize high drop-off steps first by: simplifying forms and checkout processes, improving page load speed, enhancing trust signals and social proof, clarifying value propositions, reducing friction (fewer clicks), improving mobile experience, A/B testing changes, and removing distractions. Track these improvements with Rybbit Analytics to measure the actual impact on conversions.",
+            text: "Optimize high drop-off steps first by: simplifying forms and checkout processes, improving page load speed, enhancing trust signals and social proof, clarifying value propositions, reducing friction (fewer clicks), improving mobile experience, A/B testing changes, and removing distractions. Track these improvements with Hygo Analytics to measure the actual impact on conversions.",
           },
         },
       ],
@@ -244,8 +244,8 @@ const faqs = [
         Optimize high drop-off steps first by: simplifying forms and checkout processes, improving page load speed,
         enhancing trust signals and social proof, clarifying value propositions, reducing friction (fewer clicks),
         improving mobile experience, A/B testing changes, and removing distractions. Track these improvements with{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit Analytics
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo Analytics
         </Link>{" "}
         to measure the actual impact on conversions.
       </>
@@ -264,8 +264,8 @@ export default function FunnelVisualizerPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track funnels automatically with Rybbit"
-      ctaDescription="No manual data entry—Rybbit automatically tracks conversion funnels with real-time session data."
+      ctaTitle="Track funnels automatically with Hygo"
+      ctaDescription="No manual data entry—Hygo automatically tracks conversion funnels with real-time session data."
       ctaEventLocation="funnel_visualizer_cta"
       structuredData={structuredData}
     />

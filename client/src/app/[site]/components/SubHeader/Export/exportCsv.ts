@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import {
   fetchEventNames,
   fetchMetric,
@@ -9,7 +9,7 @@ import { getStartAndEndDate } from "../../../../../api/utils";
 import { fetchGSCConnectionStatus, fetchGSCData, GSCDimension } from "../../../../../api/gsc/endpoints";
 import { CSVFile, downloadZip, formatDateForFilename } from "../../../../../lib/export";
 import { Time } from "../../../../../components/DateSelector/types";
-import { Filter } from "@rybbit/shared";
+import { Filter } from "@hygo/shared";
 
 // Metric parameters for each section
 const REFERRER_METRICS: { param: FilterParameter; filename: string }[] = [
@@ -207,7 +207,7 @@ export async function exportCsv({ site, time, filters, timeZone }: ExportCsvPara
 
   // Generate ZIP filename
   const dateStr = formatDateForFilename();
-  const zipFilename = `rybbit-export-${site}-${dateStr}.zip`;
+  const zipFilename = `hygo-export-${site}-${dateStr}.zip`;
 
   // Download the ZIP
   await downloadZip(nonEmptyFiles, zipFilename);

@@ -250,7 +250,7 @@ export function ComparisonSection({ isAnnual }: { isAnnual: boolean }) {
                   <span className="text-sm text-neutral-500 dark:text-neutral-400 font-normal block">From ${isAnnual ? "13" : "19"} /month</span>
                 </div>
                 <AppLink
-                  href="https://app.rybbit.io/signup"
+                  href="https://app.hygo.ai/signup"
                   className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200"
                 >
                   {t("Start for $0")}
@@ -262,7 +262,7 @@ export function ComparisonSection({ isAnnual }: { isAnnual: boolean }) {
                   <span className="text-sm text-neutral-500 dark:text-neutral-400 font-normal block">From ${isAnnual ? "26" : "39"} /month</span>
                 </div>
                 <AppLink
-                  href="https://app.rybbit.io/signup"
+                  href="https://app.hygo.ai/signup"
                   className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200"
                 >
                   {t("Start for $0")}
@@ -274,7 +274,7 @@ export function ComparisonSection({ isAnnual }: { isAnnual: boolean }) {
                   <span className="text-sm text-neutral-500 dark:text-neutral-400 font-normal block">{t("Custom")}</span>
                 </div>
                 <a
-                  href="https://www.rybbit.com/contact"
+                  href="https://www.hygo.ai/contact"
                   className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200"
                 >
                   {t("Contact us")}

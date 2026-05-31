@@ -180,7 +180,7 @@ export function UTMBuilderForm() {
             <AccordionItem value="item-1">
               <AccordionTrigger>What is UTM tracking?</AccordionTrigger>
               <AccordionContent>
-                UTM (Urchin Tracking Module) parameters are tags added to URLs that help you track the effectiveness of your marketing campaigns in analytics tools like Rybbit, Google Analytics, and others. They tell you exactly where your traffic is coming from and how your campaigns perform.
+                UTM (Urchin Tracking Module) parameters are tags added to URLs that help you track the effectiveness of your marketing campaigns in analytics tools like Hygo, Google Analytics, and others. They tell you exactly where your traffic is coming from and how your campaigns perform.
               </AccordionContent>
             </AccordionItem>
 
@@ -192,11 +192,11 @@ export function UTMBuilderForm() {
             </AccordionItem>
 
             <AccordionItem value="item-3">
-              <AccordionTrigger>How do I track UTM links with Rybbit?</AccordionTrigger>
+              <AccordionTrigger>How do I track UTM links with Hygo?</AccordionTrigger>
               <AccordionContent>
-                Once you have Rybbit installed on your website, UTM parameters are automatically tracked. You can view your campaign performance in your{" "}
-                <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-                  Rybbit dashboard
+                Once you have Hygo installed on your website, UTM parameters are automatically tracked. You can view your campaign performance in your{" "}
+                <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+                  Hygo dashboard
                 </Link>{" "}
                 under the UTM section.
               </AccordionContent>

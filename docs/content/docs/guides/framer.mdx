@@ -1,25 +1,25 @@
 ---
 title: Framer
-description: Integrate Rybbit Analytics with your Framer site for behavior tracking and custom events
+description: Integrate Hygo Analytics with your Framer site for behavior tracking and custom events
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-Rybbit enables you to gather analytics on user behavior, capture custom events, record sessions, and more within your Framer site.
+Hygo enables you to gather analytics on user behavior, capture custom events, record sessions, and more within your Framer site.
 
-## How to Add Rybbit to Framer
+## How to Add Hygo to Framer
 
 <Steps>
 <Step>
 ### Retrieve Your Tracking Script
 
-Navigate to your Rybbit dashboard to obtain your code snippet.
+Navigate to your Hygo dashboard to obtain your code snippet.
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   data-site-id="YOUR_SITE_ID"
   defer
 ></script>
@@ -37,12 +37,12 @@ Navigate to your Rybbit dashboard to obtain your code snippet.
 </Steps>
 
 <Callout type="info">
-  **Page View Tracking in Framer**: Framer sites often behave like Single Page Applications (SPAs). Rybbit's tracking script is designed to automatically detect URL changes and track them as page views. If you use Framer's navigation features (like links between pages or components that change the URL), Rybbit should capture these. If you notice page views are not tracked correctly after navigation, you might need to manually trigger `window.rybbit.pageview()` using a Framer code override or code component when a "virtual" page change occurs. Test the default behavior first.
+  **Page View Tracking in Framer**: Framer sites often behave like Single Page Applications (SPAs). Hygo's tracking script is designed to automatically detect URL changes and track them as page views. If you use Framer's navigation features (like links between pages or components that change the URL), Hygo should capture these. If you notice page views are not tracked correctly after navigation, you might need to manually trigger `window.hygo.pageview()` using a Framer code override or code component when a "virtual" page change occurs. Test the default behavior first.
 </Callout>
 
 ## Custom Event Tracking in Framer
 
-You can track custom events in Framer using **Code Overrides** or by creating **Code Components**. This allows you to trigger Rybbit tracking calls in response to user interactions.
+You can track custom events in Framer using **Code Overrides** or by creating **Code Components**. This allows you to trigger Hygo tracking calls in response to user interactions.
 
 **Example using a Code Override on a button:**
 
@@ -54,11 +54,11 @@ You can track custom events in Framer using **Code Overrides** or by creating **
 // MyButtonOverrides.tsx
 import type { ComponentType } from "react"
 
-export function withRybbitTracking(Component: ComponentType): ComponentType {
+export function withHygoTracking(Component: ComponentType): ComponentType {
     return (props) => {
         const handleClick = () => {
-            if (typeof window !== "undefined" && window.rybbit) {
-                window.rybbit.event('framer_button_click', {
+            if (typeof window !== "undefined" && window.hygo) {
+                window.hygo.event('framer_button_click', {
                     buttonName: props.text || 'Unnamed Button',
                     page: props.currentPage?.name || 'Unknown Page'
                 });
@@ -75,7 +75,7 @@ export function withRybbitTracking(Component: ComponentType): ComponentType {
 4.  Apply this override to your button component in Framer:
     *   Select the button.
     *   In the Overrides section, choose the file (`MyButtonOverrides`).
-    *   Choose the `withRybbitTracking` override for the `onClick` (or relevant interaction) property.
+    *   Choose the `withHygoTracking` override for the `onClick` (or relevant interaction) property.
 
 **Example within a Code Component:**
 
@@ -85,8 +85,8 @@ import React from "react"
 
 export function MyInteractiveComponent(props) {
     const handleInteraction = () => {
-        if (typeof window !== "undefined" && window.rybbit) {
-            window.rybbit.event('framer_component_interaction', {
+        if (typeof window !== "undefined" && window.hygo) {
+            window.hygo.event('framer_component_interaction', {
                 componentName: 'MyInteractiveComponent',
                 detail: 'User interacted'
             });
@@ -100,4 +100,4 @@ export function MyInteractiveComponent(props) {
     )
 }
 ```
-Remember to always check for `window.rybbit` before calling its methods. Publish your Framer site to see the tracking in action.
+Remember to always check for `window.hygo` before calling its methods. Publish your Framer site to see the tracking in action.

@@ -30,7 +30,7 @@ export default async function Page(props: {
         <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
         <ViewOptions
           markdownUrl={`${page.url}.mdx`}
-          githubUrl={`https://github.com/rybbit-io/rybbit/blob/master/docs/content/docs${filePath}.mdx`}
+          githubUrl={`https://github.com/hygo-ai/hygo/blob/master/docs/content/docs${filePath}.mdx`}
         />
       </div>
       <DocsBody>

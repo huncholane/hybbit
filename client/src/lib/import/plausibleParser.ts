@@ -433,7 +433,7 @@ export class PlausibleCsvParser {
 
       // Sort pages by entry-page weight (desc) within each date so the
       // highest-entry-likelihood pages are assigned first — they end up as
-      // the first page of sessions, which gives Rybbit's "entry pages" report
+      // the first page of sessions, which gives Hygo's "entry pages" report
       // a distribution that roughly matches Plausible's.
       const entryPagesData = csvFiles.get("entry_pages");
       const entryWeightByDatePage = new Map<string, number>();

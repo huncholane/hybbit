@@ -5,7 +5,7 @@ On Source Server (your current production):
 # 1. Create a backup of the ClickHouse data volume
 
 docker run --rm \
- -v rybbit_clickhouse-data:/source \
+ -v hygo_clickhouse-data:/source \
  -v /tmp:/backup \
  alpine tar czf /backup/clickhouse-data.tar.gz -C /source .
 
@@ -58,7 +58,7 @@ Quick Test Locally First:
 
 # On your Mac (if you want to test before remote server)
 
-cd /Users/bill/Desktop/rybbit/server/src/db/clickhouse
+cd /Users/bill/Desktop/hygo/server/src/db/clickhouse
 
 # Start the standalone ClickHouse
 

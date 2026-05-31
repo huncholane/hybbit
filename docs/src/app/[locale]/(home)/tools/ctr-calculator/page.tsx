@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     description:
       "Calculate your CTR and see how your campaigns compare to industry benchmarks across email, PPC, organic search, and social media.",
     type: "website",
-    url: "https://rybbit.com/tools/ctr-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/ctr-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
       "Calculate your CTR and compare to industry benchmarks. Understand what's a good click-through rate for your channel.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/ctr-calculator",
+    canonical: "https://hygo.ai/tools/ctr-calculator",
   },
 };
 
@@ -31,10 +31,10 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://rybbit.com/tools/ctr-calculator#webapp",
+      "@id": "https://hygo.ai/tools/ctr-calculator#webapp",
       name: "CTR Calculator",
       description: "Free tool to calculate click-through rate and compare with industry benchmarks",
-      url: "https://rybbit.com/tools/ctr-calculator",
+      url: "https://hygo.ai/tools/ctr-calculator",
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -43,13 +43,13 @@ const structuredData = {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
       "@type": "FAQPage",
-      "@id": "https://rybbit.com/tools/ctr-calculator#faqpage",
+      "@id": "https://hygo.ai/tools/ctr-calculator#faqpage",
       mainEntity: [
         {
           "@type": "Question",
@@ -258,8 +258,8 @@ const faqs = [
         To improve CTR, focus on: writing compelling ad copy with clear value propositions, using strong
         calls-to-action, targeting the right audience, testing different creatives and headlines, ensuring ad relevance
         to search intent, and using ad extensions. Track your results with{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit Analytics
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo Analytics
         </Link>{" "}
         to see what works best.
       </>
@@ -288,7 +288,7 @@ export default function CTRCalculatorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track your campaign performance with Rybbit"
+      ctaTitle="Track your campaign performance with Hygo"
       ctaDescription="Monitor CTR, conversions, and other key metrics in real-time."
       ctaEventLocation="ctr_calculator_cta"
       structuredData={structuredData}

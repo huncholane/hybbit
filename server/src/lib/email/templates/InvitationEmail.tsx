@@ -26,7 +26,7 @@ export const InvitationEmail = ({ email, invitedBy, organizationName, inviteLink
   return (
     <Html>
       <Head />
-      <Preview>You're invited to join {organizationName} on Rybbit</Preview>
+      <Preview>You're invited to join {organizationName} on Hygo</Preview>
       <Tailwind
         config={{
           presets: [pixelBasedPreset],
@@ -45,8 +45,8 @@ export const InvitationEmail = ({ email, invitedBy, organizationName, inviteLink
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-8 px-6 max-w-[600px]">
             <Img
-              src="https://app.rybbit.io/rybbit/horizontal_black.svg"
-              alt="Rybbit"
+              src="https://app.hygo.ai/hygo/horizontal_black.svg"
+              alt="Hygo"
               width="120"
               height="28"
               className="mb-8"
@@ -55,12 +55,12 @@ export const InvitationEmail = ({ email, invitedBy, organizationName, inviteLink
             <Text className="text-darkText text-base leading-relaxed mb-4">Hi there,</Text>
 
             <Text className="text-darkText text-base leading-relaxed mb-4">
-              {invitedBy} has invited you to join <span className="font-semibold">{organizationName}</span> on Rybbit
+              {invitedBy} has invited you to join <span className="font-semibold">{organizationName}</span> on Hygo
               Analytics.
             </Text>
 
             <Text className="text-darkText text-base leading-relaxed mb-4">
-              Rybbit is an open-source analytics platform that helps you understand your website traffic while
+              Hygo is an open-source analytics platform that helps you understand your website traffic while
               respecting user privacy.
             </Text>
 
@@ -74,7 +74,7 @@ export const InvitationEmail = ({ email, invitedBy, organizationName, inviteLink
 
             <Hr className="border-borderColor my-8" />
 
-            <Text className="text-mutedText text-xs">© {currentYear} Rybbit Analytics</Text>
+            <Text className="text-mutedText text-xs">© {currentYear} Hygo Analytics</Text>
           </Container>
         </Body>
       </Tailwind>

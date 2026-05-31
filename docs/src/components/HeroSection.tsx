@@ -63,7 +63,7 @@ export function HeroSection({
         <div className="flex flex-col items-center my-8 md:my-10">
           <div className="flex flex-row items-center justify-center gap-4 md:gap-6 text-base md:text-lg">
             <TrackedButton
-              href="https://app.rybbit.io/signup"
+              href="https://app.hygo.ai/signup"
               eventName="signup"
               eventProps={{ location: "hero", button_text: "get started" }}
               className="w-full whitespace-nowrap sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-3 rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:ring-opacity-50 cursor-pointer"
@@ -71,7 +71,7 @@ export function HeroSection({
               {t("Start for $0")}
             </TrackedButton>
             <TrackedButton
-              href="https://demo.rybbit.com/81"
+              href="https://demo.hygo.ai/81"
               eventName="demo"
               target="_blank"
               rel="noopener noreferrer"
@@ -107,12 +107,12 @@ export function HeroSection({
           <div className="relative z-10 rounded-2xl overflow-hidden bg-neutral-400/10 dark:bg-neutral-100/5 border-8 shadow-2xl shadow-neutral-900/20 dark:shadow-emerald-900/10">
             {/* Remove mobile message and show iframe on all devices */}
             <iframe
-              src="https://demo.rybbit.com/81/main"
+              src="https://demo.hygo.ai/81/main"
               width="1300"
               height="750"
               className="w-full h-[600px] md:h-[700px] lg:h-[750px] rounded-xl"
               style={{ border: "none" }}
-              title="Rybbit Analytics Demo"
+              title="Hygo Analytics Demo"
             ></iframe>
           </div>
         </div>

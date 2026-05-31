@@ -50,8 +50,8 @@ export const LimitExceededEmail = ({
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-8 px-6 max-w-[600px]">
             <Img
-              src="https://app.rybbit.io/rybbit/horizontal_black.svg"
-              alt="Rybbit"
+              src="https://app.hygo.ai/hygo/horizontal_black.svg"
+              alt="Hygo"
               width="120"
               height="28"
               className="mb-8"
@@ -81,12 +81,12 @@ export const LimitExceededEmail = ({
             </Text>
 
             <Text className="text-mutedText text-sm leading-relaxed">
-              Need help? Reply to this email or contact support@rybbit.com.
+              Need help? Reply to this email or contact support@hygo.ai.
             </Text>
 
             <Hr className="border-borderColor my-8" />
 
-            <Text className="text-mutedText text-xs">© {currentYear} Rybbit Analytics</Text>
+            <Text className="text-mutedText text-xs">© {currentYear} Hygo Analytics</Text>
           </Container>
         </Body>
       </Tailwind>

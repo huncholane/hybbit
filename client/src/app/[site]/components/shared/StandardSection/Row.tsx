@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import round from "lodash/round";
 import { ChevronDown, ChevronRight, SquareArrowOutUpRight } from "lucide-react";
 import { ReactNode, useState, useCallback } from "react";

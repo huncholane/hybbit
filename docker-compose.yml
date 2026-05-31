@@ -46,27 +46,27 @@ services:
       start_period: 10s
     restart: unless-stopped
 
-  postgres:
-    image: postgres:17.4
-    container_name: postgres
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER:-frog}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
-      - POSTGRES_DB=${POSTGRES_DB:-analytics}
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 3s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
+  # postgres:
+  #   image: postgres:17.4
+  #   container_name: postgres
+  #   environment:
+  #     - POSTGRES_USER=${POSTGRES_USER:-frog}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
+  #     - POSTGRES_DB=${POSTGRES_DB:-analytics}
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+  #     interval: 3s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 10s
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5432:5432"
 
   backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:${IMAGE_TAG:-latest}
+    image: ghcr.io/hygo-ai/hygo-backend:${IMAGE_TAG:-latest}
     container_name: backend
     build:
       context: .
@@ -78,7 +78,7 @@ services:
       - CLICKHOUSE_HOST=http://clickhouse:8123
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-analytics}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-frog}
-      - POSTGRES_HOST=postgres
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB:-analytics}
       - POSTGRES_USER=${POSTGRES_USER:-frog}
@@ -105,7 +105,7 @@ services:
     restart: unless-stopped
 
   client:
-    image: ghcr.io/rybbit-io/rybbit-client:${IMAGE_TAG:-latest}
+    image: ghcr.io/hygo-ai/hygo-client:${IMAGE_TAG:-latest}
     container_name: client
     build:
       context: .

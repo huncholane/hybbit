@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { GOALS_PAGE_FILTERS } from "../../../../lib/filterGroups";
 import { getFilteredFilters, useStore } from "../../../../lib/store";
 import { buildApiParams } from "../../../utils";

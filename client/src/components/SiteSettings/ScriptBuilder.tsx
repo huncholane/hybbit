@@ -97,11 +97,11 @@ export function ScriptBuilder({ siteId, siteType = "web", appIdentifier }: Scrip
     defer
 ></script>`;
 
-  const reactNativeInstall = "npm install @rybbit/react-native @react-native-async-storage/async-storage";
+  const reactNativeInstall = "npm install @hygo/react-native @react-native-async-storage/async-storage";
   const reactNativeSnippet = `import AsyncStorage from "@react-native-async-storage/async-storage";
-import rybbit from "@rybbit/react-native";
+import hygo from "@hygo/react-native";
 
-await rybbit.init({
+await hygo.init({
   analyticsHost: "${globalThis.location.origin}/api",
   siteId: "${siteId}",
   appIdentifier: "${appIdentifier || "com.example.app"}",
@@ -109,7 +109,7 @@ await rybbit.init({
   initialScreenName: "Home",
 });
 
-await rybbit.event("signup_started", { plan: "pro" });`;
+await hygo.event("signup_started", { plan: "pro" });`;
 
   if (siteType === "mobile") {
     return (

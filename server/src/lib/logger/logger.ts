@@ -17,7 +17,7 @@ export const createLogger = (name: string): FastifyBaseLogger => {
   }) as FastifyBaseLogger;
 };
 
-export const logger = createLogger("rybbit");
+export const logger = createLogger("hygo");
 
 export const createServiceLogger = (service: string) => {
   return logger.child({ service });

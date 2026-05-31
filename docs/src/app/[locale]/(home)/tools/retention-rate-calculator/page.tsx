@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Free Retention Rate Calculator",
     description: "Calculate and optimize your customer retention with industry benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/retention-rate-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/retention-rate-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Calculate your retention rate and compare against industry benchmarks",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/retention-rate-calculator",
+    canonical: "https://hygo.ai/tools/retention-rate-calculator",
   },
 };
 
@@ -31,7 +31,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Retention Rate Calculator",
       description: "Free retention rate calculator to measure customer loyalty and compare against industry benchmarks",
-      url: "https://rybbit.com/tools/retention-rate-calculator",
+      url: "https://hygo.ai/tools/retention-rate-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -263,8 +263,8 @@ export default function RetentionRatePage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track retention metrics with Rybbit"
-      ctaDescription="Monitor retention rates, churn patterns, and customer behavior in real-time with Rybbit's analytics platform."
+      ctaTitle="Track retention metrics with Hygo"
+      ctaDescription="Monitor retention rates, churn patterns, and customer behavior in real-time with Hygo's analytics platform."
       ctaEventLocation="retention_rate_calculator_cta"
       structuredData={structuredData}
     />

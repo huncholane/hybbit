@@ -1,15 +1,15 @@
 ---
 title: Bubble.io
-description: Integrate Rybbit Analytics with your Bubble.io application to track user behavior
+description: Integrate Hygo Analytics with your Bubble.io application to track user behavior
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide explains how to integrate Rybbit with your Bubble.io application to track user behavior, page views, and custom events.
+This guide explains how to integrate Hygo with your Bubble.io application to track user behavior, page views, and custom events.
 
-## How to Add Rybbit to Your Bubble App
+## How to Add Hygo to Your Bubble App
 
 Bubble allows you to add custom code, including JavaScript snippets, to the header of your pages.
 
@@ -17,11 +17,11 @@ Bubble allows you to add custom code, including JavaScript snippets, to the head
 <Step>
 ### Retrieve Your Tracking Script
 
-Navigate to your Rybbit dashboard to obtain your code snippet. It will look like this:
+Navigate to your Hygo dashboard to obtain your code snippet. It will look like this:
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   data-site-id="YOUR_SITE_ID"
   defer
 ></script>
@@ -41,7 +41,7 @@ Remember to replace `YOUR_SITE_ID` with your actual Site ID.
 ### Add the Snippet to the Page Header
 
 -   Scroll down to the section titled **"Script/meta tags in header"**.
--   Paste your Rybbit tracking snippet into this box. This will add the script to the `<head>` section of every page in your Bubble app.
+-   Paste your Hygo tracking snippet into this box. This will add the script to the `<head>` section of every page in your Bubble app.
 
 Alternatively, some Bubble plans or configurations might offer a dedicated section for "Advanced Settings" or "Custom Code" where header scripts can be placed globally or on specific pages. The "SEO / metatags" header script section is generally the most common place for global scripts.
 </Step>
@@ -55,15 +55,15 @@ Alternatively, some Bubble plans or configurations might offer a dedicated secti
 <Step>
 ### Verify Installation
 
-Open your live Bubble application and navigate through a few pages. Then, check your Rybbit dashboard to see if data is being received. You can also inspect your browser's network tab to confirm that `script.js` is loaded.
+Open your live Bubble application and navigate through a few pages. Then, check your Hygo dashboard to see if data is being received. You can also inspect your browser's network tab to confirm that `script.js` is loaded.
 </Step>
 </Steps>
 
 <Callout type="info">
-  **Page View Tracking in Bubble Apps**: Bubble applications often behave like Single Page Applications (SPAs) for navigation between "pages" (which are often groups shown/hidden on a single actual HTML page). Rybbit's script is designed to detect URL changes in SPAs.
-  - If your Bubble app uses actual URL route changes for different views, Rybbit should track these automatically.
-  - If navigation primarily involves showing/hiding groups without URL changes, Rybbit will only track the initial page load. For more granular tracking of "virtual" page views in such cases, you would need to use custom event tracking.
-  - If URL changes occur but are not automatically tracked, you might need to trigger `window.rybbit.pageview()` manually using a Bubble workflow action that runs JavaScript when a "page" (group) becomes visible.
+  **Page View Tracking in Bubble Apps**: Bubble applications often behave like Single Page Applications (SPAs) for navigation between "pages" (which are often groups shown/hidden on a single actual HTML page). Hygo's script is designed to detect URL changes in SPAs.
+  - If your Bubble app uses actual URL route changes for different views, Hygo should track these automatically.
+  - If navigation primarily involves showing/hiding groups without URL changes, Hygo will only track the initial page load. For more granular tracking of "virtual" page views in such cases, you would need to use custom event tracking.
+  - If URL changes occur but are not automatically tracked, you might need to trigger `window.hygo.pageview()` manually using a Bubble workflow action that runs JavaScript when a "page" (group) becomes visible.
 </Callout>
 
 ## Custom Event Tracking in Bubble
@@ -86,13 +86,13 @@ You can track custom events in Bubble by using a workflow action that runs JavaS
 </Step>
 
 <Step>
-### Add Rybbit Tracking Code
+### Add Hygo Tracking Code
 
--   In the "Run JavaScript" action's code block, add your Rybbit event tracking code:
+-   In the "Run JavaScript" action's code block, add your Hygo event tracking code:
 
 ```javascript
-if (typeof window.rybbit !== 'undefined') {
-  window.rybbit.event('bubble_event_name', {
+if (typeof window.hygo !== 'undefined') {
+  window.hygo.event('bubble_event_name', {
     // You can use Bubble's dynamic expressions here to pass data
     // For example: 'User Email': Current User's Email,
     // 'Clicked Element': This Button's Text (if applicable)
@@ -109,8 +109,8 @@ Replace `'bubble_event_name'` with a descriptive name for your event. You can us
 // let itemName = "Dynamic Item Name from Bubble"; // This would be set by Bubble's dynamic data
 // let itemCategory = "Dynamic Category from Bubble";
 
-if (typeof window.rybbit !== 'undefined') {
-  window.rybbit.event('item_interaction', {
+if (typeof window.hygo !== 'undefined') {
+  window.hygo.event('item_interaction', {
     name: itemName,       // Replace with actual dynamic data
     category: itemCategory // Replace with actual dynamic data
   });
@@ -122,8 +122,8 @@ if (typeof window.rybbit !== 'undefined') {
 ### Test Your Event
 
 -   Preview your Bubble app and trigger the workflow.
--   Check your Rybbit dashboard to see if the custom event data is being received.
+-   Check your Hygo dashboard to see if the custom event data is being received.
 </Step>
 </Steps>
 
-By adding the global script and using "Run JavaScript" workflow actions, you can effectively integrate Rybbit analytics into your Bubble.io application.
+By adding the global script and using "Run JavaScript" workflow actions, you can effectively integrate Hygo analytics into your Bubble.io application.

@@ -82,7 +82,7 @@ export async function verifyScript(
 
         for (const script of scripts) {
           const src = script.getAttribute("src") || script.getAttribute("data-src") || "";
-          if (src.includes("script.js") || src.includes("rybbit")) {
+          if (src.includes("script.js") || src.includes("hygo")) {
             found = true;
             foundSiteId = script.getAttribute("data-site-id");
             if (foundSiteId === expectedSiteId) {
@@ -100,7 +100,7 @@ export async function verifyScript(
 
       if (!scriptTagFound) {
         issues.push(
-          "Rybbit script tag not found in the page HTML. Make sure the script is placed in the <head> tag."
+          "Hygo script tag not found in the page HTML. Make sure the script is placed in the <head> tag."
         );
       } else if (!siteIdMatch) {
         issues.push(
@@ -112,12 +112,12 @@ export async function verifyScript(
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       scriptExecuted = await page.evaluate(() => {
-        return typeof (window as any).rybbit !== "undefined";
+        return typeof (window as any).hygo !== "undefined";
       });
 
       if (scriptTagFound && !scriptExecuted) {
         issues.push(
-          "Script tag is present but the rybbit object was not found on window. The script may be blocked by a Content Security Policy, ad blocker, or the src URL may be incorrect."
+          "Script tag is present but the hygo object was not found on window. The script may be blocked by a Content Security Policy, ad blocker, or the src URL may be incorrect."
         );
       }
 

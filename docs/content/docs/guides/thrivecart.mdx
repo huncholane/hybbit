@@ -1,6 +1,6 @@
 ---
 title: "ThriveCart"
-description: "Integrate Rybbit Analytics with your ThriveCart checkout pages"
+description: "Integrate Hygo Analytics with your ThriveCart checkout pages"
 ---
 
 import { Step, Steps } from "fumadocs-ui/components/steps";
@@ -8,15 +8,15 @@ import { Callout } from "fumadocs-ui/components/callout";
 
 # ThriveCart
 
-Rybbit can be integrated with ThriveCart to track cart views, purchases, and other conversion events on your checkout pages.
+Hygo can be integrated with ThriveCart to track cart views, purchases, and other conversion events on your checkout pages.
 
 <Callout type="warn">
-  ThriveCart strips out the standard `data-site-id` attribute from scripts. You must use the alternative installation method below for Rybbit to work correctly.
+  ThriveCart strips out the standard `data-site-id` attribute from scripts. You must use the alternative installation method below for Hygo to work correctly.
 </Callout>
 
 ## Adding the Tracking Script
 
-The standard Rybbit script won't work in ThriveCart because ThriveCart removes the `data-site-id` attribute. Instead, use this JavaScript snippet that dynamically creates the script element:
+The standard Hygo script won't work in ThriveCart because ThriveCart removes the `data-site-id` attribute. Instead, use this JavaScript snippet that dynamically creates the script element:
 
 <Steps>
 <Step>
@@ -34,7 +34,7 @@ Paste the following script into the header scripts section:
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.async = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   document.head.appendChild(s);
@@ -42,13 +42,13 @@ Paste the following script into the header scripts section:
 </script>
 ```
 
-Replace `YOUR_SITE_ID` with your actual Rybbit Site ID from your dashboard.
+Replace `YOUR_SITE_ID` with your actual Hygo Site ID from your dashboard.
 </Step>
 
 <Step>
 ### Save and Test
 
-Save your changes and visit your checkout page. Check your Rybbit dashboard to confirm pageviews are being tracked.
+Save your changes and visit your checkout page. Check your Hygo dashboard to confirm pageviews are being tracked.
 </Step>
 </Steps>
 
@@ -72,18 +72,18 @@ Add this script to your ThriveCart **success page** (the page shown after a comp
   // -----------------------------
 
   // Prevent duplicate events on refresh/back navigation
-  var SENT_KEY = "rybbit_" + EVENT_NAME + "_sent_v1";
+  var SENT_KEY = "hygo_" + EVENT_NAME + "_sent_v1";
   try {
     if (sessionStorage.getItem(SENT_KEY) === "1") return;
     sessionStorage.setItem(SENT_KEY, "1");
   } catch (e) {}
 
   function isReady() {
-    return window.rybbit && typeof window.rybbit.event === "function";
+    return window.hygo && typeof window.hygo.event === "function";
   }
 
   function send() {
-    window.rybbit.event(EVENT_NAME, PAYLOAD);
+    window.hygo.event(EVENT_NAME, PAYLOAD);
   }
 
   function waitThenSend(timeoutMs) {
@@ -97,17 +97,17 @@ Add this script to your ThriveCart **success page** (the page shown after a comp
 
   function ensureScriptLoaded() {
     // Avoid duplicate script loads
-    if (document.querySelector('script[src="https://app.rybbit.io/api/script.js"]')) return;
+    if (document.querySelector('script[src="https://app.hygo.ai/api/script.js"]')) return;
 
     var s = document.createElement("script");
-    s.src = "https://app.rybbit.io/api/script.js";
+    s.src = "https://app.hygo.ai/api/script.js";
     s.async = true;
     s.setAttribute("data-site-id", SITE_ID);
     s.onload = function () { waitThenSend(3000); };
     document.head.appendChild(s);
   }
 
-  // If Rybbit is already loaded, send immediately
+  // If Hygo is already loaded, send immediately
   if (isReady()) return send();
 
   // Otherwise, load the script and wait for it
@@ -126,7 +126,7 @@ Update the configuration variables at the top of the script:
   - `content_name`: The product name
   - `value`: The purchase amount
   - `currency`: The currency code (e.g., `"USD"`, `"GBP"`, `"EUR"`)
-- `SITE_ID`: Your Rybbit Site ID
+- `SITE_ID`: Your Hygo Site ID
 
 ## Tracking Multiple Products
 
@@ -134,15 +134,15 @@ If you have different products, create separate success pages or use ThriveCart'
 
 ## Using with Subdomains
 
-If your ThriveCart is hosted on a subdomain (e.g., `sales.yourdomain.com`) while your main site is on `yourdomain.com`, Rybbit will track both as part of the same site as long as you use the same Site ID. This allows you to create funnels that track the user journey from your main site through to the ThriveCart checkout and purchase.
+If your ThriveCart is hosted on a subdomain (e.g., `sales.yourdomain.com`) while your main site is on `yourdomain.com`, Hygo will track both as part of the same site as long as you use the same Site ID. This allows you to create funnels that track the user journey from your main site through to the ThriveCart checkout and purchase.
 
 ## Troubleshooting
 
-### Events not appearing in Rybbit
+### Events not appearing in Hygo
 
-1. **Check the script is loading**: Open your browser's Developer Tools (F12), go to the Network tab, and look for `script.js` being loaded from `app.rybbit.io`.
+1. **Check the script is loading**: Open your browser's Developer Tools (F12), go to the Network tab, and look for `script.js` being loaded from `app.hygo.ai`.
 2. **Check for JavaScript errors**: In the Console tab, look for any red error messages.
-3. **Verify your Site ID**: Make sure you've replaced `YOUR_SITE_ID` with your actual Site ID from the Rybbit dashboard.
+3. **Verify your Site ID**: Make sure you've replaced `YOUR_SITE_ID` with your actual Site ID from the Hygo dashboard.
 
 ### Duplicate events
 

@@ -1,4 +1,4 @@
-# AGENTS.md - Rybbit Server
+# AGENTS.md - Hygo Server
 
 Guidance for agents working in the `server` package. Keep changes scoped to this package unless the task explicitly requires changes in `client` or `shared`.
 

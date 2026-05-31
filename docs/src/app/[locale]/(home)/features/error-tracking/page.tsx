@@ -10,15 +10,15 @@ import {
 } from "./feature-data";
 
 export const metadata: Metadata = {
-  title: "Error Tracking - Rybbit | JavaScript Error Monitoring",
+  title: "Error Tracking - Hygo | JavaScript Error Monitoring",
   description:
     "Catch JavaScript errors in production automatically. Error aggregation, trend sparklines, full context, and session replay integration. No separate tool required.",
   openGraph: {
-    title: "Error Tracking - Rybbit",
+    title: "Error Tracking - Hygo",
     description:
       "Automatic JavaScript error monitoring built into your analytics. No separate tool required.",
     type: "website",
-    url: "https://rybbit.com/features/error-tracking",
+    url: "https://hygo.ai/features/error-tracking",
     images: [
       createOGImageUrl(
         "Error Tracking",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Error Tracking - Rybbit",
+    title: "Error Tracking - Hygo",
     description:
       "Automatic JavaScript error monitoring built into your analytics.",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: "https://rybbit.com/features/error-tracking",
+    canonical: "https://hygo.ai/features/error-tracking",
   },
 };
 
@@ -50,14 +50,14 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/features/error-tracking",
-      name: "Rybbit Error Tracking",
+      "@id": "https://hygo.ai/features/error-tracking",
+      name: "Hygo Error Tracking",
       description: "JavaScript error monitoring for production websites.",
-      url: "https://rybbit.com/features/error-tracking",
+      url: "https://hygo.ai/features/error-tracking",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -86,14 +86,14 @@ export default function ErrorTrackingPage() {
         headline="Catch errors before users report them"
         subtitle="Automatic JavaScript error monitoring built right into your analytics. See what's breaking, how often, and for whom — without adding another tool."
         badgeText="Error Tracking"
-        demoUrl="https://demo.rybbit.com/81/errors"
+        demoUrl="https://demo.hygo.ai/81/errors"
         demoCaption="Live error tracking demo — real JavaScript error data"
         introParagraphs={[
           <>
             Your users aren&apos;t going to report every error they encounter. Most will just leave. <strong className="text-neutral-900 dark:text-white">Error tracking catches what your users don&apos;t tell you</strong> — unhandled exceptions, failed API calls, and broken UI states that silently erode trust and conversion rates.
           </>,
           <>
-            Rybbit captures JavaScript errors automatically and <strong className="text-neutral-900 dark:text-white">aggregates them by type</strong> so you see the signal, not the noise. Each error type shows its frequency trend as a sparkline, making it instantly clear whether an error is new, growing, or being resolved. Click into any error for full details and context.
+            Hygo captures JavaScript errors automatically and <strong className="text-neutral-900 dark:text-white">aggregates them by type</strong> so you see the signal, not the noise. Each error type shows its frequency trend as a sparkline, making it instantly clear whether an error is new, growing, or being resolved. Click into any error for full details and context.
           </>,
           <>
             The real power is the <strong className="text-neutral-900 dark:text-white">integration with session replay</strong>. When you spot an error, you can watch the exact user session where it occurred — see what the user was doing, what they clicked, and what happened after the error. No more &ldquo;works on my machine&rdquo; — just full context, instantly.

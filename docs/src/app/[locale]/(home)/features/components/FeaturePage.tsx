@@ -108,7 +108,7 @@ export function FeaturePage({
         <div className="relative z-10 flex flex-col items-center my-8 md:my-10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 text-base md:text-lg px-4">
             <TrackedButton
-              href="https://app.rybbit.io/signup"
+              href="https://app.hygo.ai/signup"
               eventName="signup"
               eventProps={{
                 location: `feature_${featureName}_hero`,
@@ -119,7 +119,7 @@ export function FeaturePage({
               {t("Start for $0")}
             </TrackedButton>
             <TrackedButton
-              href="https://demo.rybbit.com/81"
+              href="https://demo.hygo.ai/81"
               eventName="demo"
               target="_blank"
               rel="noopener noreferrer"

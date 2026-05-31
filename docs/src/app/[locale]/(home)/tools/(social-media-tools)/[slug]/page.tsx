@@ -120,8 +120,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-photo-resizer`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-photo-resizer`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -129,7 +129,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-photo-resizer`,
+        canonical: `https://hygo.ai/tools/${platform.id}-photo-resizer`,
       },
     };
   }
@@ -150,8 +150,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-bio-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-bio-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -159,7 +159,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-bio-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-bio-generator`,
       },
     };
   }
@@ -180,8 +180,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-character-counter`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-character-counter`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -189,7 +189,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-character-counter`,
+        canonical: `https://hygo.ai/tools/${platform.id}-character-counter`,
       },
     };
   }
@@ -210,8 +210,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-hashtag-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-hashtag-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -219,7 +219,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-hashtag-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-hashtag-generator`,
       },
     };
   }
@@ -240,8 +240,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-username-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-username-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -249,7 +249,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-username-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-username-generator`,
       },
     };
   }
@@ -270,8 +270,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-post-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-post-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -279,7 +279,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-post-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-post-generator`,
       },
     };
   }
@@ -300,8 +300,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-page-name-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-page-name-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -309,7 +309,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-page-name-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-page-name-generator`,
       },
     };
   }
@@ -330,8 +330,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-comment-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-comment-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -339,7 +339,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-comment-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-comment-generator`,
       },
     };
   }
@@ -360,8 +360,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: platform.displayName,
         description: platform.description,
         type: "website",
-        url: `https://rybbit.com/tools/${platform.id}-logo-generator`,
-        siteName: "Rybbit Documentation",
+        url: `https://hygo.ai/tools/${platform.id}-logo-generator`,
+        siteName: "Hygo Documentation",
       },
       twitter: {
         card: "summary_large_image",
@@ -369,7 +369,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: platform.description,
       },
       alternates: {
-        canonical: `https://rybbit.com/tools/${platform.id}-logo-generator`,
+        canonical: `https://hygo.ai/tools/${platform.id}-logo-generator`,
       },
     };
   }
@@ -391,8 +391,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `Free ${platform.displayName}`,
       description: platform.description,
       type: "website",
-      url: `https://rybbit.com/tools/${platform.id}-font-generator`,
-      siteName: "Rybbit Documentation",
+      url: `https://hygo.ai/tools/${platform.id}-font-generator`,
+      siteName: "Hygo Documentation",
     },
     twitter: {
       card: "summary_large_image",
@@ -400,7 +400,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: platform.description,
     },
     alternates: {
-      canonical: `https://rybbit.com/tools/${platform.id}-font-generator`,
+      canonical: `https://hygo.ai/tools/${platform.id}-font-generator`,
     },
   };
 }
@@ -422,7 +422,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-photo-resizer`,
+      url: `https://hygo.ai/tools/${platform.id}-photo-resizer`,
       applicationCategory: "MultimediaApplication",
       offers: {
         "@type": "Offer",
@@ -431,8 +431,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -505,7 +505,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Enhance your ${platform.name} visuals with Rybbit`}
+        ctaTitle={`Enhance your ${platform.name} visuals with Hygo`}
         ctaDescription="Track engagement on your perfectly sized images."
         ctaEventLocation={`${platform.id}_photo_resizer_cta`}
         structuredData={structuredData}
@@ -528,7 +528,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-bio-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-bio-generator`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -537,8 +537,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -657,12 +657,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
         answer: `A great ${platform.name} ${platform.bioType} is authentic, clear, and engaging. It quickly communicates who you are, what you do, and why people should follow or connect with you. ${platform.contextGuidelines}`,
       },
       {
-        question: "How can Rybbit help me grow on social media?",
+        question: "How can Hygo help me grow on social media?",
         answer: (
           <>
-            Once you have a great bio, Rybbit helps you track engagement, clicks, and growth on {platform.name}.
+            Once you have a great bio, Hygo helps you track engagement, clicks, and growth on {platform.name}.
             Understand what content resonates with your audience and optimize your strategy.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -681,7 +681,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Build your ${platform.name} presence with Rybbit`}
+        ctaTitle={`Build your ${platform.name} presence with Hygo`}
         ctaDescription={`Track your growth and engagement on ${platform.name} to optimize your content strategy.`}
         ctaEventLocation={`${platform.id}_bio_generator_cta`}
         structuredData={structuredData}
@@ -704,7 +704,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-character-counter`,
+      url: `https://hygo.ai/tools/${platform.id}-character-counter`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -713,8 +713,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -806,12 +806,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
           "No! This tool works entirely in your browser. Your text is never sent to any server or stored anywhere. It's completely private and secure.",
       },
       {
-        question: "How can Rybbit help me track my social media performance?",
+        question: "How can Hygo help me track my social media performance?",
         answer: (
           <>
-            Rybbit helps you track engagement, clicks, and performance of your {platform.name} posts. See which content
+            Hygo helps you track engagement, clicks, and performance of your {platform.name} posts. See which content
             resonates with your audience and optimize your strategy.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -830,7 +830,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Track your ${platform.name} performance with Rybbit`}
+        ctaTitle={`Track your ${platform.name} performance with Hygo`}
         ctaDescription={`Monitor engagement and clicks from your ${platform.name} posts to optimize your content strategy.`}
         ctaEventLocation={`${platform.id}_character_counter_cta`}
         structuredData={structuredData}
@@ -853,7 +853,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-hashtag-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-hashtag-generator`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -862,8 +862,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -983,12 +983,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
           "Absolutely! Use the generated hashtags as a starting point and customize them to better fit your content. Combining AI-generated hashtags with your own research often yields the best results.",
       },
       {
-        question: "How can Rybbit help me track hashtag performance?",
+        question: "How can Hygo help me track hashtag performance?",
         answer: (
           <>
-            Rybbit helps you measure which content and hashtags drive the most engagement on {platform.name}. Track
+            Hygo helps you measure which content and hashtags drive the most engagement on {platform.name}. Track
             clicks, traffic sources, and content performance to optimize your hashtag strategy.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -1007,7 +1007,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Optimize your ${platform.name} hashtag strategy with Rybbit`}
+        ctaTitle={`Optimize your ${platform.name} hashtag strategy with Hygo`}
         ctaDescription={`Track which hashtags drive the most engagement and refine your content strategy with data-driven insights.`}
         ctaEventLocation={`${platform.id}_hashtag_generator_cta`}
         structuredData={structuredData}
@@ -1030,7 +1030,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-username-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-username-generator`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -1039,8 +1039,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -1146,12 +1146,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
         answer: `A good ${platform.name} username is memorable, easy to spell, appropriate for the platform, and reflects your brand or personality. It should be something you're comfortable using long-term and sharing professionally if needed.`,
       },
       {
-        question: "How can Rybbit help me grow my presence?",
+        question: "How can Hygo help me grow my presence?",
         answer: (
           <>
-            Once you've claimed your username, Rybbit helps you track engagement, clicks, and growth on {platform.name}.
+            Once you've claimed your username, Hygo helps you track engagement, clicks, and growth on {platform.name}.
             Understand your audience and optimize your content strategy.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -1170,7 +1170,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Build your ${platform.name} presence with Rybbit`}
+        ctaTitle={`Build your ${platform.name} presence with Hygo`}
         ctaDescription={`Track your growth and engagement on ${platform.name} to optimize your content strategy.`}
         ctaEventLocation={`${platform.id}_username_generator_cta`}
         structuredData={structuredData}
@@ -1193,7 +1193,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-post-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-post-generator`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -1202,8 +1202,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -1299,12 +1299,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
         answer: `Yes! The AI is trained to create authentic, engaging content that matches ${platform.name}'s tone and style. However, adding your personal touch makes posts even more effective and genuine.`,
       },
       {
-        question: "How can Rybbit help me measure post performance?",
+        question: "How can Hygo help me measure post performance?",
         answer: (
           <>
-            Rybbit tracks clicks, engagement, and traffic from your {platform.name} posts. See which content drives the
+            Hygo tracks clicks, engagement, and traffic from your {platform.name} posts. See which content drives the
             most interaction and optimize your social media strategy.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -1323,7 +1323,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Optimize your ${platform.name} strategy with Rybbit`}
+        ctaTitle={`Optimize your ${platform.name} strategy with Hygo`}
         ctaDescription="Track which posts drive the most engagement and refine your content strategy with data-driven insights."
         ctaEventLocation={`${platform.id}_post_generator_cta`}
         structuredData={structuredData}
@@ -1346,7 +1346,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-page-name-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-page-name-generator`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -1355,8 +1355,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -1442,12 +1442,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
         answer: `No, the tool generates creative name suggestions but doesn't check availability on ${platform.name}. Always verify that your chosen name is available on the platform before using it.`,
       },
       {
-        question: "How can Rybbit help me grow my presence?",
+        question: "How can Hygo help me grow my presence?",
         answer: (
           <>
-            Rybbit helps you track engagement, clicks, and traffic sources from your {platform.name} presence.
+            Hygo helps you track engagement, clicks, and traffic sources from your {platform.name} presence.
             Understand what content resonates with your audience and optimize your strategy.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -1466,7 +1466,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Grow your ${platform.name} presence with Rybbit`}
+        ctaTitle={`Grow your ${platform.name} presence with Hygo`}
         ctaDescription={`Track performance and engagement from your ${
           platform.name
         } ${platform.pageType.toLowerCase()} to understand what works.`}
@@ -1491,7 +1491,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-comment-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-comment-generator`,
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -1500,8 +1500,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -1586,12 +1586,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
         answer: `Yes! The AI is trained to create authentic, platform-appropriate comments that match ${platform.name}'s culture and style. However, adding your personal touch will make them even more genuine and effective.`,
       },
       {
-        question: "How can Rybbit help me track comment engagement?",
+        question: "How can Hygo help me track comment engagement?",
         answer: (
           <>
-            Rybbit helps you measure which content drives the most engagement and comments on your social media. Track
+            Hygo helps you measure which content drives the most engagement and comments on your social media. Track
             clicks, traffic sources, and content performance to understand what resonates with your audience.{" "}
-            <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+            <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
               Start tracking for free
             </a>
             .
@@ -1610,7 +1610,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle="Track engagement and comment activity with Rybbit"
+        ctaTitle="Track engagement and comment activity with Hygo"
         ctaDescription="Measure which content drives the most comments and engagement on your social media platforms."
         ctaEventLocation={`${platform.id}_comment_generator_cta`}
         structuredData={structuredData}
@@ -1632,7 +1632,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       "@type": "WebApplication",
       name: platform.displayName,
       description: platform.description,
-      url: `https://rybbit.com/tools/${platform.id}-logo-generator`,
+      url: `https://hygo.ai/tools/${platform.id}-logo-generator`,
       applicationCategory: "DesignApplication",
       offers: {
         "@type": "Offer",
@@ -1641,8 +1641,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     };
 
@@ -1741,13 +1741,13 @@ export default async function PlatformToolPage({ params }: PageProps) {
           "You can generate logos at a rate of 3 per minute. Each generation creates a unique design, so feel free to experiment with different styles and inputs to find the perfect logo.",
       },
       {
-        question: "How can Rybbit help with my brand?",
+        question: "How can Hygo help with my brand?",
         answer: (
           <>
-            Rybbit helps you track your brand&apos;s performance across social media platforms. Monitor how your brand is
+            Hygo helps you track your brand&apos;s performance across social media platforms. Monitor how your brand is
             discovered, track engagement, and understand your audience.{" "}
             <a
-              href="https://app.rybbit.io/signup"
+              href="https://app.hygo.ai/signup"
               className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline"
             >
               Start tracking for free
@@ -1768,7 +1768,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
         educationalContent={educationalContent}
         faqs={faqs}
         relatedToolsCategory="social-media"
-        ctaTitle={`Build your ${platform.name} brand presence with Rybbit`}
+        ctaTitle={`Build your ${platform.name} brand presence with Hygo`}
         ctaDescription={`Track how your brand performs on ${platform.name}. Measure visibility, engagement, and growth with powerful analytics.`}
         ctaEventLocation={`${platform.id}_logo_generator_cta`}
         structuredData={structuredData}
@@ -1790,7 +1790,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
     "@type": "WebApplication",
     name: platform.displayName,
     description: platform.description,
-    url: `https://rybbit.com/tools/${platform.id}-font-generator`,
+    url: `https://hygo.ai/tools/${platform.id}-font-generator`,
     applicationCategory: "Utility",
     offers: {
       "@type": "Offer",
@@ -1799,8 +1799,8 @@ export default async function PlatformToolPage({ params }: PageProps) {
     },
     author: {
       "@type": "Organization",
-      name: "Rybbit",
-      url: "https://rybbit.com",
+      name: "Hygo",
+      url: "https://hygo.ai",
     },
   };
 
@@ -1856,12 +1856,12 @@ export default async function PlatformToolPage({ params }: PageProps) {
         "No installation required! This is a web-based tool that works directly in your browser. Simply type your text, copy the style you like, and paste it wherever you want to use it. The Unicode characters are supported natively by most systems.",
     },
     {
-      question: "How can Rybbit help me track my social media performance?",
+      question: "How can Hygo help me track my social media performance?",
       answer: (
         <>
-          Rybbit helps you track clicks, engagement, and traffic sources from your {platform.name} posts and bio links.
+          Hygo helps you track clicks, engagement, and traffic sources from your {platform.name} posts and bio links.
           See which content drives the most engagement and optimize your social media strategy.{" "}
-          <a href="https://rybbit.com" className="text-emerald-600 hover:text-emerald-500 underline">
+          <a href="https://hygo.ai" className="text-emerald-600 hover:text-emerald-500 underline">
             Start tracking for free
           </a>
           .
@@ -1880,7 +1880,7 @@ export default async function PlatformToolPage({ params }: PageProps) {
       educationalContent={educationalContent}
       faqs={fontFaqs}
       relatedToolsCategory="social-media"
-      ctaTitle="Track your social media engagement with Rybbit"
+      ctaTitle="Track your social media engagement with Hygo"
       ctaDescription="Monitor clicks, traffic sources, and content performance across all your social platforms."
       ctaEventLocation={`${platform.id}_font_generator_cta`}
       structuredData={structuredData}

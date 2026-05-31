@@ -35,7 +35,7 @@ function MobileSidebar() {
         </SheetTrigger>
         <VisuallyHidden>
           <SheetHeader>
-            <SheetTitle>{t("Rybbit Sidebar")}</SheetTitle>
+            <SheetTitle>{t("Hygo Sidebar")}</SheetTitle>
           </SheetHeader>
         </VisuallyHidden>
         <SheetContent side="left" className="p-0 w-[40px] flex gap-0" showClose={false}>

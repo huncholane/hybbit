@@ -1,4 +1,4 @@
-import { Filter, FilterParameter, FilterType } from "@rybbit/shared";
+import { Filter, FilterParameter, FilterType } from "@hygo/shared";
 import { DateTime } from "luxon";
 import { create } from "zustand";
 import { EndpointConfig } from "../utils/endpointConfig";

@@ -83,15 +83,15 @@ export const capabilities: FeatureCapability[] = [
 export const howItWorks: HowItWorksStep[] = [
   {
     step: 1,
-    title: "Install the Rybbit script",
+    title: "Install the Hygo script",
     description:
-      "Add the Rybbit script to your site or install @rybbit/js from npm. Pageviews and basic interactions are tracked automatically.",
+      "Add the Hygo script to your site or install @hygo/js from npm. Pageviews and basic interactions are tracked automatically.",
   },
   {
     step: 2,
     title: "Track custom events",
     description:
-      "Call rybbit.event('event_name', { properties }) anywhere in your code. Track signups, purchases, feature usage, or any interaction.",
+      "Call hygo.event('event_name', { properties }) anywhere in your code. Track signups, purchases, feature usage, or any interaction.",
   },
   {
     step: 3,
@@ -103,7 +103,7 @@ export const howItWorks: HowItWorksStep[] = [
     step: 4,
     title: "Use events across features",
     description:
-      "Your custom events power funnels, goals, and filters throughout Rybbit. One line of tracking code unlocks insights everywhere.",
+      "Your custom events power funnels, goals, and filters throughout Hygo. One line of tracking code unlocks insights everywhere.",
   },
 ];
 
@@ -150,7 +150,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "How do I track a custom event?",
     answer:
-      "Call rybbit.event('event_name') or rybbit.event('event_name', { key: 'value' }) from anywhere in your JavaScript code. That's it — the event will appear in your dashboard immediately.",
+      "Call hygo.event('event_name') or hygo.event('event_name', { key: 'value' }) from anywhere in your JavaScript code. That's it — the event will appear in your dashboard immediately.",
   },
   {
     question: "What's the difference between pageviews and custom events?",
@@ -160,7 +160,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Can I track events without writing code?",
     answer:
-      "Yes. Rybbit's autocapture feature automatically tracks clicks on buttons, links, and form submissions. You can also use data-rybbit-event attributes in your HTML to track clicks without JavaScript.",
+      "Yes. Hygo's autocapture feature automatically tracks clicks on buttons, links, and form submissions. You can also use data-hygo-event attributes in your HTML to track clicks without JavaScript.",
   },
   {
     question: "Are event properties searchable and filterable?",
@@ -175,7 +175,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Can I use events in funnels and goals?",
     answer:
-      "Yes. Custom events are first-class citizens in Rybbit. They can be used as funnel steps, goal triggers, and filter conditions throughout the platform.",
+      "Yes. Custom events are first-class citizens in Hygo. They can be used as funnel steps, goal triggers, and filter conditions throughout the platform.",
   },
 ];
 

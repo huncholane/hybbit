@@ -3,7 +3,7 @@ import { sql, SQL } from "drizzle-orm";
 import { clickhouse } from "../../../db/clickhouse/clickhouse.js";
 import { db } from "../../../db/postgres/postgres.js";
 import { enrichWithTraits, getTimeStatement, processResults } from "../utils/utils.js";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { getFilterStatement } from "../utils/getFilterStatement.js";
 
 export type GetUsersResponse = {

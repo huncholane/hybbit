@@ -85,7 +85,7 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Add one script tag",
     description:
-      "Paste a single line of code into your site or install @rybbit/js from npm. It works with any framework — React, Vue, Next.js, WordPress, Shopify, and more.",
+      "Paste a single line of code into your site or install @hygo/js from npm. It works with any framework — React, Vue, Next.js, WordPress, Shopify, and more.",
   },
   {
     step: 2,
@@ -150,17 +150,17 @@ export const faqItems: FAQItem[] = [
   {
     question: "What do I need to set up web analytics?",
     answer:
-      "Just add a single script tag to your website or install @rybbit/js from npm. There's no tag manager, no complex configuration, and no cookie consent banner required. Most users are collecting data within 5 minutes.",
+      "Just add a single script tag to your website or install @hygo/js from npm. There's no tag manager, no complex configuration, and no cookie consent banner required. Most users are collecting data within 5 minutes.",
   },
   {
-    question: "How is Rybbit different from Google Analytics?",
+    question: "How is Hygo different from Google Analytics?",
     answer:
-      "Rybbit is privacy-first (no cookies, no personal data), open source, and shows everything on a single dashboard instead of 150+ reports. The tracking script is 18KB vs GA4's 371KB. You also get features like session replay and funnels that GA4 lacks or charges $50k/year for.",
+      "Hygo is privacy-first (no cookies, no personal data), open source, and shows everything on a single dashboard instead of 150+ reports. The tracking script is 18KB vs GA4's 371KB. You also get features like session replay and funnels that GA4 lacks or charges $50k/year for.",
   },
   {
     question: "Do I need a cookie consent banner?",
     answer:
-      "No. Rybbit doesn't use cookies and doesn't collect personal data, so no consent banner is needed under GDPR, CCPA, or PECR. This means you capture 100% of your visitors without any consent friction.",
+      "No. Hygo doesn't use cookies and doesn't collect personal data, so no consent banner is needed under GDPR, CCPA, or PECR. This means you capture 100% of your visitors without any consent friction.",
   },
   {
     question: "Can I filter by multiple properties at once?",
@@ -170,12 +170,12 @@ export const faqItems: FAQItem[] = [
   {
     question: "What UTM parameters are supported?",
     answer:
-      "Rybbit automatically captures utm_source, utm_medium, utm_campaign, utm_term, and utm_content from your URLs. No extra setup required — they appear in your traffic sources breakdown.",
+      "Hygo automatically captures utm_source, utm_medium, utm_campaign, utm_term, and utm_content from your URLs. No extra setup required — they appear in your traffic sources breakdown.",
   },
   {
     question: "Is real-time data actually real-time?",
     answer:
-      "Yes. Rybbit processes events as they arrive with no sampling or batching delays. You'll see live visitor counts, current active pages, and events as they happen.",
+      "Yes. Hygo processes events as they arrive with no sampling or batching delays. You'll see live visitor counts, current active pages, and events as they happen.",
   },
 ];
 

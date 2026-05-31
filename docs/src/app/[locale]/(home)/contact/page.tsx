@@ -5,12 +5,12 @@ import { createMetadata, createOGImageUrl } from "@/lib/metadata";
 
 export const metadata = createMetadata({
   title: "Contact",
-  description: "Get in touch with the Rybbit team",
+  description: "Get in touch with the Hygo team",
   openGraph: {
-    images: [createOGImageUrl("Contact", "Get in touch with the Rybbit team")],
+    images: [createOGImageUrl("Contact", "Get in touch with the Hygo team")],
   },
   twitter: {
-    images: [createOGImageUrl("Contact", "Get in touch with the Rybbit team")],
+    images: [createOGImageUrl("Contact", "Get in touch with the Hygo team")],
   },
 });
 
@@ -23,7 +23,7 @@ export default function Contact() {
 
       <div className="bg-neutral-100/50 dark:bg-neutral-800/20 border border-neutral-300/50 dark:border-neutral-700/50 rounded-xl p-6 md:p-8 mb-8">
         <p className="text-lg mb-6 text-neutral-700 dark:text-neutral-300">
-          {t("Have questions about Rybbit? We're here to help! Reach out to us through any of these channels:")}
+          {t("Have questions about Hygo? We're here to help! Reach out to us through any of these channels:")}
         </p>
 
         <div className="space-y-6">
@@ -33,8 +33,8 @@ export default function Contact() {
             </div>
             <div>
               <h2 className="text-xl font-medium mb-1">{t("Email")}</h2>
-              <a href="mailto:hello@rybbit.com" className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors">
-                hello@rybbit.com
+              <a href="mailto:hello@hygo.ai" className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                hello@hygo.ai
               </a>
             </div>
           </div>
@@ -79,8 +79,8 @@ export default function Contact() {
         <h2 className="text-xl font-medium mb-3">{t("Customer Support")}</h2>
         <p className="mb-4 text-neutral-700 dark:text-neutral-300">
           {t("If you are a customer and need help with your account, please contact us at")}{" "}
-          <a href="mailto:support@rybbit.com" className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors underline">
-            support@rybbit.com
+          <a href="mailto:support@hygo.ai" className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors underline">
+            support@hygo.ai
           </a>
           {". "}
           {t("We try to respond to all support requests within 12 hours.")}
@@ -89,15 +89,15 @@ export default function Contact() {
       <div className="bg-neutral-100/30 dark:bg-neutral-800/30 border border-neutral-300/50 dark:border-neutral-700/50 rounded-xl p-6 mb-8">
         <h2 className="text-xl font-medium mb-3">{t("White-Labeling & Custom Solutions")}</h2>
         <p className="mb-4 text-neutral-700 dark:text-neutral-300">
-          {t("Looking to white-label Rybbit for your organization or need a custom analytics solution? We offer tailored implementations to meet your specific requirements.")}
+          {t("Looking to white-label Hygo for your organization or need a custom analytics solution? We offer tailored implementations to meet your specific requirements.")}
         </p>
         <p className="mb-4 text-neutral-700 dark:text-neutral-300">
           {t("Contact us at")}{" "}
           <a
-            href="mailto:partnerships@rybbit.com"
+            href="mailto:partnerships@hygo.ai"
             className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors underline"
           >
-            partnerships@rybbit.com
+            partnerships@hygo.ai
           </a>{" "}
           {t("to discuss your needs.")}
         </p>

@@ -9,7 +9,7 @@ set -e
 REGION=${1:-us-east}
 ACTION=${2:-deploy}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-docker.io}
-DOCKER_IMAGE=${DOCKER_IMAGE:-rybbit/monitor-agent}
+DOCKER_IMAGE=${DOCKER_IMAGE:-hygo/monitor-agent}
 VERSION=${VERSION:-latest}
 
 # Region configurations
@@ -73,8 +73,8 @@ case $ACTION in
             set -e
             
             # Create directories
-            mkdir -p /opt/rybbit-monitor-agent
-            cd /opt/rybbit-monitor-agent
+            mkdir -p /opt/hygo-monitor-agent
+            cd /opt/hygo-monitor-agent
             
             # Create .env file if it doesn't exist
             if [ ! -f .env ]; then
@@ -86,19 +86,19 @@ REGION=$REGION
 ALLOWED_IPS=\${ALLOWED_IPS:-}
 LOG_LEVEL=info
 ENVFILE
-                echo "Please edit /opt/rybbit-monitor-agent/.env with correct values"
+                echo "Please edit /opt/hygo-monitor-agent/.env with correct values"
             fi
             
             # Pull latest image
             docker pull $DOCKER_REGISTRY/$DOCKER_IMAGE:$REGION
             
             # Stop existing container
-            docker stop rybbit-monitor-agent 2>/dev/null || true
-            docker rm rybbit-monitor-agent 2>/dev/null || true
+            docker stop hygo-monitor-agent 2>/dev/null || true
+            docker rm hygo-monitor-agent 2>/dev/null || true
             
             # Start new container
             docker run -d \
-                --name rybbit-monitor-agent \
+                --name hygo-monitor-agent \
                 --restart always \
                 -p 3003:3003 \
                 --env-file .env \
@@ -107,12 +107,12 @@ ENVFILE
                 
             # Check if container is running
             sleep 5
-            if docker ps | grep -q rybbit-monitor-agent; then
+            if docker ps | grep -q hygo-monitor-agent; then
                 echo "Container started successfully"
-                docker logs --tail 20 rybbit-monitor-agent
+                docker logs --tail 20 hygo-monitor-agent
             else
                 echo "Container failed to start"
-                docker logs rybbit-monitor-agent
+                docker logs hygo-monitor-agent
                 exit 1
             fi
 EOF
@@ -123,10 +123,10 @@ EOF
         log_info "Checking status of $REGION ($SERVER)..."
         ssh $SERVER << EOF
             echo "=== Container Status ==="
-            docker ps -a | grep rybbit-monitor-agent || echo "No container found"
+            docker ps -a | grep hygo-monitor-agent || echo "No container found"
             echo ""
             echo "=== Recent Logs ==="
-            docker logs --tail 20 rybbit-monitor-agent 2>&1 || echo "No logs available"
+            docker logs --tail 20 hygo-monitor-agent 2>&1 || echo "No logs available"
             echo ""
             echo "=== Health Check ==="
             curl -s http://localhost:3003/health | jq . || echo "Health check failed"
@@ -135,17 +135,17 @@ EOF
         
     logs)
         log_info "Fetching logs from $REGION ($SERVER)..."
-        ssh $SERVER "docker logs --tail 100 -f rybbit-monitor-agent"
+        ssh $SERVER "docker logs --tail 100 -f hygo-monitor-agent"
         ;;
         
     restart)
         log_info "Restarting $REGION ($SERVER)..."
-        ssh $SERVER "docker restart rybbit-monitor-agent"
+        ssh $SERVER "docker restart hygo-monitor-agent"
         ;;
         
     stop)
         log_info "Stopping $REGION ($SERVER)..."
-        ssh $SERVER "docker stop rybbit-monitor-agent"
+        ssh $SERVER "docker stop hygo-monitor-agent"
         ;;
         
     *)

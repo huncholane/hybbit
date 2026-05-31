@@ -1,4 +1,4 @@
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { and, inArray, eq } from "drizzle-orm";
 import SqlString from "sqlstring";

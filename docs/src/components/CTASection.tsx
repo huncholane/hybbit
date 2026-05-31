@@ -16,9 +16,9 @@ export function CTASection({
   title,
   description,
   primaryButtonText,
-  primaryButtonHref = "https://app.rybbit.io/signup",
+  primaryButtonHref = "https://app.hygo.ai/signup",
   secondaryButtonText,
-  secondaryButtonHref = "https://demo.rybbit.com/81",
+  secondaryButtonHref = "https://demo.hygo.ai/81",
   eventLocation = "bottom_cta",
 }: CTASectionProps) {
   const t = useExtracted();

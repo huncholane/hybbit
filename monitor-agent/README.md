@@ -1,6 +1,6 @@
-# Rybbit Monitor Agent
+# Hygo Monitor Agent
 
-Regional monitoring agent for Rybbit uptime monitoring system. This lightweight service runs on VPS instances in different regions to execute monitoring checks.
+Regional monitoring agent for Hygo uptime monitoring system. This lightweight service runs on VPS instances in different regions to execute monitoring checks.
 
 ## Features
 

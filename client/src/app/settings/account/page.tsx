@@ -15,7 +15,7 @@ export default function AccountPage() {
         <h1 className="text-3xl font-bold tracking-tight">{t("Account Settings")}</h1>
         <p className="text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
           {t("Manage your personal account settings")}
-          <ExternalLink href="https://www.rybbit.com/docs/account-settings">
+          <ExternalLink href="https://www.hygo.ai/docs/account-settings">
             {t("Learn more")}
           </ExternalLink>
         </p>

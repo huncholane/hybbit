@@ -25,9 +25,9 @@ export function AffiliateBanner() {
       <div className="flex items-center gap-2">
         <HandCoins className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
         <span className="text-emerald-700 dark:text-emerald-300 font-medium">
-          {t("Earn 50% recurring commission by referring Rybbit.")}{" "}
+          {t("Earn 50% recurring commission by referring Hygo.")}{" "}
           <a
-            href="https://rybbit.com/affiliate"
+            href="https://hygo.ai/affiliate"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-emerald-900 dark:hover:text-emerald-100"

@@ -262,7 +262,7 @@ export function ExperimentResultsPanel({ experiment }: { experiment: Experiment 
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
             {t(
-              'Showing assigned visitors. Call rybbit.flag("{flagKey}") where the variant renders to measure visitors actually exposed to it.',
+              'Showing assigned visitors. Call hygo.flag("{flagKey}") where the variant renders to measure visitors actually exposed to it.',
               { flagKey: experiment.featureFlag.key }
             )}
           </span>

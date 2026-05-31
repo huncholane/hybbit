@@ -1,4 +1,4 @@
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { DateTime } from "luxon";
 import { useLocale } from "next-intl";
 import { useMemo } from "react";

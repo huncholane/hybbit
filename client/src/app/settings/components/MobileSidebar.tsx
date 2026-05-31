@@ -19,7 +19,7 @@ export function MobileSidebar() {
         </SheetTrigger>
         <VisuallyHidden>
           <SheetHeader>
-            <SheetTitle>Rybbit Sidebar</SheetTitle>
+            <SheetTitle>Hygo Sidebar</SheetTitle>
           </SheetHeader>
         </VisuallyHidden>
         <SheetContent side="left" className="p-0 w-[240px] flex gap-0" showClose={false}>

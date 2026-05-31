@@ -10,15 +10,15 @@ import {
 } from "./feature-data";
 
 export const metadata: Metadata = {
-  title: "Funnels - Rybbit | Conversion Funnel Analytics",
+  title: "Funnels - Hygo | Conversion Funnel Analytics",
   description:
     "Visualize your conversion paths and find exactly where visitors drop off. Build multi-step funnels with page paths or custom events. No sampling, real-time data.",
   openGraph: {
-    title: "Funnels - Rybbit",
+    title: "Funnels - Hygo",
     description:
       "Find where users drop off. Build conversion funnels with real-time data and zero sampling.",
     type: "website",
-    url: "https://rybbit.com/features/funnels",
+    url: "https://hygo.ai/features/funnels",
     images: [
       createOGImageUrl(
         "Conversion Funnels",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Funnels - Rybbit",
+    title: "Funnels - Hygo",
     description:
       "Find where users drop off. Build conversion funnels with real-time data.",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: "https://rybbit.com/features/funnels",
+    canonical: "https://hygo.ai/features/funnels",
   },
 };
 
@@ -50,14 +50,14 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/features/funnels",
-      name: "Rybbit Funnels",
+      "@id": "https://hygo.ai/features/funnels",
+      name: "Hygo Funnels",
       description: "Conversion funnel analytics for your website or product.",
-      url: "https://rybbit.com/features/funnels",
+      url: "https://hygo.ai/features/funnels",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -86,14 +86,14 @@ export default function FunnelsPage() {
         headline="Where do users drop off?"
         subtitle="Build multi-step conversion funnels to visualize your user flow and pinpoint exactly where you're losing conversions."
         badgeText="Funnels"
-        demoUrl="https://demo.rybbit.com/81/funnels"
+        demoUrl="https://demo.hygo.ai/81/funnels"
         demoCaption="Live funnels demo — see real conversion data"
         introParagraphs={[
           <>
             You&apos;re driving traffic to your site, but <strong className="text-neutral-900 dark:text-white">how many visitors actually complete the journey</strong> from landing page to signup, onboarding to activation, or browse to purchase? Without funnel analysis, you&apos;re flying blind — optimizing pages that might not be the real bottleneck.
           </>,
           <>
-            Rybbit funnels give you a <strong className="text-neutral-900 dark:text-white">step-by-step breakdown of your conversion flow</strong> with precise drop-off percentages at every stage. No sampling, no estimation — every event is counted. Mix page paths and custom events freely to model any conversion flow, from a simple two-step signup to a complex multi-stage onboarding.
+            Hygo funnels give you a <strong className="text-neutral-900 dark:text-white">step-by-step breakdown of your conversion flow</strong> with precise drop-off percentages at every stage. No sampling, no estimation — every event is counted. Mix page paths and custom events freely to model any conversion flow, from a simple two-step signup to a complex multi-stage onboarding.
           </>,
           <>
             Combined with <strong className="text-neutral-900 dark:text-white">session replay and user journey mapping</strong>, funnels become even more powerful. Spot the drop-off in your funnel, then watch the sessions where users left to understand <em>why</em>. It&apos;s the difference between knowing you have a problem and knowing how to fix it.

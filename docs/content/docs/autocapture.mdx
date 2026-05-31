@@ -3,7 +3,7 @@ title: Autocapture
 description: Automatically track user interactions without writing code
 ---
 
-Rybbit can automatically capture common user interactions without requiring any code changes. These features can be enabled in your [Site Settings](/docs/site-settings) under the "Auto Capture" section.
+Hygo can automatically capture common user interactions without requiring any code changes. These features can be enabled in your [Site Settings](/docs/site-settings) under the "Auto Capture" section.
 
 ## Available Autocapture Features
 
@@ -17,7 +17,7 @@ Rybbit can automatically capture common user interactions without requiring any 
 
 ## Outbound Links
 
-When enabled, Rybbit automatically tracks clicks on links that navigate to external domains.
+When enabled, Hygo automatically tracks clicks on links that navigate to external domains.
 
 **Tracked properties:**
 - `url` - The destination URL
@@ -47,12 +47,12 @@ Automatically tracks clicks on:
 
 ### Adding Custom Properties
 
-You can add custom properties to auto-tracked button clicks using `data-rybbit-prop-*` attributes:
+You can add custom properties to auto-tracked button clicks using `data-hygo-prop-*` attributes:
 
 ```html
 <button
-  data-rybbit-prop-category="pricing"
-  data-rybbit-prop-variant="blue"
+  data-hygo-prop-category="pricing"
+  data-hygo-prop-variant="blue"
 >
   Buy Now
 </button>
@@ -62,11 +62,11 @@ This tracks: `{ text: "Buy Now", category: "pricing", variant: "blue" }`
 
 ### Skipping Autocapture for Specific Buttons
 
-If you want to track a button with a custom event instead of the automatic `button_click`, add the `data-rybbit-event` attribute:
+If you want to track a button with a custom event instead of the automatic `button_click`, add the `data-hygo-event` attribute:
 
 ```html
 <!-- This button will fire a custom "signup" event, NOT a button_click -->
-<button data-rybbit-event="signup" data-rybbit-prop-plan="pro">
+<button data-hygo-event="signup" data-hygo-prop-plan="pro">
   Sign Up
 </button>
 ```
@@ -98,13 +98,13 @@ Triggered when a form is submitted.
 - `fieldCount` - Number of form fields
 - `ariaLabel` - The form's `aria-label` attribute (if present)
 
-You can add custom properties using `data-rybbit-prop-*` on the form element:
+You can add custom properties using `data-hygo-prop-*` on the form element:
 
 ```html
 <form
   id="signup"
-  data-rybbit-prop-form-type="registration"
-  data-rybbit-prop-variant="a"
+  data-hygo-prop-form-type="registration"
+  data-hygo-prop-variant="a"
 >
   ...
 </form>
@@ -121,17 +121,17 @@ Triggered when a user changes the value of an input, select, or textarea field. 
 - `formId` - The parent form's `id` (if within a form)
 - `formName` - The parent form's `name` (if within a form)
 
-You can add custom properties using `data-rybbit-prop-*` on the input element:
+You can add custom properties using `data-hygo-prop-*` on the input element:
 
 ```html
 <input
   name="email"
-  data-rybbit-prop-field-category="contact"
+  data-hygo-prop-field-category="contact"
 />
 
 <select
   name="country"
-  data-rybbit-prop-section="demographics"
+  data-hygo-prop-section="demographics"
 >
   ...
 </select>

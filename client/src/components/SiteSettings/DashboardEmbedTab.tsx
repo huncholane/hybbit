@@ -50,7 +50,7 @@ export function DashboardEmbedTab({ siteMetadata, disabled = false }: DashboardE
   const hasPrivateLink = !!privateLinkKey;
   const dashboardEmbedAvailable = hasPrivateLink;
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://app.rybbit.io";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://app.hygo.ai";
   const dashboardPath = `/${siteId}/${privateLinkKey ?? "PRIVATE_LINK_KEY"}/main`;
 
   const dashboardUrl = new URL(dashboardPath, origin);

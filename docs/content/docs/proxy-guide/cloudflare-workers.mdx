@@ -1,13 +1,13 @@
 ---
 title: Cloudflare Workers Proxy Setup
-description: Use Cloudflare Workers to proxy Rybbit tracking at the edge
+description: Use Cloudflare Workers to proxy Hygo tracking at the edge
 ---
 
 import { Steps } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
-Cloudflare Workers provide a serverless way to proxy Rybbit tracking at the edge, close to your users worldwide. This delivers excellent performance with minimal configuration.
+Cloudflare Workers provide a serverless way to proxy Hygo tracking at the edge, close to your users worldwide. This delivers excellent performance with minimal configuration.
 
 ## Overview
 
@@ -23,10 +23,10 @@ Cloudflare Workers run on Cloudflare's global network, intercepting and proxying
 
 - Cloudflare account with your domain
 - Workers enabled on your account (free tier available)
-- Your Rybbit instance URL:
-  - **Cloud hosted**: `https://app.rybbit.io`
+- Your Hygo instance URL:
+  - **Cloud hosted**: `https://app.hygo.ai`
   - **Self-hosted**: Your instance URL
-- Your Rybbit site ID
+- Your Hygo site ID
 
 ## Implementation
 
@@ -37,7 +37,7 @@ Cloudflare Workers run on Cloudflare's global network, intercepting and proxying
 Log in to Cloudflare Dashboard and create a new Worker:
 
 1. Go to **Workers & Pages** → **Create application** → **Create Worker**
-2. Name it `rybbit-proxy` (or your preferred name)
+2. Name it `hygo-proxy` (or your preferred name)
 3. Click **Deploy** to create the worker
 
 ### Update Worker Code
@@ -48,9 +48,9 @@ Replace the default code with the proxy implementation:
 <Tab value="full-proxy-recommended" title="Full Proxy (Recommended)">
 
 ```javascript
-// Cloudflare Worker for Rybbit Analytics Proxy
+// Cloudflare Worker for Hygo Analytics Proxy
 
-const RYBBIT_HOST = 'https://app.rybbit.io';
+const HYGO_HOST = 'https://app.hygo.ai';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -66,20 +66,20 @@ async function handleRequest(request) {
   }
 
   try {
-    return await proxyToRybbit(request, url);
+    return await proxyToHygo(request, url);
   } catch (error) {
     console.error('Proxy error:', error);
     return new Response('Analytics proxy error', { status: 500 });
   }
 }
 
-async function proxyToRybbit(request, url) {
+async function proxyToHygo(request, url) {
   // Map paths: /analytics/* → /api/*
-  let rybbitPath = url.pathname.replace('/analytics/', '/api/');
+  let hygoPath = url.pathname.replace('/analytics/', '/api/');
 
-  // Build Rybbit URL
-  const rybbitUrl = new URL(rybbitPath, RYBBIT_HOST);
-  rybbitUrl.search = url.search; // Preserve query params
+  // Build Hygo URL
+  const hygoUrl = new URL(hygoPath, HYGO_HOST);
+  hygoUrl.search = url.search; // Preserve query params
 
   // Get client IP
   const clientIp = request.headers.get('CF-Connecting-IP') ||
@@ -93,7 +93,7 @@ async function proxyToRybbit(request, url) {
   proxyHeaders.delete('CF-Connecting-IP'); // Remove Cloudflare internal header
 
   // Build proxy request
-  const proxyRequest = new Request(rybbitUrl, {
+  const proxyRequest = new Request(hygoUrl, {
     method: request.method,
     headers: proxyHeaders,
     body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
@@ -117,7 +117,7 @@ async function proxyToRybbit(request, url) {
     }
   }
 
-  // Fetch from Rybbit
+  // Fetch from Hygo
   const response = await fetch(proxyRequest);
 
   // Cache scripts for 1 hour
@@ -146,9 +146,9 @@ async function proxyToRybbit(request, url) {
 <Tab value="minimal-proxy" title="Minimal Proxy">
 
 ```javascript
-// Minimal Cloudflare Worker for Rybbit
+// Minimal Cloudflare Worker for Hygo
 
-const RYBBIT_HOST = 'https://app.rybbit.io';
+const HYGO_HOST = 'https://app.hygo.ai';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -159,8 +159,8 @@ async function handleRequest(request) {
 
   // Only proxy /analytics/script.js and /analytics/track
   if (url.pathname === '/analytics/script.js' || url.pathname === '/analytics/track') {
-    const rybbitPath = url.pathname.replace('/analytics/', '/api/');
-    const rybbitUrl = `${RYBBIT_HOST}${rybbitPath}`;
+    const hygoPath = url.pathname.replace('/analytics/', '/api/');
+    const hygoUrl = `${HYGO_HOST}${hygoPath}`;
 
     const clientIp = request.headers.get('CF-Connecting-IP') || '0.0.0.0';
 
@@ -168,7 +168,7 @@ async function handleRequest(request) {
     proxyHeaders.set('X-Real-IP', clientIp);
     proxyHeaders.set('X-Forwarded-For', clientIp);
 
-    return fetch(rybbitUrl, {
+    return fetch(hygoUrl, {
       method: request.method,
       headers: proxyHeaders,
       body: request.method === 'POST' ? request.body : undefined,
@@ -191,7 +191,7 @@ addEventListener('fetch', event => {
 });
 
 async function handleRequest(request, env) {
-  const RYBBIT_HOST = env.RYBBIT_HOST || 'https://app.rybbit.io';
+  const HYGO_HOST = env.HYGO_HOST || 'https://app.hygo.ai';
   const url = new URL(request.url);
 
   if (!url.pathname.startsWith('/analytics/')) {
@@ -199,16 +199,16 @@ async function handleRequest(request, env) {
   }
 
   // Map paths: /analytics/* → /api/*
-  let rybbitPath = url.pathname.replace('/analytics/', '/api/');
+  let hygoPath = url.pathname.replace('/analytics/', '/api/');
 
-  const rybbitUrl = new URL(rybbitPath, RYBBIT_HOST);
+  const hygoUrl = new URL(hygoPath, HYGO_HOST);
   const clientIp = request.headers.get('CF-Connecting-IP') || '0.0.0.0';
 
   const proxyHeaders = new Headers(request.headers);
   proxyHeaders.set('X-Real-IP', clientIp);
   proxyHeaders.set('X-Forwarded-For', clientIp);
 
-  return fetch(rybbitUrl.toString(), {
+  return fetch(hygoUrl.toString(), {
     method: request.method,
     headers: proxyHeaders,
     body: request.method !== 'GET' ? request.body : undefined,
@@ -217,7 +217,7 @@ async function handleRequest(request, env) {
 ```
 
 Set environment variable in Cloudflare Dashboard:
-**Workers & Pages** → Your Worker → **Settings** → **Variables** → Add `RYBBIT_HOST`
+**Workers & Pages** → Your Worker → **Settings** → **Variables** → Add `HYGO_HOST`
 
 </Tab>
 </Tabs>
@@ -255,7 +255,7 @@ Add the script to your website:
 2. **Check Network tab**:
    - Script loads from `/analytics/script.js`
    - Check response headers for `CF-Cache-Status` (HIT/MISS)
-3. **Verify in Rybbit dashboard**: Data should appear
+3. **Verify in Hygo dashboard**: Data should appear
 
 </Steps>
 
@@ -265,7 +265,7 @@ Cloudflare Workers intercept requests at the edge:
 
 1. Request to `yourdomain.com/analytics/script.js` hits Cloudflare edge
 2. Worker checks cache for GET requests
-3. If not cached, proxies to `app.rybbit.io/api/script.js`
+3. If not cached, proxies to `app.hygo.ai/api/script.js`
 4. Response is cached at the edge location
 5. Subsequent requests serve from edge cache (ultra-fast)
 
@@ -339,7 +339,7 @@ async function handleRequest(request) {
   const startTime = Date.now();
 
   try {
-    const response = await proxyToRybbit(request, url);
+    const response = await proxyToHygo(request, url);
     const duration = Date.now() - startTime;
 
     // Log to Cloudflare Analytics Engine (if enabled)
@@ -391,7 +391,7 @@ Most sites stay within the free tier. Bandwidth is unlimited on all Cloudflare p
 **Solution**:
 1. Verify cache key includes important parts:
    ```javascript
-   const cacheKey = new Request(rybbitUrl, request);
+   const cacheKey = new Request(hygoUrl, request);
    ```
 2. Ensure `Cache-Control` headers are set
 3. Check method is GET (POST requests aren't cached)
@@ -432,7 +432,7 @@ npm install -g wrangler
 wrangler login
 
 # Create worker
-wrangler init rybbit-proxy
+wrangler init hygo-proxy
 
 # Dev server
 wrangler dev

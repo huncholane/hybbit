@@ -63,13 +63,13 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Users visit your site",
     description:
-      "Rybbit automatically tracks visitor sessions. Each visitor is assigned to a cohort based on the date of their first visit.",
+      "Hygo automatically tracks visitor sessions. Each visitor is assigned to a cohort based on the date of their first visit.",
   },
   {
     step: 2,
     title: "Return visits are tracked",
     description:
-      "When a visitor returns on subsequent days or weeks, Rybbit records the return visit and maps it to their original cohort.",
+      "When a visitor returns on subsequent days or weeks, Hygo records the return visit and maps it to their original cohort.",
   },
   {
     step: 3,
@@ -133,7 +133,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "What counts as a 'return visit'?",
     answer:
-      "A return visit is any session by a previously seen visitor on a subsequent day or week. Rybbit uses privacy-friendly identifiers (daily rotating salts) to recognize returning visitors without cookies or personal data.",
+      "A return visit is any session by a previously seen visitor on a subsequent day or week. Hygo uses privacy-friendly identifiers (daily rotating salts) to recognize returning visitors without cookies or personal data.",
   },
   {
     question: "Can I see retention for specific user segments?",
@@ -148,7 +148,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "How does this work with privacy and cookie-free tracking?",
     answer:
-      "Rybbit uses daily rotating salt-based identifiers to recognize returning visitors without cookies or personal data. This means retention data is accurate while remaining fully GDPR compliant.",
+      "Hygo uses daily rotating salt-based identifiers to recognize returning visitors without cookies or personal data. This means retention data is accurate while remaining fully GDPR compliant.",
   },
 ];
 

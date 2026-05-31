@@ -12,7 +12,7 @@ import { authClient } from "../lib/auth";
 import { DEPLOYMENT, IS_CLOUD } from "../lib/const";
 import { useStripeSubscription } from "../lib/subscription/useStripeSubscription";
 import { cn } from "../lib/utils";
-import { RybbitLogo } from "./RybbitLogo";
+import { HygoLogo } from "./HygoLogo";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 
 function AdminLink({ isExpanded }: { isExpanded: boolean }) {
@@ -55,10 +55,10 @@ function AppSidebarContent() {
     >
       <div className="flex flex-col items-start gap-2">
         <Link href="/" className="mb-2 mt-1 ml-0.5 flex items-center justify-center">
-          <RybbitLogo width={24} height={18} />
+          <HygoLogo width={24} height={18} />
         </Link>
         <SidebarLink
-          href="https://rybbit.com/docs"
+          href="https://hygo.ai/docs"
           icon={<BookOpen className="w-5 h-5" />}
           label={t("Documentation")}
           target="_blank"
@@ -67,7 +67,7 @@ function AppSidebarContent() {
         />
         {
           IS_CLOUD && (subscription?.status === "active" || subscription?.status === "trialing") && <SidebarLink
-            href="mailto:hello@rybbit.com"
+            href="mailto:hello@hygo.ai"
             icon={<HelpCircle className="w-5 h-5" />}
             label={t("Email Support")}
             target="_blank"

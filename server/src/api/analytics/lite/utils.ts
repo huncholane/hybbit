@@ -1,4 +1,4 @@
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import SqlString from "sqlstring";
 import { TimeBucket } from "../types.js";
 import { TimeBucketToFn, bucketIntervalMap } from "../utils/utils.js";

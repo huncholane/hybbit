@@ -1,20 +1,20 @@
 ---
 title: VitePress
-description: Integrate Rybbit Analytics with your VitePress documentation site
+description: Integrate Hygo Analytics with your VitePress documentation site
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-VitePress is a static site generator powered by Vite and Vue, commonly used for documentation. Here's how to add Rybbit Analytics to your VitePress site.
+VitePress is a static site generator powered by Vite and Vue, commonly used for documentation. Here's how to add Hygo Analytics to your VitePress site.
 
-## How to Add Rybbit to VitePress
+## How to Add Hygo to VitePress
 
 <Tabs items={['Config File (Recommended)', 'Custom Theme']}>
 <Tab>
 ### Using VitePress Config
 
-The simplest way to add Rybbit is through your VitePress configuration file.
+The simplest way to add Hygo is through your VitePress configuration file.
 
 Edit your `.vitepress/config.ts` (or `.js`/`.mts`):
 
@@ -27,7 +27,7 @@ export default defineConfig({
     [
       'script',
       {
-        src: 'https://app.rybbit.io/api/script.js',
+        src: 'https://app.hygo.ai/api/script.js',
         'data-site-id': 'YOUR_SITE_ID',
         defer: ''
       }
@@ -36,7 +36,7 @@ export default defineConfig({
 })
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 
 <Callout type="info">
 The empty string for `defer` is intentional - VitePress will render it as a boolean attribute.
@@ -62,7 +62,7 @@ export default {
     if (typeof window !== 'undefined') {
       onMounted(() => {
         const script = document.createElement('script')
-        script.src = 'https://app.rybbit.io/api/script.js'
+        script.src = 'https://app.hygo.ai/api/script.js'
         script.defer = true
         script.setAttribute('data-site-id', 'YOUR_SITE_ID')
         document.head.appendChild(script)
@@ -78,7 +78,7 @@ Replace `YOUR_SITE_ID` with your actual Site ID.
 
 ## SPA Navigation
 
-VitePress uses client-side navigation between pages. The Rybbit script automatically tracks page views during SPA navigation, so no additional configuration is needed.
+VitePress uses client-side navigation between pages. The Hygo script automatically tracks page views during SPA navigation, so no additional configuration is needed.
 
 ## Development vs Production
 
@@ -94,7 +94,7 @@ export default defineConfig({
     [
       'script',
       {
-        src: 'https://app.rybbit.io/api/script.js',
+        src: 'https://app.hygo.ai/api/script.js',
         'data-site-id': 'YOUR_SITE_ID',
         defer: ''
       }

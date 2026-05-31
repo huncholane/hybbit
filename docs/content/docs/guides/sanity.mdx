@@ -1,17 +1,17 @@
 ---
 title: Sanity
-description: Integrate Rybbit Analytics with your Sanity-powered website
+description: Integrate Hygo Analytics with your Sanity-powered website
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Sanity is a headless CMS that provides content management for your applications. Since Sanity is headless, you'll add Rybbit Analytics to your frontend application rather than to Sanity itself.
+Sanity is a headless CMS that provides content management for your applications. Since Sanity is headless, you'll add Hygo Analytics to your frontend application rather than to Sanity itself.
 
 <Callout type="info">
 Sanity only manages your content - it doesn't serve your website directly. The tracking script goes in your frontend framework (Next.js, Gatsby, Nuxt, etc.).
 </Callout>
 
-## How to Add Rybbit with Sanity
+## How to Add Hygo with Sanity
 
 Choose the guide that matches your frontend framework:
 
@@ -46,7 +46,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
-          src="https://app.rybbit.io/api/script.js"
+          src="https://app.hygo.ai/api/script.js"
           data-site-id="YOUR_SITE_ID"
           strategy="afterInteractive"
         />
@@ -57,7 +57,7 @@ export default function RootLayout({
 }
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 
 ## Sanity Studio
 

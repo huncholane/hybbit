@@ -1,17 +1,17 @@
-export type RybbitStorage = {
+export type HygoStorage = {
   getItem(key: string): Promise<string | null> | string | null;
   setItem(key: string, value: string): Promise<void> | void;
   removeItem(key: string): Promise<void> | void;
 };
 
-export type RybbitConfig = {
+export type HygoConfig = {
   analyticsHost: string;
   siteId: string | number;
   appIdentifier?: string;
   bundleId?: string;
   appVersion?: string;
   tag?: string;
-  storage?: RybbitStorage;
+  storage?: HygoStorage;
   storageKeyPrefix?: string;
   debug?: boolean;
   autoTrackAppLifecycle?: boolean;
@@ -56,8 +56,8 @@ export type NavigationTracker = {
   trackCurrentRoute(navigationRef: NavigationRef): Promise<void>;
 };
 
-export class RybbitReactNative {
-  init(config: RybbitConfig): Promise<void>;
+export class HygoReactNative {
+  init(config: HygoConfig): Promise<void>;
   screen(name: string, properties?: TrackProperties, context?: TrackContext): Promise<void>;
   pageview(path?: string, context?: TrackContext): Promise<void>;
   event(name: string, properties?: TrackProperties, context?: TrackContext): Promise<void>;
@@ -71,5 +71,5 @@ export class RybbitReactNative {
   cleanup(): void;
 }
 
-declare const rybbit: RybbitReactNative;
-export default rybbit;
+declare const hygo: HygoReactNative;
+export default hygo;

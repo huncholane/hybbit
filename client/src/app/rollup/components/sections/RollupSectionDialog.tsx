@@ -1,5 +1,5 @@
 "use client";
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import {
   ColumnDef,
   createColumnHelper,

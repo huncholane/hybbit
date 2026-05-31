@@ -1,12 +1,12 @@
 ---
 title: Troubleshooting Proxy Setup
-description: Common issues and solutions for Rybbit proxy configurations
+description: Common issues and solutions for Hygo proxy configurations
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Steps } from 'fumadocs-ui/components/steps';
 
-This guide covers common issues you might encounter when setting up a Rybbit proxy and how to resolve them.
+This guide covers common issues you might encounter when setting up a Hygo proxy and how to resolve them.
 
 ## Script Loading Issues
 
@@ -35,7 +35,7 @@ Check your proxy rules are correctly configured:
 Ensure paths are correctly mapped:
 
 ```
-Your domain          →  Rybbit backend
+Your domain          →  Hygo backend
 -----------------        ---------------
 /analytics/script.js →  /api/script.js
 ```
@@ -47,10 +47,10 @@ Common mistakes:
 
 ### Test Direct Backend Access
 
-Verify Rybbit backend is accessible:
+Verify Hygo backend is accessible:
 
 ```bash
-curl -I https://app.rybbit.io/api/script.js
+curl -I https://app.hygo.ai/api/script.js
 ```
 
 Should return `HTTP/2 200` with `content-type: application/javascript`.
@@ -95,7 +95,7 @@ app.get('*', (req, res) => res.sendFile('index.html'));
 **Symptoms:**
 - Script loads successfully
 - No errors in console
-- No tracking data appears in Rybbit dashboard
+- No tracking data appears in Hygo dashboard
 - POST requests to `/analytics/track` fail or return errors
 
 **Solutions:**
@@ -115,7 +115,7 @@ Ensure tracking endpoints are configured:
 
 ### Check CORS Headers
 
-Tracking endpoints need proper CORS headers. Rybbit sets these automatically, but ensure your proxy preserves them:
+Tracking endpoints need proper CORS headers. Hygo sets these automatically, but ensure your proxy preserves them:
 
 ```nginx
 # Nginx - preserve CORS headers
@@ -128,7 +128,7 @@ proxy_pass_header Access-Control-Allow-Methods;
 // ❌ Wrong - blocks CORS
 app.use('/analytics', cors({ origin: 'https://yourdomain.com' }));
 
-// ✅ Correct - allow all origins (or use Rybbit's headers)
+// ✅ Correct - allow all origins (or use Hygo's headers)
 app.use('/analytics', cors({ origin: true }));
 ```
 
@@ -159,7 +159,7 @@ Ensure POST requests remain POST:
 proxy_method $request_method;
 
 # Or let it default (preserves method)
-proxy_pass https://app.rybbit.io;
+proxy_pass https://app.hygo.ai;
 ```
 
 </Steps>
@@ -190,7 +190,7 @@ proxy_set_header User-Agent $http_user_agent;
 
 **Caddy:**
 ```txt
-reverse_proxy https://app.rybbit.io {
+reverse_proxy https://app.hygo.ai {
     header_up X-Real-IP {remote_host}
     header_up X-Forwarded-For {remote_host}
 }
@@ -223,9 +223,9 @@ proxyHeaders.set('X-Real-IP', clientIp);
 - The bot reason mentions `bot asn`
 - Geolocation points to your CDN or proxy region, such as a Cloudflare Worker or AWS CloudFront edge location
 
-**Cause:** Rybbit is seeing the proxy IP instead of the original visitor IP. This is common when a first-party proxy is hosted on CDN or cloud infrastructure. Those networks use hosting/datacenter ASNs, so traffic can look like bot infrastructure if the visitor IP is not passed in a trusted way.
+**Cause:** Hygo is seeing the proxy IP instead of the original visitor IP. This is common when a first-party proxy is hosted on CDN or cloud infrastructure. Those networks use hosting/datacenter ASNs, so traffic can look like bot infrastructure if the visitor IP is not passed in a trusted way.
 
-Set `X-Forwarded-For` or `X-Real-IP` to the original visitor IP before forwarding the request to Rybbit. Rybbit reads those headers before the connecting edge IP.
+Set `X-Forwarded-For` or `X-Real-IP` to the original visitor IP before forwarding the request to Hygo. Hygo reads those headers before the connecting edge IP.
 
 **Cloudflare Workers:**
 
@@ -260,7 +260,7 @@ proxyHeaders.set('X-Forwarded-For', clientIp);
 // Next.js
 {
   source: '/analytics/replay.js',
-  destination: `${process.env.NEXT_PUBLIC_RYBBIT_HOST}/api/replay.js`,
+  destination: `${process.env.NEXT_PUBLIC_HYGO_HOST}/api/replay.js`,
 }
 ```
 
@@ -268,7 +268,7 @@ proxyHeaders.set('X-Forwarded-For', clientIp);
 ```javascript
 {
   source: '/analytics/session-replay/record/:siteId',
-  destination: `${process.env.NEXT_PUBLIC_RYBBIT_HOST}/api/session-replay/record/:siteId`,
+  destination: `${process.env.NEXT_PUBLIC_HYGO_HOST}/api/session-replay/record/:siteId`,
 }
 ```
 
@@ -280,7 +280,7 @@ Session replay can send large payloads (up to 10MB). Ensure your proxy allows th
 # Nginx
 location ~ ^/analytics/session-replay/record/ {
     client_max_body_size 10M;
-    proxy_pass https://app.rybbit.io;
+    proxy_pass https://app.hygo.ai;
 }
 ```
 
@@ -307,7 +307,7 @@ module.exports = {
 ### Stale Configuration (Settings Changes Not Applied)
 
 **Symptoms:**
-- Changed settings in Rybbit dashboard
+- Changed settings in Hygo dashboard
 - But tracking script still uses old settings
 - Takes a long time for changes to appear
 
@@ -321,7 +321,7 @@ module.exports = {
 # Nginx - cache for 5 minutes max
 location ~ ^/analytics/site/tracking-config/(.*)$ {
     proxy_cache_valid 200 5m;  # Not longer!
-    proxy_pass https://app.rybbit.io/api/site/tracking-config/$1;
+    proxy_pass https://app.hygo.ai/api/site/tracking-config/$1;
 }
 ```
 
@@ -332,12 +332,12 @@ location ~ ^/analytics/site/tracking-config/(.*)$ {
 sudo nginx -s reload
 
 # Or clear cache directory
-sudo rm -rf /var/cache/nginx/rybbit/*
+sudo rm -rf /var/cache/nginx/hygo/*
 ```
 
 ```javascript
 // Node.js/Express with node-cache
-cache.del(`rybbit_config_${siteId}`);
+cache.del(`hygo_config_${siteId}`);
 
 // Or flush all
 cache.flushAll();
@@ -349,7 +349,7 @@ cache.flushAll();
 # Nginx - no caching
 location ~ ^/analytics/site/tracking-config/(.*)$ {
     proxy_cache off;
-    proxy_pass https://app.rybbit.io/api/site/tracking-config/$1;
+    proxy_pass https://app.hygo.ai/api/site/tracking-config/$1;
 }
 ```
 
@@ -358,7 +358,7 @@ location ~ ^/analytics/site/tracking-config/(.*)$ {
 ### Script Updates Not Appearing
 
 **Symptoms:**
-- Rybbit released an update
+- Hygo released an update
 - Your site still loads old script version
 - Missing new features or bug fixes
 
@@ -377,7 +377,7 @@ proxy_cache_valid 200 1h;  # Not longer!
 
 ```bash
 # Nginx - purge cache
-sudo rm -rf /var/cache/nginx/rybbit/
+sudo rm -rf /var/cache/nginx/hygo/
 sudo nginx -s reload
 ```
 
@@ -397,7 +397,7 @@ sudo nginx -s reload
 // Next.js - revalidate on each deployment
 {
   source: '/analytics/script.js',
-  destination: `${rybbitHost}/api/script.js`,
+  destination: `${hygoHost}/api/script.js`,
   headers: [
     {
       key: 'Cache-Control',
@@ -428,14 +428,14 @@ Cache static scripts to reduce backend requests:
 
 ```nginx
 # Nginx with caching
-proxy_cache_path /var/cache/nginx/rybbit levels=1:2 keys_zone=rybbit:10m;
+proxy_cache_path /var/cache/nginx/hygo levels=1:2 keys_zone=hygo:10m;
 
 location = /analytics/script.js {
-    proxy_cache rybbit;
+    proxy_cache hygo;
     proxy_cache_valid 200 1h;
     proxy_cache_key "$scheme$request_method$host$request_uri";
     add_header X-Cache-Status $upstream_cache_status;
-    proxy_pass https://app.rybbit.io/api/script.js;
+    proxy_pass https://app.hygo.ai/api/script.js;
 }
 ```
 
@@ -489,8 +489,8 @@ gzip_types application/javascript;
 proxy_http_version 1.1;
 proxy_set_header Connection "";
 
-upstream rybbit {
-    server app.rybbit.io:443;
+upstream hygo {
+    server app.hygo.ai:443;
     keepalive 32;
 }
 ```
@@ -498,8 +498,8 @@ upstream rybbit {
 3. **Check backend connectivity**:
 
 ```bash
-# Test latency to Rybbit
-curl -w "@curl-format.txt" -o /dev/null -s https://app.rybbit.io/api/script.js
+# Test latency to Hygo
+curl -w "@curl-format.txt" -o /dev/null -s https://app.hygo.ai/api/script.js
 
 # Create curl-format.txt:
 # time_namelookup:  %{time_namelookup}s
@@ -509,7 +509,7 @@ curl -w "@curl-format.txt" -o /dev/null -s https://app.rybbit.io/api/script.js
 ```
 
 If backend is slow, consider:
-- Self-hosting Rybbit closer to your users
+- Self-hosting Hygo closer to your users
 - Using a CDN proxy
 - Caching more aggressively
 
@@ -545,7 +545,7 @@ async rewrites() {
 3. **Verify environment variable** is loaded:
 ```javascript
 async rewrites() {
-    console.log('RYBBIT_HOST:', process.env.NEXT_PUBLIC_RYBBIT_HOST);
+    console.log('HYGO_HOST:', process.env.NEXT_PUBLIC_HYGO_HOST);
     // Should log the URL
     return [...];
 }
@@ -566,7 +566,7 @@ proxy_ssl_server_name on;
 
 2. **Check DNS resolution**:
 ```bash
-nslookup app.rybbit.io
+nslookup app.hygo.ai
 ```
 
 3. **Check logs**:
@@ -576,7 +576,7 @@ sudo tail -f /var/log/nginx/error.log
 
 4. **Test backend directly**:
 ```bash
-curl -v https://app.rybbit.io/api/script.js
+curl -v https://app.hygo.ai/api/script.js
 ```
 
 ---
@@ -590,7 +590,7 @@ curl -v https://app.rybbit.io/api/script.js
 1. **Ensure `vercel.json` is committed**:
 ```bash
 git add vercel.json
-git commit -m "Add Rybbit proxy config"
+git commit -m "Add Hygo proxy config"
 git push
 ```
 
@@ -625,7 +625,7 @@ If you've tried everything and still have issues:
 2. **Check Network tab** for failed requests (note status codes)
 3. **Check server logs** for proxy errors
 4. **Test with curl** to isolate browser vs server issues
-5. **Verify directly** against `https://app.rybbit.io/api/script.js`
+5. **Verify directly** against `https://app.hygo.ai/api/script.js`
 
 **Gather this information before asking for help:**
 - Framework/platform you're using

@@ -1,31 +1,31 @@
 ---
 title: Laravel Proxy Setup
-description: Configure Laravel routes and middleware to proxy Rybbit tracking
+description: Configure Laravel routes and middleware to proxy Hygo tracking
 ---
 
 import { Steps } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
-Laravel makes it straightforward to proxy Rybbit tracking using routes and the HTTP client. This guide shows how to set up proxy endpoints in your Laravel application.
+Laravel makes it straightforward to proxy Hygo tracking using routes and the HTTP client. This guide shows how to set up proxy endpoints in your Laravel application.
 
 ## Overview
 
-Laravel's HTTP client (built on Guzzle) provides an elegant way to proxy requests to Rybbit servers while maintaining full control over headers, caching, and error handling.
+Laravel's HTTP client (built on Guzzle) provides an elegant way to proxy requests to Hygo servers while maintaining full control over headers, caching, and error handling.
 
 **What you'll achieve:**
-- Proxy all Rybbit endpoints through your Laravel app
+- Proxy all Hygo endpoints through your Laravel app
 - Forward necessary headers for accurate tracking
 - Optional caching with Laravel Cache
-- Support all Rybbit features
+- Support all Hygo features
 
 ## Prerequisites
 
 - Laravel 8 or later
-- Your Rybbit instance URL:
-  - **Cloud hosted**: `https://app.rybbit.io`
+- Your Hygo instance URL:
+  - **Cloud hosted**: `https://app.hygo.ai`
   - **Self-hosted**: Your instance URL
-- Your Rybbit site ID
+- Your Hygo site ID
 
 ## Implementation
 
@@ -33,12 +33,12 @@ Laravel's HTTP client (built on Guzzle) provides an elegant way to proxy request
 
 ### Configure Environment Variables
 
-Add your Rybbit host to `.env`:
+Add your Hygo host to `.env`:
 
 ```bash
 # .env
-RYBBIT_HOST=https://app.rybbit.io
-# For self-hosted: RYBBIT_HOST=https://analytics.yourcompany.com
+HYGO_HOST=https://app.hygo.ai
+# For self-hosted: HYGO_HOST=https://analytics.yourcompany.com
 ```
 
 ### Create Analytics Controller
@@ -63,11 +63,11 @@ use Illuminate\Support\Facades\Cache;
 
 class AnalyticsProxyController extends Controller
 {
-    private string $rybbitHost;
+    private string $hygoHost;
 
     public function __construct()
     {
-        $this->rybbitHost = config('services.rybbit.host', 'https://app.rybbit.io');
+        $this->hygoHost = config('services.hygo.host', 'https://app.hygo.ai');
     }
 
     /**
@@ -76,7 +76,7 @@ class AnalyticsProxyController extends Controller
     public function proxyScript(Request $request, string $script)
     {
         // Cache scripts for 1 hour
-        $cacheKey = "rybbit_script_{$script}";
+        $cacheKey = "hygo_script_{$script}";
 
         return Cache::remember($cacheKey, 3600, function () use ($script, $request) {
             return $this->forwardRequest("api/{$script}", 'GET', $request);
@@ -113,7 +113,7 @@ class AnalyticsProxyController extends Controller
     public function proxySiteConfig(Request $request, string $siteId)
     {
         // Cache config for 5 minutes
-        $cacheKey = "rybbit_config_{$siteId}";
+        $cacheKey = "hygo_config_{$siteId}";
 
         return Cache::remember($cacheKey, 300, function () use ($siteId, $request) {
             return $this->forwardRequest("api/site/tracking-config/{$siteId}", 'GET', $request);
@@ -121,11 +121,11 @@ class AnalyticsProxyController extends Controller
     }
 
     /**
-     * Forward request to Rybbit backend
+     * Forward request to Hygo backend
      */
     private function forwardRequest(string $path, string $method, Request $request)
     {
-        $url = "{$this->rybbitHost}/{$path}";
+        $url = "{$this->hygoHost}/{$path}";
 
         // Get client IP
         $clientIp = $request->header('X-Forwarded-For', $request->ip());
@@ -149,7 +149,7 @@ class AnalyticsProxyController extends Controller
             return response($response->body(), $response->status())
                 ->header('Content-Type', $response->header('Content-Type'));
         } catch (\Exception $e) {
-            \Log::error('Rybbit proxy error', [
+            \Log::error('Hygo proxy error', [
                 'url' => $url,
                 'error' => $e->getMessage(),
             ]);
@@ -188,7 +188,7 @@ Route::prefix('analytics')->group(function () {
 
 ### Add Service Configuration (Optional)
 
-Add Rybbit configuration to `config/services.php`:
+Add Hygo configuration to `config/services.php`:
 
 ```php
 <?php
@@ -197,8 +197,8 @@ Add Rybbit configuration to `config/services.php`:
 return [
     // ... other services
 
-    'rybbit' => [
-        'host' => env('RYBBIT_HOST', 'https://app.rybbit.io'),
+    'hygo' => [
+        'host' => env('HYGO_HOST', 'https://app.hygo.ai'),
     ],
 ];
 ```
@@ -215,7 +215,7 @@ Add the tracking script to your layout:
     <meta charset="UTF-8">
     <title>{{ config('app.name') }}</title>
 
-    {{-- Rybbit Analytics --}}
+    {{-- Hygo Analytics --}}
     <script src="{{ url('/analytics/script.js') }}" async data-site-id="YOUR_SITE_ID"></script>
 </head>
 <body>
@@ -233,16 +233,16 @@ Add the tracking script to your layout:
 
 2. **Visit your application** with Developer Tools open
 3. **Check Network tab**: Requests should go to `/analytics/*`
-4. **Verify in Rybbit dashboard**: Data should appear
+4. **Verify in Hygo dashboard**: Data should appear
 
 </Steps>
 
 ## How It Works
 
-Laravel routes intercept requests to `/analytics/*` and forward them to Rybbit:
+Laravel routes intercept requests to `/analytics/*` and forward them to Hygo:
 
 1. Request to `/analytics/script.js` hits Laravel route
-2. Controller forwards to `https://app.rybbit.io/api/script.js`
+2. Controller forwards to `https://app.hygo.ai/api/script.js`
 3. Response is cached (for cacheable endpoints)
 4. Client IP and headers are preserved for accurate tracking
 
@@ -371,7 +371,7 @@ public function proxySessionReplay(Request $request, string $siteId)
 {
     // Dispatch job for async processing
     ForwardAnalyticsData::dispatch(
-        "{$this->rybbitHost}/api/session-replay/record/{$siteId}",
+        "{$this->hygoHost}/api/session-replay/record/{$siteId}",
         $request->all(),
         [
             'X-Real-IP' => $request->ip(),
@@ -441,12 +441,12 @@ And add to HTTP request:
 
 ### Cache not clearing
 
-**Problem**: Old script cached after Rybbit update.
+**Problem**: Old script cached after Hygo update.
 
 **Solution**:
 Clear specific cache key:
 ```bash
-php artisan cache:forget rybbit_script_script.js
+php artisan cache:forget hygo_script_script.js
 ```
 
 Or clear all cache:
@@ -460,12 +460,12 @@ php artisan cache:clear
 
 ```php
 // Configure cache tags for easy clearing
-Cache::tags(['rybbit', 'scripts'])->remember($cacheKey, 3600, function () {
+Cache::tags(['hygo', 'scripts'])->remember($cacheKey, 3600, function () {
     // ... fetch script
 });
 
-// Clear all Rybbit cache
-Cache::tags(['rybbit'])->flush();
+// Clear all Hygo cache
+Cache::tags(['hygo'])->flush();
 ```
 
 ### HTTP Client Optimization
@@ -473,8 +473,8 @@ Cache::tags(['rybbit'])->flush();
 ```php
 // Use connection pooling
 Http::pool(fn (Pool $pool) => [
-    $pool->get("{$this->rybbitHost}/api/script.js"),
-    $pool->get("{$this->rybbitHost}/api/replay.js"),
+    $pool->get("{$this->hygoHost}/api/script.js"),
+    $pool->get("{$this->hygoHost}/api/replay.js"),
 ]);
 ```
 

@@ -1,27 +1,27 @@
 [Unit]
-Description=Rybbit Monitor Agent
-Documentation=https://github.com/rybbit/monitor-agent
+Description=Hygo Monitor Agent
+Documentation=https://github.com/hygo/monitor-agent
 After=network.target
 
 [Service]
 Type=simple
-User=rybbit
-Group=rybbit
-WorkingDirectory=/opt/rybbit-monitor-agent
-ExecStart=/usr/bin/node /opt/rybbit-monitor-agent/dist/index.js
+User=hygo
+Group=hygo
+WorkingDirectory=/opt/hygo-monitor-agent
+ExecStart=/usr/bin/node /opt/hygo-monitor-agent/dist/index.js
 Restart=always
 RestartSec=10
 
 # Environment
 Environment="NODE_ENV=production"
-EnvironmentFile=/opt/rybbit-monitor-agent/.env
+EnvironmentFile=/opt/hygo-monitor-agent/.env
 
 # Security
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/rybbit-monitor-agent/logs
+ReadWritePaths=/opt/hygo-monitor-agent/logs
 
 # Resource limits
 LimitNOFILE=65536
@@ -31,7 +31,7 @@ CPUQuota=100%
 # Logging
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=rybbit-monitor-agent
+SyslogIdentifier=hygo-monitor-agent
 
 [Install]
 WantedBy=multi-user.target

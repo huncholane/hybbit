@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Setup script for Rybbit Monitor Agent with systemd
+# Setup script for Hygo Monitor Agent with systemd
 # Run with sudo: sudo ./setup.sh
 
 set -e
@@ -12,9 +12,9 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Configuration
-INSTALL_DIR="/opt/rybbit-monitor-agent"
-SERVICE_USER="rybbit"
-SERVICE_NAME="rybbit-monitor-agent"
+INSTALL_DIR="/opt/hygo-monitor-agent"
+SERVICE_USER="hygo"
+SERVICE_NAME="hygo-monitor-agent"
 NODE_VERSION="20"
 
 # Functions
@@ -74,7 +74,7 @@ npm ci --production
 if [[ ! -f "$INSTALL_DIR/.env" ]]; then
     log_info "Creating environment file..."
     cat > "$INSTALL_DIR/.env" << EOF
-# Rybbit Monitor Agent Configuration
+# Hygo Monitor Agent Configuration
 NODE_ENV=production
 PORT=3000
 HOST=0.0.0.0
@@ -84,7 +84,7 @@ REGION=${REGION:-us-east}
 REGION_NAME=${REGION_NAME:-US East}
 
 # Main Server
-MAIN_SERVER_URL=https://your-rybbit-server.com
+MAIN_SERVER_URL=https://your-hygo-server.com
 
 # Security - IP Whitelist (comma-separated)
 # Leave empty to allow all IPs (not recommended for production)
@@ -110,7 +110,7 @@ chmod 600 "$INSTALL_DIR/.env"
 
 # Install systemd service
 log_info "Installing systemd service..."
-cp rybbit-monitor-agent.service /etc/systemd/system/
+cp hygo-monitor-agent.service /etc/systemd/system/
 systemctl daemon-reload
 
 # Enable and start service
@@ -133,7 +133,7 @@ fi
 
 # Setup log rotation
 log_info "Setting up log rotation..."
-cat > /etc/logrotate.d/rybbit-monitor-agent << EOF
+cat > /etc/logrotate.d/hygo-monitor-agent << EOF
 $INSTALL_DIR/logs/*.log {
     daily
     rotate 14
@@ -152,7 +152,7 @@ EOF
 # Setup firewall (if ufw is installed)
 if command -v ufw &> /dev/null; then
     log_info "Configuring firewall..."
-    ufw allow 3000/tcp comment "Rybbit Monitor Agent"
+    ufw allow 3000/tcp comment "Hygo Monitor Agent"
 fi
 
 log_info "Installation complete!"

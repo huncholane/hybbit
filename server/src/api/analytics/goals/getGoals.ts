@@ -5,7 +5,7 @@ import { clickhouse } from "../../../db/clickhouse/clickhouse.js";
 import { eq, desc, asc, sql } from "drizzle-orm";
 import { getTimeStatement, processResults, patternToRegex } from "../utils/utils.js";
 import SqlString from "sqlstring";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { getFilterStatement } from "../utils/getFilterStatement.js";
 
 // Types for the response

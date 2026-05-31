@@ -16,11 +16,11 @@ export default async function Layout({
     <DocsLayout
       tree={source.pageTree[locale]}
       {...baseOptions(locale)}
-      githubUrl="https://github.com/rybbit-io/rybbit"
+      githubUrl="https://github.com/hygo-ai/hygo"
       links={[
         {
           type: "custom",
-          children: <GithubInfo owner="rybbit-io" repo="rybbit" className="lg:-mx-2" />,
+          children: <GithubInfo owner="hygo-ai" repo="hygo" className="lg:-mx-2" />,
         },
       ]}
     >

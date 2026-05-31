@@ -64,7 +64,7 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Enable session replay",
     description:
-      "Add sessionReplay: true to your Rybbit script configuration, or install the @rybbit/replay package. That's all the setup required.",
+      "Add sessionReplay: true to your Hygo script configuration, or install the @hygo/replay package. That's all the setup required.",
   },
   {
     step: 2,
@@ -76,7 +76,7 @@ export const howItWorks: HowItWorksStep[] = [
     step: 3,
     title: "Sessions are captured automatically",
     description:
-      "Every user interaction — clicks, scrolls, page navigations, form inputs (masked), and custom events — is captured and sent to your Rybbit instance.",
+      "Every user interaction — clicks, scrolls, page navigations, form inputs (masked), and custom events — is captured and sent to your Hygo instance.",
   },
   {
     step: 4,
@@ -129,7 +129,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Is session replay enabled by default?",
     answer:
-      "No. Session replay is opt-in. You need to explicitly enable it by adding sessionReplay: true to your Rybbit configuration or installing the @rybbit/replay package.",
+      "No. Session replay is opt-in. You need to explicitly enable it by adding sessionReplay: true to your Hygo configuration or installing the @hygo/replay package.",
   },
   {
     question: "Does enabling session replay slow down my site?",
@@ -139,7 +139,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "How is this different from Hotjar or FullStory?",
     answer:
-      "Rybbit session replay is integrated directly into your analytics platform — no separate tool, no extra billing, and no data silos. It's also privacy-first with automatic input masking, and it's fully open source so you can self-host everything.",
+      "Hygo session replay is integrated directly into your analytics platform — no separate tool, no extra billing, and no data silos. It's also privacy-first with automatic input masking, and it's fully open source so you can self-host everything.",
   },
   {
     question: "Are form inputs recorded?",

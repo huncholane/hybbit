@@ -1,5 +1,5 @@
 "use client";
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { ResponsiveBar } from "@nivo/bar";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { DateTime } from "luxon";

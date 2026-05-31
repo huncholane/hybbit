@@ -53,13 +53,13 @@ export default function NotFound() {
           <p className="text-sm text-neutral-500 dark:text-neutral-400">{t("Need help? Check out our resources:")}</p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link
-              href="https://rybbit.com/docs"
+              href="https://hygo.ai/docs"
               className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 underline-offset-4 hover:underline"
             >
               {t("Documentation")}
             </Link>
             <Link
-              href="https://github.com/rybbit-io/rybbit"
+              href="https://github.com/hygo-ai/hygo"
               className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 underline-offset-4 hover:underline"
             >
               {t("GitHub")}

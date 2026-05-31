@@ -13,18 +13,18 @@ const tilt_wrap = Tilt_Warp({
 });
 
 export const metadata: Metadata = {
-  title: "Rybbit vs The Competition: Analytics Alternatives Compared",
+  title: "Hygo vs The Competition: Analytics Alternatives Compared",
   description:
-    "See how Rybbit compares to Google Analytics, Plausible, PostHog, Umami, Fathom, Simple Analytics, Matomo, and Cloudflare Analytics. Privacy-first, open-source web analytics.",
+    "See how Hygo compares to Google Analytics, Plausible, PostHog, Umami, Fathom, Simple Analytics, Matomo, and Cloudflare Analytics. Privacy-first, open-source web analytics.",
   openGraph: {
-    title: "Rybbit vs The Competition: Analytics Alternatives Compared",
+    title: "Hygo vs The Competition: Analytics Alternatives Compared",
     description:
-      "Side-by-side comparisons of Rybbit with every major analytics platform. Find the right tool for your team.",
+      "Side-by-side comparisons of Hygo with every major analytics platform. Find the right tool for your team.",
     type: "website",
-    url: "https://rybbit.com/compare",
+    url: "https://hygo.ai/compare",
     images: [
       createOGImageUrl(
-        "Rybbit vs The Competition",
+        "Hygo vs The Competition",
         "Side-by-side comparisons with every major analytics platform.",
         "Compare"
       ),
@@ -32,19 +32,19 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rybbit vs The Competition",
+    title: "Hygo vs The Competition",
     description:
-      "Compare Rybbit with Google Analytics, Plausible, PostHog, and more.",
+      "Compare Hygo with Google Analytics, Plausible, PostHog, and more.",
     images: [
       createOGImageUrl(
-        "Rybbit vs The Competition",
-        "Compare Rybbit with Google Analytics, Plausible, PostHog, and more.",
+        "Hygo vs The Competition",
+        "Compare Hygo with Google Analytics, Plausible, PostHog, and more.",
         "Compare"
       ),
     ],
   },
   alternates: {
-    canonical: "https://rybbit.com/compare",
+    canonical: "https://hygo.ai/compare",
   },
 };
 
@@ -94,14 +94,14 @@ const competitors = [
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "Rybbit Analytics Comparisons",
-  description: "Compare Rybbit with popular analytics platforms",
+  name: "Hygo Analytics Comparisons",
+  description: "Compare Hygo with popular analytics platforms",
   numberOfItems: competitors.length,
   itemListElement: competitors.map((c, i) => ({
     "@type": "ListItem",
     position: i + 1,
-    name: `Rybbit vs ${c.name}`,
-    url: `https://rybbit.com/compare/${c.slug}`,
+    name: `Hygo vs ${c.name}`,
+    url: `https://hygo.ai/compare/${c.slug}`,
   })),
 };
 
@@ -121,10 +121,10 @@ export default function ComparePage() {
               tilt_wrap.className
             )}
           >
-            Rybbit vs The Competition
+            Hygo vs The Competition
           </h1>
           <h2 className="relative z-10 text-base md:text-xl pt-4 md:pt-6 px-4 tracking-tight max-w-3xl text-center text-neutral-600 dark:text-neutral-300 font-light mx-auto">
-            See how Rybbit stacks up against every major analytics platform. Privacy-first, open source, and built for modern teams.
+            See how Hygo stacks up against every major analytics platform. Privacy-first, open source, and built for modern teams.
           </h2>
         </div>
 
@@ -139,7 +139,7 @@ export default function ComparePage() {
                 <div className="bg-neutral-50 dark:bg-neutral-900 backdrop-blur-sm rounded-2xl border border-neutral-300 dark:border-neutral-800 group-hover:border-emerald-500/20 dark:group-hover:border-emerald-500/10 p-6 h-full transition-colors">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold">
-                      Rybbit vs {competitor.name}
+                      Hygo vs {competitor.name}
                     </h3>
                     <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
                   </div>

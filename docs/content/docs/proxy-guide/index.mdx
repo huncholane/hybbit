@@ -1,6 +1,6 @@
 ---
 title: Proxy Setup Guide
-description: Bypass ad blockers and improve tracking accuracy by proxying Rybbit through your own domain
+description: Bypass ad blockers and improve tracking accuracy by proxying Hygo through your own domain
 ---
 
 import { Cards, Card } from 'fumadocs-ui/components/card';
@@ -15,25 +15,25 @@ import {
   SiVercel
 } from '@icons-pack/react-simple-icons';
 
-Proxying Rybbit's tracking script through your own domain helps bypass ad blockers and improves tracking accuracy by making all analytics requests appear as first-party traffic.
+Proxying Hygo's tracking script through your own domain helps bypass ad blockers and improves tracking accuracy by making all analytics requests appear as first-party traffic.
 
 ## What is Proxy Setup?
 
-When you add Rybbit's tracking script directly to your website using the default installation:
+When you add Hygo's tracking script directly to your website using the default installation:
 
 ```html
-<script src="https://app.rybbit.io/api/script.js" async data-site-id="YOUR_SITE_ID"></script>
+<script src="https://app.hygo.ai/api/script.js" async data-site-id="YOUR_SITE_ID"></script>
 ```
 
-The browser loads the script from `app.rybbit.io`, which ad blockers can identify and block as third-party analytics. Even though Rybbit is privacy-focused and doesn't use cookies, some ad blockers use aggressive blocking rules that target any analytics domains.
+The browser loads the script from `app.hygo.ai`, which ad blockers can identify and block as third-party analytics. Even though Hygo is privacy-focused and doesn't use cookies, some ad blockers use aggressive blocking rules that target any analytics domains.
 
 **Proxying solves this** by serving the tracking script and handling tracking requests through your own domain (e.g., `yourdomain.com/analytics/script.js`), making all tracking appear as first-party traffic.
 
 <Callout type="info">
-Rybbit is fully compliant with GDPR, CCPA, and other privacy regulations. It uses cookieless tracking based on IP + User Agent hashing with optional daily rotating salts. Proxying is about improving data accuracy, not circumventing privacy laws.
+Hygo is fully compliant with GDPR, CCPA, and other privacy regulations. It uses cookieless tracking based on IP + User Agent hashing with optional daily rotating salts. Proxying is about improving data accuracy, not circumventing privacy laws.
 </Callout>
 
-## Why Proxy Rybbit?
+## Why Proxy Hygo?
 
 ### Improve Tracking Accuracy
 
@@ -47,7 +47,7 @@ Ad blockers are becoming increasingly aggressive and may block analytics scripts
 
 Proxying doesn't compromise user privacy:
 
-- No cookies are used (Rybbit remains cookieless)
+- No cookies are used (Hygo remains cookieless)
 - User data is still processed according to your privacy policy
 - GDPR, CCPA, and other privacy regulations remain fully satisfied
 - Users can still opt out through browser settings or Do Not Track
@@ -62,29 +62,29 @@ With proper caching configuration, proxying can also improve performance:
 
 ## How It Works
 
-Here's the flow when you proxy Rybbit:
+Here's the flow when you proxy Hygo:
 
 1. **User visits your website**: Your HTML includes the tracking script from your domain
    ```html
    <script src="https://yourdomain.com/analytics/script.js" data-site-id="123"></script>
    ```
 
-2. **Script loads from your domain**: Your server proxies the request to Rybbit's servers
-   - Request: `yourdomain.com/analytics/script.js` → proxied to → `app.rybbit.io/api/script.js`
+2. **Script loads from your domain**: Your server proxies the request to Hygo's servers
+   - Request: `yourdomain.com/analytics/script.js` → proxied to → `app.hygo.ai/api/script.js`
 
-3. **Script auto-discovers analytics host**: The Rybbit script automatically detects the domain it was loaded from
+3. **Script auto-discovers analytics host**: The Hygo script automatically detects the domain it was loaded from
    ```typescript
    // The script extracts the host from its own src attribute
    const analyticsHost = src.split("/script.js")[0];
    // Result: "https://yourdomain.com/analytics"
    ```
 
-4. **Tracking data sent through your domain**: All analytics events are sent to your domain and proxied to Rybbit
-   - Event tracking: `yourdomain.com/analytics/track` → proxied to → `app.rybbit.io/api/track`
+4. **Tracking data sent through your domain**: All analytics events are sent to your domain and proxied to Hygo
+   - Event tracking: `yourdomain.com/analytics/track` → proxied to → `app.hygo.ai/api/track`
    - Session replay: `yourdomain.com/analytics/session-replay/record/{siteId}` → proxied
    - Configuration: `yourdomain.com/analytics/site/tracking-config/{siteId}` → proxied
 
-5. **Data appears in your Rybbit dashboard**: No changes needed in the Rybbit interface
+5. **Data appears in your Hygo dashboard**: No changes needed in the Hygo interface
 
 <Callout type="warn">
 **Bandwidth Consideration**: All tracking requests will flow through your server infrastructure, which will increase bandwidth usage. For most sites this is minimal (typically 10-50KB per session), but consider this when evaluating hosting costs.

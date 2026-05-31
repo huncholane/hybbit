@@ -1,15 +1,15 @@
 ---
 title: PrestaShop
-description: Integrate Rybbit Analytics with your PrestaShop store
+description: Integrate Hygo Analytics with your PrestaShop store
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-PrestaShop is a popular open-source e-commerce platform. Here's how to add Rybbit Analytics to track visitors and conversions on your PrestaShop store.
+PrestaShop is a popular open-source e-commerce platform. Here's how to add Hygo Analytics to track visitors and conversions on your PrestaShop store.
 
-## How to Add Rybbit to PrestaShop
+## How to Add Hygo to PrestaShop
 
 <Tabs items={['Back Office Settings', 'Theme Files']}>
 <Tab>
@@ -41,7 +41,7 @@ Depending on your PrestaShop version:
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   document.head.appendChild(s);
@@ -93,7 +93,7 @@ Open `head.tpl` and add the following before the closing `</head>` tag (or at th
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   document.head.appendChild(s);
@@ -124,10 +124,10 @@ To track completed purchases, add a script to the order confirmation page. Creat
 {if isset($order)}
 <script>
 (function() {
-  function waitForRybbit(callback, timeout) {
+  function waitForHygo(callback, timeout) {
     var start = Date.now();
     (function check() {
-      if (window.rybbit && typeof window.rybbit.event === 'function') {
+      if (window.hygo && typeof window.hygo.event === 'function') {
         callback();
       } else if (Date.now() - start < timeout) {
         setTimeout(check, 100);
@@ -135,8 +135,8 @@ To track completed purchases, add a script to the order confirmation page. Creat
     })();
   }
 
-  waitForRybbit(function() {
-    window.rybbit.event('purchase', {
+  waitForHygo(function() {
+    window.hygo.event('purchase', {
       transaction_id: '{$order.details.reference}',
       value: {$order.totals.total.amount},
       currency: '{$order.totals.total.currency}'

@@ -1,19 +1,19 @@
 ---
 title: Tracking script
-description: How to install and configure the Rybbit tracking script
+description: How to install and configure the Hygo tracking script
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
-To start tracking user activity on your website, add the Rybbit tracking script to your site's HTML.
+To start tracking user activity on your website, add the Hygo tracking script to your site's HTML.
 
 ## Installation
 The webpage should give you this script tag like this when you first add a website. Place it within the `<head>` section of your website. Include it on every page you wish to track.
 
 ```html
-<script src="https://app.rybbit.io/api/script.js" async data-site-id="YOUR_SITE_ID"></script>
+<script src="https://app.hygo.ai/api/script.js" async data-site-id="YOUR_SITE_ID"></script>
 ```
-If you are self-hosting Rybbit `app.rybbit.io` will be domain of your Rybbit instance.
+If you are self-hosting Hygo `app.hygo.ai` will be domain of your Hygo instance.
 
 <Callout type="info">
   **Bypass Ad Blockers**: Some ad blockers may block analytics scripts regardless of privacy compliance. To improve tracking accuracy, you can proxy the tracking script through your own domain. See our [Proxy Guide](/docs/proxy-guide) for setup instructions for Next.js, Nginx, Caddy, and more.
@@ -23,7 +23,7 @@ If you are self-hosting Rybbit `app.rybbit.io` will be domain of your Rybbit ins
 
 ### Site Settings Configuration
 
-Most tracking options are configured through your site settings in the Rybbit dashboard. The script automatically fetches these settings when it loads:
+Most tracking options are configured through your site settings in the Hygo dashboard. The script automatically fetches these settings when it loads:
 
 - **Automatic Initial Pageview**: Track the first pageview when the script loads
 - **SPA Navigation**: Automatically track navigation in single-page applications
@@ -46,12 +46,12 @@ These are the attributes you can pass to the script tag.
 
 ### Feature Flags
 
-The tracking script automatically evaluates client and both-runtime feature flags when it loads. Read evaluated flags from `window.rybbit` after the script is ready:
+The tracking script automatically evaluates client and both-runtime feature flags when it loads. Read evaluated flags from `window.hygo` after the script is ready:
 
 ```javascript
-window.rybbit.onReady((rybbit) => {
-  const enabled = rybbit.flag("new_checkout", false);
-  const config = rybbit.flagPayload("checkout_config", {});
+window.hygo.onReady((hygo) => {
+  const enabled = hygo.flag("new_checkout", false);
+  const config = hygo.flagPayload("checkout_config", {});
 });
 ```
 
@@ -118,7 +118,7 @@ data-mask-patterns='["re:^/users/\\d+/settings$"]'
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   defer
   data-site-id="456"
   data-skip-patterns='["/admin/**", "/preview/*"]'
@@ -145,7 +145,7 @@ Protect sensitive user information using these options:
 **Example - Comprehensive privacy setup:**
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   defer
   data-site-id="123"
   data-replay-block-selector=".admin-panel, #payment-modal"
@@ -220,7 +220,7 @@ data-replay-slim-dom-options="true"
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   defer
   data-site-id="456"
   data-skip-patterns='["/admin/**", "/preview/*"]'

@@ -6,11 +6,11 @@ description: Embed a compact live visitor widget on your own site
 import { Callout } from 'fumadocs-ui/components/callout';
 import { EmbedWidgetDemo } from '@/components/EmbedWidgetDemo';
 
-Widget Embeds let you place a compact live visitor widget on another site with a self-contained iframe. There is no script tag, no JavaScript on your site, and no dependency on the Rybbit tracking script.
+Widget Embeds let you place a compact live visitor widget on another site with a self-contained iframe. There is no script tag, no JavaScript on your site, and no dependency on the Hygo tracking script.
 
 ## Try It
 
-Configure the widget below to see how it'll look. The preview shows live data from [demo.rybbit.com](https://demo.rybbit.com).
+Configure the widget below to see how it'll look. The preview shows live data from [demo.hygo.ai](https://demo.hygo.ai).
 
 <EmbedWidgetDemo />
 
@@ -24,7 +24,7 @@ The widget needs a public read-only data endpoint, so you must enable **Widget E
 
 ## Setup
 
-1. Open your site in the Rybbit dashboard and click the settings icon.
+1. Open your site in the Hygo dashboard and click the settings icon.
 2. Go to the **Widget Embeds** tab.
 3. Toggle **Widget Enabled** on.
 4. Pick your options: variant, time window, theme, accent color, and display settings.
@@ -45,25 +45,25 @@ A self-contained dashboard card showing the live count, an optional bar chart of
 
 ### Inline Pill
 
-A compact pill that fits inline with your site's chrome, such as in a header or footer. It shows the pulsing dot, the live count over the last 30 minutes, and the Rybbit wordmark.
+A compact pill that fits inline with your site's chrome, such as in a header or footer. It shows the pulsing dot, the live count over the last 30 minutes, and the Hygo wordmark.
 
 ## Appearance
 
 - **Theme**: `dark` or `light`. The widget background is transparent, so rounded-corner edges blend into whatever sits behind the iframe.
-- **Accent color**: any hex color. Used for the pulsing live-indicator dot and the bar-chart bars. Defaults to Rybbit emerald.
+- **Accent color**: any hex color. Used for the pulsing live-indicator dot and the bar-chart bars. Defaults to Hygo emerald.
 
 ## Example
 
 ```html
 <iframe
-  src="https://app.rybbit.io/widget/YOUR_SITE_ID?variant=card&theme=dark&minutes=30&chart=true&countries=true"
+  src="https://app.hygo.ai/widget/YOUR_SITE_ID?variant=card&theme=dark&minutes=30&chart=true&countries=true"
   style="border: 0; width: 360px; height: 390px; max-width: 100%;"
   loading="lazy"
   title="Live visitors"
 ></iframe>
 ```
 
-If you self-host Rybbit, replace `app.rybbit.io` with your own domain.
+If you self-host Hygo, replace `app.hygo.ai` with your own domain.
 
 ## URL Parameters
 
@@ -80,4 +80,4 @@ You don't usually need to build the URL by hand because the dashboard generates 
 
 ## Caching
 
-The widget HTML and the underlying stats endpoint are both cached for 60 seconds on the server, so embedding the widget on a high-traffic page won't put pressure on your Rybbit instance. The visible count refreshes once per minute.
+The widget HTML and the underlying stats endpoint are both cached for 60 seconds on the server, so embedding the widget on a high-traffic page won't put pressure on your Hygo instance. The visible count refreshes once per minute.

@@ -64,13 +64,13 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Enable Web Vitals tracking",
     description:
-      "Add trackWebVitals: true to your Rybbit configuration. The tracking code uses the standard web-vitals library to measure CWV metrics.",
+      "Add trackWebVitals: true to your Hygo configuration. The tracking code uses the standard web-vitals library to measure CWV metrics.",
   },
   {
     step: 2,
     title: "Real user data is collected",
     description:
-      "As visitors browse your site, their actual LCP, FID/INP, and CLS values are measured and sent to Rybbit. No synthetic tests — real performance from real users.",
+      "As visitors browse your site, their actual LCP, FID/INP, and CLS values are measured and sent to Hygo. No synthetic tests — real performance from real users.",
   },
   {
     step: 3,
@@ -134,12 +134,12 @@ export const faqItems: FAQItem[] = [
   {
     question: "How does this differ from Lighthouse or PageSpeed Insights?",
     answer:
-      "Lighthouse and PageSpeed Insights run synthetic tests on a simulated device. Rybbit measures real user performance — actual LCP, FID, and CLS values from your visitors' real devices, browsers, and network conditions. This gives you a much more accurate picture.",
+      "Lighthouse and PageSpeed Insights run synthetic tests on a simulated device. Hygo measures real user performance — actual LCP, FID, and CLS values from your visitors' real devices, browsers, and network conditions. This gives you a much more accurate picture.",
   },
   {
     question: "Does tracking Web Vitals add overhead to my site?",
     answer:
-      "The overhead is negligible. Rybbit uses the standard web-vitals library which runs entirely in the browser and measures metrics that are already being calculated. The reporting payload is tiny.",
+      "The overhead is negligible. Hygo uses the standard web-vitals library which runs entirely in the browser and measures metrics that are already being calculated. The reporting payload is tiny.",
   },
   {
     question: "What percentiles are available?",
@@ -154,7 +154,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Is this available on all plans?",
     answer:
-      "Web Vitals monitoring is available on Rybbit Cloud plans. Self-hosted users can also enable this feature.",
+      "Web Vitals monitoring is available on Hygo Cloud plans. Self-hosted users can also enable this feature.",
   },
 ];
 

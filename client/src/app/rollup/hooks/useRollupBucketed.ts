@@ -1,4 +1,4 @@
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { useQueries } from "@tanstack/react-query";
 import {
   fetchOverviewBucketed,

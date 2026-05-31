@@ -1,5 +1,5 @@
 // Import and re-export shared types
-import type { Filter, FilterType, FilterParameter, TimeBucket, WebVitalMetric, PercentileLevel } from "@rybbit/shared";
+import type { Filter, FilterType, FilterParameter, TimeBucket, WebVitalMetric, PercentileLevel } from "@hygo/shared";
 
 // Re-export for other modules
 export { Filter, FilterType, FilterParameter, TimeBucket, WebVitalMetric, PercentileLevel };

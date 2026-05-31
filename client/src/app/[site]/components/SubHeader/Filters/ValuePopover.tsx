@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter } from "@rybbit/shared";
+import { Filter } from "@hygo/shared";
 import { HelpCircle, Plus } from "lucide-react";
 import { useExtracted } from "next-intl";
 import { useMemo, useState } from "react";

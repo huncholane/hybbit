@@ -53,7 +53,7 @@ class R2StorageService {
         requestHandler: httpHandler,
       });
 
-      this.bucketName = process.env.R2_BUCKET_NAME || "rybbit";
+      this.bucketName = process.env.R2_BUCKET_NAME || "hygo";
       this.enabled = true;
       this.logger.info({ bucket: this.bucketName }, "R2Storage initialized");
     } else {

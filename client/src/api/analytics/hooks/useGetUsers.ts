@@ -1,4 +1,4 @@
-import { Filter } from "@rybbit/shared";
+import { Filter } from "@hygo/shared";
 import { useQuery } from "@tanstack/react-query";
 import { getFilteredFilters, useStore } from "../../../lib/store";
 import { USER_PAGE_FILTERS } from "../../../lib/filterGroups";

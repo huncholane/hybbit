@@ -46,9 +46,9 @@ export function VersionCheck() {
             }}
             className="flex items-center gap-3 bg-white dark:bg-neutral-850 border border-neutral-150 dark:border-neutral-850 rounded-lg shadow-lg py-2 px-3 text-sm"
           >
-            <span>{t("Rybbit v{latest} is available (you're on v{current})", { latest: latestVersion, current })}</span>
+            <span>{t("Hygo v{latest} is available (you're on v{current})", { latest: latestVersion, current })}</span>
             <a
-              href="https://rybbit.com/docs/managing-your-installation#updating-your-installation"
+              href="https://hygo.ai/docs/managing-your-installation#updating-your-installation"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -78,13 +78,13 @@ async function fetchLatestVersion(): Promise<string | null> {
   sessionStorage.setItem(VERSION_CHECK_DONE_KEY, "1");
 
   try {
-    const res = await fetch("https://app.rybbit.io/api/version");
+    const res = await fetch("https://app.hygo.ai/api/version");
     if (!res.ok) return null;
 
     const data = (await res.json()) as { version?: string };
     return data.version ?? null;
   } catch {
-    // Silently ignore - user may be offline or app.rybbit.io unreachable
+    // Silently ignore - user may be offline or app.hygo.ai unreachable
     return null;
   }
 }

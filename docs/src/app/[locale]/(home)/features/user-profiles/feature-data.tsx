@@ -28,7 +28,7 @@ export const capabilities: FeatureCapability[] = [
     icon: <UserCheck className="w-5 h-5" />,
     title: "User identification",
     description:
-      "Identify users by calling rybbit.identify(). Link anonymous sessions to known users when they log in or sign up.",
+      "Identify users by calling hygo.identify(). Link anonymous sessions to known users when they log in or sign up.",
   },
   {
     icon: <History className="w-5 h-5" />,
@@ -85,13 +85,13 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Track events normally",
     description:
-      "Rybbit tracks pageviews and events automatically. Anonymous visitors are tracked with privacy-friendly session identifiers.",
+      "Hygo tracks pageviews and events automatically. Anonymous visitors are tracked with privacy-friendly session identifiers.",
   },
   {
     step: 2,
     title: "Call identify() on login or signup",
     description:
-      "When a user logs in or signs up, call rybbit.identify({ userId: 'user-123', traits: { plan: 'pro' } }). Previous anonymous sessions are automatically linked.",
+      "When a user logs in or signs up, call hygo.identify({ userId: 'user-123', traits: { plan: 'pro' } }). Previous anonymous sessions are automatically linked.",
   },
   {
     step: 3,
@@ -155,12 +155,12 @@ export const faqItems: FAQItem[] = [
   {
     question: "Is user identification GDPR-compliant?",
     answer:
-      "Yes. User identification in Rybbit is opt-in — you control exactly when and what data is attached to a user profile. No fingerprinting or cross-site tracking is used. You choose what personal data (if any) to include.",
+      "Yes. User identification in Hygo is opt-in — you control exactly when and what data is attached to a user profile. No fingerprinting or cross-site tracking is used. You choose what personal data (if any) to include.",
   },
   {
     question: "How is this different from Google Analytics user tracking?",
     answer:
-      "Google Analytics uses cookies and cross-site tracking by default. Rybbit only identifies users when you explicitly call identify() with the data you choose to send. There's no passive surveillance or third-party data sharing.",
+      "Google Analytics uses cookies and cross-site tracking by default. Hygo only identifies users when you explicitly call identify() with the data you choose to send. There's no passive surveillance or third-party data sharing.",
   },
   {
     question: "Can I attach custom properties to users?",

@@ -233,7 +233,7 @@ export function PricingSection({ isAnnual, setIsAnnual }: { isAnnual: boolean, s
                 )
               }
               buttonText={standardPrices.custom ? t("Contact us") : t("Start for $0")}
-              buttonHref={standardPrices.custom ? "https://www.rybbit.com/contact" : "https://app.rybbit.io/signup"}
+              buttonHref={standardPrices.custom ? "https://www.hygo.ai/contact" : "https://app.hygo.ai/signup"}
               features={STANDARD_FEATURES}
               eventLocation={standardPrices.custom ? undefined : "standard"}
             />
@@ -256,7 +256,7 @@ export function PricingSection({ isAnnual, setIsAnnual }: { isAnnual: boolean, s
                 )
               }
               buttonText={proPrices.custom ? t("Contact us") : t("Start for $0")}
-              buttonHref={proPrices.custom ? "https://www.rybbit.com/contact" : "https://app.rybbit.io/signup"}
+              buttonHref={proPrices.custom ? "https://www.hygo.ai/contact" : "https://app.hygo.ai/signup"}
               features={PRO_FEATURES}
               eventLocation={proPrices.custom ? undefined : "pro"}
               recommended={true}
@@ -270,7 +270,7 @@ export function PricingSection({ isAnnual, setIsAnnual }: { isAnnual: boolean, s
               priceDisplay={<div className="text-3xl font-bold">{t("Custom")}</div>}
               features={ENTERPRISE_FEATURES}
               buttonText={t("Contact us")}
-              buttonHref={"https://www.rybbit.com/contact"}
+              buttonHref={"https://www.hygo.ai/contact"}
             />
           );
 

@@ -1,4 +1,4 @@
-import { Filter } from "@rybbit/shared";
+import { Filter } from "@hygo/shared";
 import { exportPdfReport } from "../../../../../api/analytics/endpoints";
 import { getStartAndEndDate } from "../../../../../api/utils";
 import { Time } from "../../../../../components/DateSelector/types";

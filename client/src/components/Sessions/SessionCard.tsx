@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { addFilter, getTimezone } from "@/lib/store";
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import { ArrowRight, ChevronDown, ChevronRight, Video } from "lucide-react";
 import { DateTime } from "luxon";
 import { useExtracted } from "next-intl";

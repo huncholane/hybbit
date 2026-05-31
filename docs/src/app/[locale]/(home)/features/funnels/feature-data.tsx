@@ -64,7 +64,7 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Track your events",
     description:
-      "Rybbit automatically tracks pageviews. For custom events like signups or purchases, add a single line of code with rybbit.event().",
+      "Hygo automatically tracks pageviews. For custom events like signups or purchases, add a single line of code with hygo.event().",
   },
   {
     step: 2,

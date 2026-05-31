@@ -1,9 +1,9 @@
 ---
 title: Track Events
-description: How to track custom events with Rybbit
+description: How to track custom events with Hygo
 ---
 
-The script exposes a global object `window.rybbit` with functions for manual tracking of events, as well as the ability to track events using data attributes on HTML elements.
+The script exposes a global object `window.hygo` with functions for manual tracking of events, as well as the ability to track events using data attributes on HTML elements.
 
 ## Using Data Attributes
 
@@ -11,13 +11,13 @@ You can track custom events by adding data attributes to any HTML element:
 
 ```html
 <!-- Basic event tracking -->
-<button data-rybbit-event="signup_clicked">Sign Up</button>
+<button data-hygo-event="signup_clicked">Sign Up</button>
 
 <!-- Event with custom properties -->
 <button
-  data-rybbit-event="purchase_click"
-  data-rybbit-prop-product="premium"
-  data-rybbit-prop-price="49.99"
+  data-hygo-event="purchase_click"
+  data-hygo-prop-product="premium"
+  data-hygo-prop-price="49.99"
 >
   Buy Now
 </button>
@@ -27,7 +27,7 @@ This approach requires no JavaScript and works on any clickable element.
 
 ## Available Functions
 
-### `window.rybbit.event(eventName, properties)`
+### `window.hygo.event(eventName, properties)`
 
 Tracks a custom event with optional properties.
 
@@ -36,31 +36,31 @@ Tracks a custom event with optional properties.
 
 ```javascript
 // Track a simple custom event
-window.rybbit.event("Signup Button Clicked");
+window.hygo.event("Signup Button Clicked");
 
 // Track a custom event with properties
-window.rybbit.event("Item Added To Cart", {
+window.hygo.event("Item Added To Cart", {
   itemId: "PROD123",
   price: 49.99,
   category: "Clothing"
 });
 ```
 
-### `window.rybbit.pageview()`
+### `window.hygo.pageview()`
 
 Tracks a pageview. Useful when `data-track-spa` is set to `"false"` or when you need to manually trigger a pageview.
 
 ```javascript
 // Track a pageview
-window.rybbit.pageview();
+window.hygo.pageview();
 ```
 
 ## TypeScript Support
 
-Put this as `rybbit.d.ts` anywhere in your project to avoid having to do `(window as any).rybbit.event()` everywhere.
+Put this as `hygo.d.ts` anywhere in your project to avoid having to do `(window as any).hygo.event()` everywhere.
 
 ```typescript
-interface Rybbit {
+interface Hygo {
     /**
      * Tracks a page view
      */
@@ -134,14 +134,14 @@ interface Rybbit {
     /**
      * Runs a callback once the tracking script and feature flags are ready.
      * Use this before reading flags during page initialization.
-     * @param callback Receives the ready rybbit instance
+     * @param callback Receives the ready hygo instance
      */
-    onReady: (callback: (rybbit: Rybbit) => void) => void;
+    onReady: (callback: (hygo: Hygo) => void) => void;
 }
 
 declare global {
     interface Window {
-        rybbit: Rybbit;
+        hygo: Hygo;
     }
 }
 

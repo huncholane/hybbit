@@ -1,19 +1,19 @@
 ---
 title: Tagging
-description: How to use tags to label and segment analytics data in Rybbit
+description: How to use tags to label and segment analytics data in Hygo
 ---
 
 Tags let you label all events from a script instance with a string identifier. This is useful for A/B testing, deploy labeling, cohort segmentation, and any scenario where you want to slice your analytics by a custom dimension that applies to the entire page.
 
-If you need Rybbit to choose a value at runtime, gradually roll out a feature, or serve remote config, use [Feature Flags](/docs/feature-flags) instead.
+If you need Hygo to choose a value at runtime, gradually roll out a feature, or serve remote config, use [Feature Flags](/docs/feature-flags) instead.
 
 ## How It Works
 
-Add a `data-tag` attribute to your Rybbit script tag. Every event (pageviews, custom events, outbound clicks, etc.) sent from that page will include the tag value, which is stored in ClickHouse and available as a filter in the dashboard.
+Add a `data-tag` attribute to your Hygo script tag. Every event (pageviews, custom events, outbound clicks, etc.) sent from that page will include the tag value, which is stored in ClickHouse and available as a filter in the dashboard.
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   async
   data-site-id="YOUR_SITE_ID"
   data-tag="variant-a"
@@ -30,10 +30,10 @@ Serve different script tags to different user groups and compare behavior:
 
 ```html
 <!-- Variant A -->
-<script src="https://app.rybbit.io/api/script.js" async data-site-id="1" data-tag="homepage-v2-a"></script>
+<script src="https://app.hygo.ai/api/script.js" async data-site-id="1" data-tag="homepage-v2-a"></script>
 
 <!-- Variant B -->
-<script src="https://app.rybbit.io/api/script.js" async data-site-id="1" data-tag="homepage-v2-b"></script>
+<script src="https://app.hygo.ai/api/script.js" async data-site-id="1" data-tag="homepage-v2-b"></script>
 ```
 
 Then filter by tag in the dashboard to compare metrics between variants.
@@ -44,7 +44,7 @@ Tag events with the current deploy version to correlate releases with changes in
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   async
   data-site-id="1"
   data-tag="v2.4.1"
@@ -57,7 +57,7 @@ Label traffic from different sources, campaigns, or user segments:
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   async
   data-site-id="1"
   data-tag="beta-users"

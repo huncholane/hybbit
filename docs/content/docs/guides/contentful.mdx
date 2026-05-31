@@ -1,17 +1,17 @@
 ---
 title: Contentful
-description: Integrate Rybbit Analytics with your Contentful-powered website
+description: Integrate Hygo Analytics with your Contentful-powered website
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Contentful is an enterprise headless CMS that delivers content via API. Since Contentful is headless, you'll add Rybbit Analytics to your frontend application rather than to Contentful itself.
+Contentful is an enterprise headless CMS that delivers content via API. Since Contentful is headless, you'll add Hygo Analytics to your frontend application rather than to Contentful itself.
 
 <Callout type="info">
 Contentful only manages and delivers your content - it doesn't serve your website. The tracking script goes in your frontend framework (Next.js, Gatsby, Nuxt, etc.).
 </Callout>
 
-## How to Add Rybbit with Contentful
+## How to Add Hygo with Contentful
 
 Choose the guide that matches your frontend framework:
 
@@ -47,7 +47,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
-          src="https://app.rybbit.io/api/script.js"
+          src="https://app.hygo.ai/api/script.js"
           data-site-id="YOUR_SITE_ID"
           strategy="afterInteractive"
         />
@@ -58,7 +58,7 @@ export default function RootLayout({
 }
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 
 ## Quick Example: Gatsby with Contentful
 
@@ -70,8 +70,8 @@ import React from 'react'
 export const onRenderBody = ({ setHeadComponents }) => {
   setHeadComponents([
     <script
-      key="rybbit"
-      src="https://app.rybbit.io/api/script.js"
+      key="hygo"
+      src="https://app.hygo.ai/api/script.js"
       data-site-id="YOUR_SITE_ID"
       defer
     />

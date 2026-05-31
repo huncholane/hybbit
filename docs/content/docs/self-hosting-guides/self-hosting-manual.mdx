@@ -1,6 +1,6 @@
 ---
 title: Manual Docker Compose setup
-description: Manual setup guide for Rybbit using Docker Compose without the setup script
+description: Manual setup guide for Hygo using Docker Compose without the setup script
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
@@ -8,7 +8,7 @@ import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
 
-This guide is for users who want to manually set up Rybbit using Docker Compose without the setup script. This is useful if you already have a reverse proxy setup (like Nginx, Traefik, or Coolify), or if you want more control over the configuration.
+This guide is for users who want to manually set up Hygo using Docker Compose without the setup script. This is useful if you already have a reverse proxy setup (like Nginx, Traefik, or Coolify), or if you want more control over the configuration.
 
 ## Prerequisites
 
@@ -23,8 +23,8 @@ This guide is for users who want to manually set up Rybbit using Docker Compose 
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/rybbit-io/rybbit.git
-cd rybbit
+git clone https://github.com/hygo-ai/hygo.git
+cd hygo
 ```
 </Step>
 
@@ -166,16 +166,16 @@ services:
   backend:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rybbit-api.rule=Host(`your.domain.com`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.rybbit-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.rybbit-api.loadbalancer.server.port=3001"
+      - "traefik.http.routers.hygo-api.rule=Host(`your.domain.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.hygo-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.hygo-api.loadbalancer.server.port=3001"
   
   client:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rybbit-client.rule=Host(`your.domain.com`)"
-      - "traefik.http.routers.rybbit-client.tls.certresolver=letsencrypt"
-      - "traefik.http.services.rybbit-client.loadbalancer.server.port=3002"
+      - "traefik.http.routers.hygo-client.rule=Host(`your.domain.com`)"
+      - "traefik.http.routers.hygo-client.tls.certresolver=letsencrypt"
+      - "traefik.http.services.hygo-client.loadbalancer.server.port=3002"
 ```
 </Tab>
 </Tabs>
@@ -216,7 +216,7 @@ Navigate to `https://your.domain.com/signup` and create your admin account.
 
 ## Service Architecture
 
-Rybbit consists of these services:
+Hygo consists of these services:
 
 - **client**: Next.js frontend (port 3002)
 - **backend**: Node.js API server (port 3001)
@@ -303,7 +303,7 @@ services:
       - traefik.enable=false
 
   backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:${IMAGE_TAG:-latest}
+    image: ghcr.io/hygo-ai/hygo-backend:${IMAGE_TAG:-latest}
     container_name: backend
     environment:
       - NODE_ENV=production
@@ -344,17 +344,17 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=coolify
-      - traefik.http.routers.rybbit-backend.entrypoints=https
-      - traefik.http.routers.rybbit-backend.tls=true
-      - traefik.http.routers.rybbit-backend.rule=Host(`${DOMAIN_NAME}`) && (Path(`/api`) || PathPrefix(`/api/`))
-      - traefik.http.services.rybbit-backend.loadbalancer.server.port=3001
-      - traefik.http.routers.rybbit-backend.priority=100
-      - traefik.http.middlewares.rybbit-forward-headers.headers.customrequestheaders.X-Forwarded-Proto=https
-      - traefik.http.middlewares.rybbit-forward-headers.headers.customrequestheaders.X-Forwarded-Host=${DOMAIN_NAME}
-      - traefik.http.routers.rybbit-backend.middlewares=rybbit-forward-headers
+      - traefik.http.routers.hygo-backend.entrypoints=https
+      - traefik.http.routers.hygo-backend.tls=true
+      - traefik.http.routers.hygo-backend.rule=Host(`${DOMAIN_NAME}`) && (Path(`/api`) || PathPrefix(`/api/`))
+      - traefik.http.services.hygo-backend.loadbalancer.server.port=3001
+      - traefik.http.routers.hygo-backend.priority=100
+      - traefik.http.middlewares.hygo-forward-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.hygo-forward-headers.headers.customrequestheaders.X-Forwarded-Host=${DOMAIN_NAME}
+      - traefik.http.routers.hygo-backend.middlewares=hygo-forward-headers
 
   client:
-    image: ghcr.io/rybbit-io/rybbit-client:${IMAGE_TAG:-latest}
+    image: ghcr.io/hygo-ai/hygo-client:${IMAGE_TAG:-latest}
     container_name: client
     environment:
       - NODE_ENV=production
@@ -367,11 +367,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=coolify
-      - traefik.http.routers.rybbit-client.entrypoints=https
-      - traefik.http.routers.rybbit-client.tls=true
-      - traefik.http.routers.rybbit-client.rule=Host(`${DOMAIN_NAME}`)
-      - traefik.http.services.rybbit-client.loadbalancer.server.port=3002
-      - traefik.http.routers.rybbit-client.priority=10
+      - traefik.http.routers.hygo-client.entrypoints=https
+      - traefik.http.routers.hygo-client.tls=true
+      - traefik.http.routers.hygo-client.rule=Host(`${DOMAIN_NAME}`)
+      - traefik.http.services.hygo-client.loadbalancer.server.port=3002
+      - traefik.http.routers.hygo-client.priority=10
 
 volumes:
   clickhouse-data:
@@ -425,7 +425,7 @@ configs:
       </clickhouse>
 ```
 
-To deploy Rybbit on Coolify, you need to:
+To deploy Hygo on Coolify, you need to:
 1. Create a new project and resource using `docker-compose.yaml` file provided above
 2. Make sure "Escape special characters in labels" option is unchecked when adding docker-compose file so that env variables in labels are read properly
 3. Set the environment variables in Coolify's interface
@@ -448,8 +448,8 @@ Note: you don't need to add a domain for `backend` service in Coolify since clie
 ### Database Persistence
 
 Data is automatically persisted in Docker volumes:
-- `rybbit_clickhouse-data`: Analytics data
-- `rybbit_postgres-data`: User accounts and site configurations
+- `hygo_clickhouse-data`: Analytics data
+- `hygo_postgres-data`: User accounts and site configurations
 
 ## Advanced Configurations
 
@@ -458,7 +458,7 @@ For specific reverse proxy setups, see our detailed guides:
 - **[Custom Nginx Setup](/docs/self-hosting-guides/custom-nginx)** - Complete Nginx configuration with SSL
 - **[Nginx Proxy Manager](/docs/self-hosting-guides/nginx-proxy-manager)** - NPM setup without port exposure
 
-These guides provide step-by-step instructions for integrating Rybbit with your existing infrastructure.
+These guides provide step-by-step instructions for integrating Hygo with your existing infrastructure.
 
 ## Troubleshooting
 

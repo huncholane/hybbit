@@ -13,25 +13,25 @@ const tilt_wrap = Tilt_Warp({
 });
 
 export const metadata: Metadata = {
-  title: "Affiliate Program - Rybbit Analytics",
+  title: "Affiliate Program - Hygo Analytics",
   description:
-    "Earn 50% recurring commission for 12 months by referring customers to Rybbit, the open-source privacy-first analytics platform.",
+    "Earn 50% recurring commission for 12 months by referring customers to Hygo, the open-source privacy-first analytics platform.",
   openGraph: {
-    title: "Rybbit Affiliate Program",
+    title: "Hygo Affiliate Program",
     description:
-      "Earn 50% recurring commission for 12 months by referring customers to Rybbit.",
+      "Earn 50% recurring commission for 12 months by referring customers to Hygo.",
     type: "website",
-    url: "https://rybbit.com/affiliate",
-    images: [createOGImageUrl("Rybbit Affiliate Program", "Earn 50% recurring commission for 12 months by referring customers to Rybbit.")],
+    url: "https://hygo.ai/affiliate",
+    images: [createOGImageUrl("Hygo Affiliate Program", "Earn 50% recurring commission for 12 months by referring customers to Hygo.")],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rybbit Affiliate Program",
-    description: "Earn 50% recurring commission for 12 months by referring customers to Rybbit.",
-    images: [createOGImageUrl("Rybbit Affiliate Program", "Earn 50% recurring commission for 12 months by referring customers to Rybbit.")],
+    title: "Hygo Affiliate Program",
+    description: "Earn 50% recurring commission for 12 months by referring customers to Hygo.",
+    images: [createOGImageUrl("Hygo Affiliate Program", "Earn 50% recurring commission for 12 months by referring customers to Hygo.")],
   },
   alternates: {
-    canonical: "https://rybbit.com/affiliate",
+    canonical: "https://hygo.ai/affiliate",
   },
 };
 
@@ -70,13 +70,13 @@ export default function AffiliatePage() {
           {t("50% Affiliate Program")}
         </h1>
         <h2 className="relative z-10 text-base md:text-xl pt-4 md:pt-6 px-4 tracking-tight max-w-4xl text-center text-neutral-600 dark:text-neutral-300 font-light">
-          {t("Earn 50% recurring commission for 12 months by referring customers to Rybbit.")}
+          {t("Earn 50% recurring commission for 12 months by referring customers to Hygo.")}
         </h2>
 
         <div className="relative z-10 flex flex-col items-center my-8 md:my-10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 text-base md:text-lg px-4">
             <TrackedButton
-              href="https://rybbit.getrewardful.com/signup"
+              href="https://hygo.getrewardful.com/signup"
               eventName="affiliate_signup_click"
               eventProps={{
                 location: "hero",

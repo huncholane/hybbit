@@ -1,4 +1,4 @@
-import type { TimeBucket } from "@rybbit/shared";
+import type { TimeBucket } from "@hygo/shared";
 import { DateTime } from "luxon";
 
 import type { Time } from "@/components/DateSelector/types";

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "AI-powered tool to generate click-worthy SEO titles. Free, unlimited use. Optimize your title tags for better search engine rankings.",
     type: "website",
-    url: "https://rybbit.com/tools/seo-title-generator",
+    url: "https://hygo.ai/tools/seo-title-generator",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Generate optimized SEO titles with AI in seconds. Free tool with unlimited use.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/seo-title-generator",
+    canonical: "https://hygo.ai/tools/seo-title-generator",
   },
 };
 
@@ -44,7 +44,7 @@ const structuredData = {
         "Real-time optimization",
       ],
       operatingSystem: "Any",
-      url: "https://rybbit.com/tools/seo-title-generator",
+      url: "https://hygo.ai/tools/seo-title-generator",
     },
     {
       "@type": "FAQPage",
@@ -70,7 +70,7 @@ const structuredData = {
           name: "How do I track title performance?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Use analytics to track CTR from search results. Tools like Rybbit can show you which pages get the most organic traffic, helping you identify successful titles and opportunities for improvement.",
+            text: "Use analytics to track CTR from search results. Tools like Hygo can show you which pages get the most organic traffic, helping you identify successful titles and opportunities for improvement.",
           },
         },
         {
@@ -197,8 +197,8 @@ const faqs = [
     answer: (
       <>
         Use analytics to track CTR from search results. Tools like{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo
         </Link>{" "}
         can show you which pages get the most organic traffic, helping you identify successful titles and opportunities
         for improvement.
@@ -228,7 +228,7 @@ export default function SEOTitleGeneratorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="seo"
-      ctaTitle="Track your SEO performance with Rybbit"
+      ctaTitle="Track your SEO performance with Hygo"
       ctaDescription="Monitor organic traffic, CTR, and page performance in real-time."
       ctaEventLocation="seo_title_generator_cta"
       structuredData={structuredData}

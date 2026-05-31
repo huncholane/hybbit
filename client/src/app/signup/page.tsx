@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { parseAsInteger, useQueryState } from "nuqs";
 import React, { Suspense, useState } from "react";
 import { addSite } from "../../api/admin/endpoints";
-import { RybbitLogo, RybbitTextLogo } from "../../components/RybbitLogo";
+import { HygoLogo, HygoTextLogo } from "../../components/HygoLogo";
 
 import { useSetPageTitle } from "../../hooks/useSetPageTitle";
 import { authClient } from "../../lib/auth";
@@ -144,7 +144,7 @@ function SignupPageContent() {
       await authClient.organization.setActive({ organizationId: data.id });
 
       if (IS_CLOUD && referralSource && userStore.getState().user?.id) {
-        window.rybbit?.identify(userStore.getState().user?.id || "", {
+        window.hygo?.identify(userStore.getState().user?.id || "", {
           source: referralSource,
         });
       }
@@ -285,7 +285,7 @@ function SignupPageContent() {
       <div className="flex justify-center items-center h-dvh w-full">
         <Card className="w-full max-w-sm p-1">
           <CardHeader>
-            <RybbitLogo width={32} height={32} />
+            <HygoLogo width={32} height={32} />
             <CardTitle className="text-2xl flex justify-center">{t("Sign Up Disabled")}</CardTitle>
           </CardHeader>
           <CardContent>
@@ -309,15 +309,15 @@ function SignupPageContent() {
       <div className="w-full max-w-[550px] flex flex-col p-6 lg:p-10">
         {/* Logo */}
         <div className="mb-8">
-          <a href="https://rybbit.com" target="_blank" className="inline-block">
-            <RybbitTextLogo />
+          <a href="https://hygo.ai" target="_blank" className="inline-block">
+            <HygoTextLogo />
           </a>
         </div>
 
         <div className="flex-1 flex flex-col justify-center w-full max-w-[550px] mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-medium">
-              {IS_CLOUD ? t("Start your 7-day free trial") : t("Get started with Rybbit")}
+              {IS_CLOUD ? t("Start your 7-day free trial") : t("Get started with Hygo")}
             </h1>
             {IS_CLOUD && (
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3">
@@ -376,12 +376,12 @@ function SignupPageContent() {
         {!IS_CLOUD && (
           <div className="text-xs text-muted-foreground mt-8">
             <a
-              href="https://rybbit.com"
+              href="https://hygo.ai"
               target="_blank"
               rel="noopener"
-              title="Rybbit - Open Source Privacy-Focused Web Analytics"
+              title="Hygo - Open Source Privacy-Focused Web Analytics"
             >
-              {t("Open source web analytics powered by Rybbit")}
+              {t("Open source web analytics powered by Hygo")}
             </a>
           </div>
         )}

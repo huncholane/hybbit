@@ -9,7 +9,7 @@ import { useExtracted } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { RybbitLogo } from "../../components/RybbitLogo";
+import { HygoLogo } from "../../components/HygoLogo";
 import { useSetPageTitle } from "../../hooks/useSetPageTitle";
 import { authClient } from "../../lib/auth";
 import { IS_CLOUD } from "../../lib/const";
@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
     <div className="flex justify-center items-center h-dvh w-full p-4">
       <Card className="w-full max-w-sm p-1">
         <CardHeader>
-          <RybbitLogo width={32} height={32} />
+          <HygoLogo width={32} height={32} />
           <CardTitle className="text-2xl flex justify-center">
             {resetSuccess ? t("Password Reset Successful") : otpSent ? t("Enter OTP Code") : t("Reset Password")}
           </CardTitle>

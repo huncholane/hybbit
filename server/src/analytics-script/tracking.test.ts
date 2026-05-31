@@ -83,7 +83,7 @@ describe("Tracker", () => {
     });
 
     config = {
-      namespace: "rybbit",
+      namespace: "hygo",
       analyticsHost: "https://analytics.example.com",
       siteId: "123",
       visitorId: "visitor-123",

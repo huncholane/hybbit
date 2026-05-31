@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     description:
       "Calculate the monetary value of your website traffic. Understand what each visitor is worth to your business and optimize your marketing spend.",
     type: "website",
-    url: "https://rybbit.com/tools/traffic-value-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/traffic-value-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
       "Calculate the value of each website visitor and make smarter marketing decisions based on traffic ROI.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/traffic-value-calculator",
+    canonical: "https://hygo.ai/tools/traffic-value-calculator",
   },
 };
 
@@ -32,7 +32,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Traffic Value Calculator",
       description: "Free tool to calculate the monetary value of website traffic and understand visitor ROI",
-      url: "https://rybbit.com/tools/traffic-value-calculator",
+      url: "https://hygo.ai/tools/traffic-value-calculator",
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -41,8 +41,8 @@ const structuredData = {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -294,7 +294,7 @@ export default function TrafficValueCalculatorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Maximize your traffic value with Rybbit"
+      ctaTitle="Maximize your traffic value with Hygo"
       ctaDescription="Track conversions, revenue, and visitor sources to optimize your most valuable traffic."
       ctaEventLocation="traffic_value_calculator_cta"
       structuredData={structuredData}

@@ -12,8 +12,8 @@ export function GitHubStarButton() {
   const { systemTheme, resolvedTheme } = useTheme();
 
   useEffect(() => {
-    if (systemTheme && resolvedTheme && window?.rybbit?.event) {
-      window.rybbit.event("theme", {
+    if (systemTheme && resolvedTheme && window?.hygo?.event) {
+      window.hygo.event("theme", {
         resolvedTheme,
         systemTheme,
       });
@@ -23,7 +23,7 @@ export function GitHubStarButton() {
   return (
     <div className="mb-6 md:mb-8" onClick={() => trackAdEvent("github")}>
       <a
-        href="https://github.com/rybbit-io/rybbit"
+        href="https://github.com/hygo-ai/hygo"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1 bg-neutral-100/80 dark:bg-neutral-800/70 hover:bg-neutral-150/80 dark:hover:bg-neutral-700/70 border border-neutral-300/70 dark:border-neutral-600/70 hover:border-neutral-300/80 dark:hover:border-neutral-700/80 text-neutral-900 dark:text-white px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-neutral-300/50 dark:shadow-neutral-900/50 hover:shadow-xl hover:shadow-neutral-300/60 dark:hover:shadow-neutral-800/60 backdrop-blur-sm ring-1 ring-neutral-900/10 dark:ring-white/10 hover:ring-neutral-900/20 dark:hover:ring-white/20"

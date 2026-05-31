@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 import { addSite } from "../../../api/admin/endpoints";
-import { RybbitTextLogo } from "../../../components/RybbitLogo";
+import { HygoTextLogo } from "../../../components/HygoLogo";
 import { useSetPageTitle } from "../../../hooks/useSetPageTitle";
 import { authClient } from "../../../lib/auth";
 import { IS_CLOUD } from "../../../lib/const";
@@ -293,7 +293,7 @@ export default function AppSumoSignupPage() {
       case 1:
         return (
           <div>
-            <h2 className="text-2xl font-semibold mb-2">Welcome to Rybbit!</h2>
+            <h2 className="text-2xl font-semibold mb-2">Welcome to Hygo!</h2>
             <p className="text-sm text-muted-foreground mb-6">Activate your AppSumo license by creating an account</p>
             <div className="space-y-4">
               <AuthInput
@@ -463,8 +463,8 @@ export default function AppSumoSignupPage() {
 
         {/* Logo and title above the card */}
         <div className="relative z-10 mb-6 text-center">
-          <a href="https://rybbit.com" target="_blank" className="inline-block mb-2">
-            <RybbitTextLogo />
+          <a href="https://hygo.ai" target="_blank" className="inline-block mb-2">
+            <HygoTextLogo />
           </a>
           <h1 className="text-lg text-neutral-600 dark:text-neutral-300">AppSumo License Activation</h1>
         </div>
@@ -507,12 +507,12 @@ export default function AppSumoSignupPage() {
 
         <div className="text-xs text-muted-foreground relative z-10 mt-8">
           <a
-            href="https://rybbit.com"
+            href="https://hygo.ai"
             target="_blank"
             rel="noopener"
-            title="Rybbit - Open Source Privacy-Focused Web Analytics"
+            title="Hygo - Open Source Privacy-Focused Web Analytics"
           >
-            Open source web analytics powered by Rybbit
+            Open source web analytics powered by Hygo
           </a>
         </div>
       </div>

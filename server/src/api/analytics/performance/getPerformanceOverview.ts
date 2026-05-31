@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { clickhouse } from "../../../db/clickhouse/clickhouse.js";
 import { getTimeStatement, processResults } from "../utils/utils.js";
 import { PerformanceOverviewMetrics } from "../types.js";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { getFilterStatement } from "../utils/getFilterStatement.js";
 
 const getQuery = (params: FilterParams, siteId: number) => {

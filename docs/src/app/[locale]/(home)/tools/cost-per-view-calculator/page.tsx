@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Free Cost Per View (CPV) Calculator",
     description: "Calculate and optimize your video advertising CPV with platform-specific benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/cost-per-view-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/cost-per-view-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Calculate your cost per view and compare against platform benchmarks",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/cost-per-view-calculator",
+    canonical: "https://hygo.ai/tools/cost-per-view-calculator",
   },
 };
 
@@ -31,7 +31,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Cost Per View Calculator",
       description: "Free CPV calculator to measure video advertising costs and compare against platform benchmarks",
-      url: "https://rybbit.com/tools/cost-per-view-calculator",
+      url: "https://hygo.ai/tools/cost-per-view-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -286,8 +286,8 @@ export default function CostPerViewPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track CPV and video metrics with Rybbit"
-      ctaDescription="Monitor cost per view, video engagement, and campaign performance across all platforms in real-time with Rybbit."
+      ctaTitle="Track CPV and video metrics with Hygo"
+      ctaDescription="Monitor cost per view, video engagement, and campaign performance across all platforms in real-time with Hygo."
       ctaEventLocation="cost_per_view_calculator_cta"
       structuredData={structuredData}
     />

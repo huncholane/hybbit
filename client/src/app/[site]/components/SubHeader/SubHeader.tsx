@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { canGoForward, goBack, goForward, useStore } from "@/lib/store";
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Filters } from "./Filters/Filters";
 

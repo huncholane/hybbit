@@ -1,13 +1,13 @@
 ---
 title: WordPress
-description: Integrate Rybbit Analytics with your WordPress site
+description: Integrate Hygo Analytics with your WordPress site
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-You can integrate Rybbit into your WordPress site to track user behavior and gather analytics. There are several ways to do this depending on whether you're using a hosted WordPress.com site or a self-hosted WordPress.org installation.
+You can integrate Hygo into your WordPress site to track user behavior and gather analytics. There are several ways to do this depending on whether you're using a hosted WordPress.com site or a self-hosted WordPress.org installation.
 
 <Callout type="info">
 We recommend using the JavaScript snippet below instead of a plain `<script>` tag. Some WordPress plugins and page builders strip `data-*` attributes from HTML, which can break tracking. The JavaScript approach avoids this issue.
@@ -36,7 +36,7 @@ Alternatively, download from [WordPress.org](https://wordpress.org/plugins/inser
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   document.head.appendChild(s);
@@ -44,14 +44,14 @@ Alternatively, download from [WordPress.org](https://wordpress.org/plugins/inser
 </script>
 ```
 
-3. Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard
+3. Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard
 4. Click **Save Changes**
 </Step>
 
 <Step>
 ### Verify Installation
 
-Visit your site in a new browser tab, then check your Rybbit dashboard to confirm data is being received.
+Visit your site in a new browser tab, then check your Hygo dashboard to confirm data is being received.
 </Step>
 </Steps>
 
@@ -72,12 +72,12 @@ For self-hosted WordPress, you can add the script via your theme's `functions.ph
 3. Add this code at the end of the file:
 
 ```php
-function add_rybbit_analytics() {
+function add_hygo_analytics() {
     ?>
     <script>
     (function() {
       var s = document.createElement('script');
-      s.src = 'https://app.rybbit.io/api/script.js';
+      s.src = 'https://app.hygo.ai/api/script.js';
       s.defer = true;
       s.setAttribute('data-site-id', 'YOUR_SITE_ID');
       document.head.appendChild(s);
@@ -85,7 +85,7 @@ function add_rybbit_analytics() {
     </script>
     <?php
 }
-add_action('wp_head', 'add_rybbit_analytics');
+add_action('wp_head', 'add_hygo_analytics');
 ```
 
 4. Replace `YOUR_SITE_ID` with your actual Site ID and save
@@ -108,7 +108,7 @@ You can directly edit your theme's `header.php` file to add the script.
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   document.head.appendChild(s);
@@ -127,23 +127,23 @@ Creating a small plugin ensures your tracking code persists through theme change
 
 1. Connect to your site via FTP/SFTP or use a file manager plugin
 2. Navigate to `/wp-content/plugins/`
-3. Create a new folder called `rybbit-analytics`
-4. Inside that folder, create a file called `rybbit-analytics.php` with this content:
+3. Create a new folder called `hygo-analytics`
+4. Inside that folder, create a file called `hygo-analytics.php` with this content:
 
 ```php
 <?php
 /**
- * Plugin Name: Rybbit Analytics
- * Description: Adds Rybbit Analytics tracking to your WordPress site
+ * Plugin Name: Hygo Analytics
+ * Description: Adds Hygo Analytics tracking to your WordPress site
  * Version: 1.0
  */
 
-function rybbit_add_tracking_script() {
+function hygo_add_tracking_script() {
     ?>
     <script>
     (function() {
       var s = document.createElement('script');
-      s.src = 'https://app.rybbit.io/api/script.js';
+      s.src = 'https://app.hygo.ai/api/script.js';
       s.defer = true;
       s.setAttribute('data-site-id', 'YOUR_SITE_ID');
       document.head.appendChild(s);
@@ -151,11 +151,11 @@ function rybbit_add_tracking_script() {
     </script>
     <?php
 }
-add_action('wp_head', 'rybbit_add_tracking_script');
+add_action('wp_head', 'hygo_add_tracking_script');
 ```
 
 5. Replace `YOUR_SITE_ID` with your actual Site ID
-6. Go to **Plugins** in WordPress and activate "Rybbit Analytics"
+6. Go to **Plugins** in WordPress and activate "Hygo Analytics"
 </Tab>
 </Tabs>
 
@@ -166,7 +166,7 @@ add_action('wp_head', 'rybbit_add_tracking_script');
 **Check if the script is in the page source:**
 1. Visit your site
 2. Right-click and select "View Page Source"
-3. Search for `rybbit` - you should see the script tag
+3. Search for `hygo` - you should see the script tag
 
 If the script is missing:
 - Make sure you saved your changes
@@ -175,7 +175,7 @@ If the script is missing:
 
 ### Caching plugin conflicts
 
-Many WordPress caching plugins aggressively cache pages. After adding Rybbit:
+Many WordPress caching plugins aggressively cache pages. After adding Hygo:
 
 1. **Clear all caches:**
    - Your caching plugin's cache
@@ -183,8 +183,8 @@ Many WordPress caching plugins aggressively cache pages. After adding Rybbit:
    - Browser cache (Ctrl+Shift+R or Cmd+Shift+R)
 
 2. **Exclude the script from optimization:**
-   Some optimization plugins try to defer, combine, or minify scripts. If Rybbit isn't working, check these plugins:
-   - **Autoptimize**: Add `app.rybbit.io` to the exclusion list
+   Some optimization plugins try to defer, combine, or minify scripts. If Hygo isn't working, check these plugins:
+   - **Autoptimize**: Add `app.hygo.ai` to the exclusion list
    - **WP Rocket**: Exclude from JavaScript optimization
    - **LiteSpeed Cache**: Add to JS excludes
    - **SG Optimizer**: Exclude from combine/minify
@@ -195,7 +195,7 @@ If you're using a page builder like Elementor, Divi, WPBakery, or Beaver Builder
 
 ### Security plugin blocking the script
 
-Security plugins like Wordfence or Sucuri may block external scripts. Add `app.rybbit.io` to your allowlist if tracking isn't working.
+Security plugins like Wordfence or Sucuri may block external scripts. Add `app.hygo.ai` to your allowlist if tracking isn't working.
 
 ### WordPress.com limitations
 
@@ -221,7 +221,7 @@ Use `data-skip-patterns` to exclude certain pages (like admin or preview pages) 
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   s.setAttribute('data-skip-patterns', '["/wp-admin/**", "/preview/**"]');
@@ -238,7 +238,7 @@ Use `data-mask-patterns` to track pageviews on sensitive pages without recording
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   s.setAttribute('data-mask-patterns', '["/my-account/**", "/orders/*/details"]');
@@ -255,7 +255,7 @@ If you have session replay enabled, you can mask or block sensitive content from
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   s.setAttribute('data-replay-block-selector', '.sensitive-content, #payment-form');

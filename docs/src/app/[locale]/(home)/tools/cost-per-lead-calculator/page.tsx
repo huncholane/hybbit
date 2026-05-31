@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Free Cost Per Lead (CPL) Calculator",
     description: "Calculate and optimize your cost per lead with channel-specific benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/cost-per-lead-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/cost-per-lead-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Calculate your cost per lead and compare against channel benchmarks",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/cost-per-lead-calculator",
+    canonical: "https://hygo.ai/tools/cost-per-lead-calculator",
   },
 };
 
@@ -31,7 +31,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Cost Per Lead Calculator",
       description: "Free CPL calculator to measure lead generation costs and compare against channel benchmarks",
-      url: "https://rybbit.com/tools/cost-per-lead-calculator",
+      url: "https://hygo.ai/tools/cost-per-lead-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -296,8 +296,8 @@ export default function CostPerLeadPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track CPL and lead metrics with Rybbit"
-      ctaDescription="Monitor cost per lead, lead quality, and channel performance in real-time with Rybbit's analytics platform."
+      ctaTitle="Track CPL and lead metrics with Hygo"
+      ctaDescription="Monitor cost per lead, lead quality, and channel performance in real-time with Hygo's analytics platform."
       ctaEventLocation="cost_per_lead_calculator_cta"
       structuredData={structuredData}
     />

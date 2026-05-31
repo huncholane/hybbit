@@ -1,4 +1,4 @@
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { authedFetch } from "../../utils";
 import { CommonApiParams, PaginationParams, SortParams, toQueryParams } from "./types";
 

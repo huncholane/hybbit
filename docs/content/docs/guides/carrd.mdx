@@ -1,18 +1,18 @@
 ---
 title: Carrd
-description: Integrate Rybbit Analytics with your Carrd site
+description: Integrate Hygo Analytics with your Carrd site
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Carrd is a popular platform for building simple, responsive one-page sites. You can add Rybbit Analytics to track visitors on your Carrd site.
+Carrd is a popular platform for building simple, responsive one-page sites. You can add Hygo Analytics to track visitors on your Carrd site.
 
 <Callout type="warn">
 Adding custom code requires a **Carrd Pro** subscription (Pro Standard, Pro Plus, or Pro Max).
 </Callout>
 
-## How to Add Rybbit to Carrd
+## How to Add Hygo to Carrd
 
 <Steps>
 <Step>
@@ -33,7 +33,7 @@ Adding custom code requires a **Carrd Pro** subscription (Pro Standard, Pro Plus
 <script>
 (function() {
   var s = document.createElement('script');
-  s.src = 'https://app.rybbit.io/api/script.js';
+  s.src = 'https://app.hygo.ai/api/script.js';
   s.defer = true;
   s.setAttribute('data-site-id', 'YOUR_SITE_ID');
   document.head.appendChild(s);
@@ -41,7 +41,7 @@ Adding custom code requires a **Carrd Pro** subscription (Pro Standard, Pro Plus
 </script>
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 </Step>
 
 <Step>
@@ -65,7 +65,7 @@ If your Carrd site has multiple pages (Pro Plus or Pro Max feature), the trackin
 
 1. Make sure you have a Carrd Pro subscription
 2. Ensure you published the site after adding the code
-3. Check "View Page Source" on your live site and search for `rybbit`
+3. Check "View Page Source" on your live site and search for `hygo`
 
 ### Form submissions
 

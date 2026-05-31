@@ -1,4 +1,4 @@
-import { FilterParameter, TimeBucket } from "@rybbit/shared";
+import { FilterParameter, TimeBucket } from "@hygo/shared";
 import { authedFetch } from "../../utils";
 import { CommonApiParams, PaginationParams, toQueryParams } from "./types";
 

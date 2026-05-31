@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, FilterParameter, FilterType } from "@rybbit/shared";
+import { Filter, FilterParameter, FilterType } from "@hygo/shared";
 import { Check, ChevronLeft, ChevronRight, ChevronsUpDown, HelpCircle, ListFilterPlus, Plus } from "lucide-react";
 import { useExtracted } from "next-intl";
 import { useMemo, useRef, useState } from "react";

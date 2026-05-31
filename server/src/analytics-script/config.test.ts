@@ -60,7 +60,7 @@ describe("parseScriptConfig", () => {
     const config = await parseScriptConfig(mockScriptTag);
 
     expect(config).toEqual({
-      namespace: "rybbit",
+      namespace: "hygo",
       analyticsHost: "https://analytics.example.com",
       siteId: "123",
       visitorId: expect.any(String),
@@ -125,7 +125,7 @@ describe("parseScriptConfig", () => {
     const config = await parseScriptConfig(mockScriptTag);
 
     expect(config).toEqual({
-      namespace: "rybbit",
+      namespace: "hygo",
       analyticsHost: "https://analytics.example.com",
       siteId: "123",
       visitorId: expect.any(String),
@@ -173,7 +173,7 @@ describe("parseScriptConfig", () => {
     const config = await parseScriptConfig(mockScriptTag);
 
     expect(config).toEqual({
-      namespace: "rybbit",
+      namespace: "hygo",
       analyticsHost: "https://analytics.example.com",
       siteId: "123",
       visitorId: expect.any(String),

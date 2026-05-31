@@ -11,7 +11,7 @@ import {
   TableRow,
   TableSortIndicator,
 } from "@/components/ui/table";
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import {
   createColumnHelper,
   flexRender,

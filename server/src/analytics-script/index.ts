@@ -5,12 +5,12 @@ import { ClickTrackingManager } from "./clickTracking.js";
 import { CopyTrackingManager } from "./copyTracking.js";
 import { FormTrackingManager } from "./formTracking.js";
 import { debounce, isOutboundLink } from "./utils.js";
-import { RybbitAPI, WebVitalsData, ErrorProperties } from "./types.js";
+import { HygoAPI, WebVitalsData, ErrorProperties } from "./types.js";
 
 declare global {
   interface Window {
-    __RYBBIT_OPTOUT__?: boolean;
-    rybbit: RybbitAPI;
+    __HYGO_OPTOUT__?: boolean;
+    hygo: HygoAPI;
     [key: string]: any;
   }
 }
@@ -23,11 +23,11 @@ declare global {
   }
 
   // Parse namespace early for opt-out check
-  const namespace = scriptTag.getAttribute("data-namespace") || "rybbit";
+  const namespace = scriptTag.getAttribute("data-namespace") || "hygo";
   const optOutKey = `disable-${namespace}`;
 
   // Check if user has opted out
-  if (window.__RYBBIT_OPTOUT__ || localStorage.getItem(optOutKey) !== null) {
+  if (window.__HYGO_OPTOUT__ || localStorage.getItem(optOutKey) !== null) {
     // Create no-op implementation
     window[namespace] = {
       pageview: () => {},
@@ -151,13 +151,13 @@ declare global {
 
       // Check for custom events via data attributes
       while (target && target !== document.documentElement) {
-        if (target.hasAttribute("data-rybbit-event")) {
-          const eventName = target.getAttribute("data-rybbit-event");
+        if (target.hasAttribute("data-hygo-event")) {
+          const eventName = target.getAttribute("data-hygo-event");
           if (eventName) {
             const properties: Record<string, string> = {};
             for (const attr of target.attributes) {
-              if (attr.name.startsWith("data-rybbit-prop-")) {
-                const propName = attr.name.replace("data-rybbit-prop-", "");
+              if (attr.name.startsWith("data-hygo-prop-")) {
+                const propName = attr.name.replace("data-hygo-prop-", "");
                 properties[propName] = attr.value;
               }
             }
@@ -220,7 +220,7 @@ declare global {
     flagPayload: <T = unknown>(key: string, fallback?: T) => tracker.getFeatureFlagPayload<T>(key, fallback),
     flags: () => tracker.getFeatureFlags(),
     flagPayloads: () => tracker.getFeatureFlagPayloads(),
-    onReady: (callback: (api: RybbitAPI) => void) => callback(window[config.namespace]),
+    onReady: (callback: (api: HygoAPI) => void) => callback(window[config.namespace]),
     startSessionReplay: () => tracker.startSessionReplay(),
     stopSessionReplay: () => tracker.stopSessionReplay(),
     isSessionReplayActive: () => tracker.isSessionReplayActive(),

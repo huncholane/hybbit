@@ -38,7 +38,7 @@ export function TraitsExplorer() {
       <NothingFound
         icon={<Tags className="w-10 h-10" />}
         title={t("No traits found")}
-        description={<p>{t("Traits will appear here once you")} <ExternalLink href="https://rybbit.com/docs/identify-users">{t("identify users")}</ExternalLink> {t("with custom properties.")}</p>}
+        description={<p>{t("Traits will appear here once you")} <ExternalLink href="https://hygo.ai/docs/identify-users">{t("identify users")}</ExternalLink> {t("with custom properties.")}</p>}
       />
     );
   }

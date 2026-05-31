@@ -1,22 +1,22 @@
 ---
 title: WooCommerce
-description: Integrate Rybbit Analytics with your WooCommerce store
+description: Integrate Hygo Analytics with your WooCommerce store
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide explains how to integrate Rybbit with your WooCommerce store (running on WordPress) to track e-commerce events like product views, add to carts, and purchases, in addition to standard page view analytics.
+This guide explains how to integrate Hygo with your WooCommerce store (running on WordPress) to track e-commerce events like product views, add to carts, and purchases, in addition to standard page view analytics.
 
 ## Prerequisites
 
-1.  **Rybbit Installed on WordPress**: Ensure you have already installed the Rybbit tracking script on your WordPress site using one of the methods described in our [WordPress integration guide](/docs/guides/wordpress). This guide focuses on adding e-commerce event tracking.
+1.  **Hygo Installed on WordPress**: Ensure you have already installed the Hygo tracking script on your WordPress site using one of the methods described in our [WordPress integration guide](/docs/guides/wordpress). This guide focuses on adding e-commerce event tracking.
 2.  **Access to `functions.php` or Custom Plugin**: You'll need to add PHP snippets. The recommended way is via your child theme's `functions.php` file or a custom plugin to avoid changes being overwritten by theme updates.
 
 ## Tracking E-commerce Events
 
-WooCommerce provides various action hooks that allow you to trigger JavaScript when specific e-commerce events occur. We'll use these to send data to Rybbit.
+WooCommerce provides various action hooks that allow you to trigger JavaScript when specific e-commerce events occur. We'll use these to send data to Hygo.
 
 <Callout type="warning">
   The following PHP code snippets should be added to your **child theme's `functions.php` file** or a **custom site-specific plugin**. Modifying your parent theme's `functions.php` directly is not recommended as changes will be lost upon theme updates.
@@ -28,8 +28,8 @@ Track when a user views a single product page.
 
 ```php
 // Add to your child theme's functions.php or a custom plugin
-add_action( 'woocommerce_after_single_product_summary', 'rybbit_track_view_product', 10 );
-function rybbit_track_view_product() {
+add_action( 'woocommerce_after_single_product_summary', 'hygo_track_view_product', 10 );
+function hygo_track_view_product() {
     if ( ! is_product() ) { // Ensure it's a single product page
         return;
     }
@@ -47,8 +47,8 @@ function rybbit_track_view_product() {
     );
     ?>
     <script type="text/javascript">
-        if (typeof window.rybbit !== 'undefined') {
-            window.rybbit.event('view_item', <?php echo json_encode($product_data); ?>);
+        if (typeof window.hygo !== 'undefined') {
+            window.hygo.event('view_item', <?php echo json_encode($product_data); ?>);
         }
     </script>
     <?php
@@ -61,8 +61,8 @@ Track when a user adds a product to their cart. This example uses a JavaScript a
 
 ```php
 // Add to your child theme's functions.php or a custom plugin
-add_action( 'woocommerce_after_add_to_cart_button', 'rybbit_track_add_to_cart_script' );
-function rybbit_track_add_to_cart_script() {
+add_action( 'woocommerce_after_add_to_cart_button', 'hygo_track_add_to_cart_script' );
+function hygo_track_add_to_cart_script() {
     global $product;
     if ( ! $product instanceof WC_Product ) {
         return;
@@ -88,10 +88,10 @@ function rybbit_track_add_to_cart_script() {
                     quantity = parseInt(quantityInput.value, 10);
                 }
 
-                if (typeof window.rybbit !== 'undefined') {
+                if (typeof window.hygo !== 'undefined') {
                     const eventData = <?php echo json_encode($product_data); ?>;
                     eventData.quantity = quantity > 0 ? quantity : 1;
-                    window.rybbit.event('add_to_cart', eventData);
+                    window.hygo.event('add_to_cart', eventData);
                 }
             });
         }
@@ -101,18 +101,18 @@ function rybbit_track_add_to_cart_script() {
 }
 
 // For AJAX add to cart events (e.g., on shop/category pages)
-add_action( 'wp_footer', 'rybbit_ajax_add_to_cart_tracker' );
-function rybbit_ajax_add_to_cart_tracker() {
+add_action( 'wp_footer', 'hygo_ajax_add_to_cart_tracker' );
+function hygo_ajax_add_to_cart_tracker() {
     if ( is_admin() ) return;
     ?>
     <script type="text/javascript">
         jQuery(document.body).on('added_to_cart', function(event, fragments, cart_hash, $button) {
-            if (typeof window.rybbit !== 'undefined' && $button && $button.length) {
+            if (typeof window.hygo !== 'undefined' && $button && $button.length) {
                 const productId = $button.data('product_id');
                 const quantity = $button.data('quantity') || 1; // Or $button.closest('.product').find('input.qty').val()
                 // Note: Getting full product details here via AJAX might be needed for price, name, SKU
                 // This example sends basic info. For more details, you might need another AJAX call or pass data via $button.data attributes
-                window.rybbit.event('add_to_cart', {
+                window.hygo.event('add_to_cart', {
                     item_id: productId,
                     quantity: quantity,
                     source: 'ajax_add_to_cart'
@@ -131,8 +131,8 @@ Track when a user proceeds to the checkout page.
 
 ```php
 // Add to your child theme's functions.php or a custom plugin
-add_action( 'woocommerce_before_checkout_form', 'rybbit_track_begin_checkout', 5 );
-function rybbit_track_begin_checkout() {
+add_action( 'woocommerce_before_checkout_form', 'hygo_track_begin_checkout', 5 );
+function hygo_track_begin_checkout() {
     if ( is_admin() || ! is_checkout() ) return;
 
     $cart = WC()->cart;
@@ -156,8 +156,8 @@ function rybbit_track_begin_checkout() {
     );
     ?>
     <script type="text/javascript">
-        if (typeof window.rybbit !== 'undefined') {
-            window.rybbit.event('begin_checkout', <?php echo json_encode($checkout_data); ?>);
+        if (typeof window.hygo !== 'undefined') {
+            window.hygo.event('begin_checkout', <?php echo json_encode($checkout_data); ?>);
         }
     </script>
     <?php
@@ -170,8 +170,8 @@ Track when a purchase is completed (on the "Thank You" page).
 
 ```php
 // Add to your child theme's functions.php or a custom plugin
-add_action( 'woocommerce_thankyou', 'rybbit_track_purchase', 10, 1 );
-function rybbit_track_purchase( $order_id ) {
+add_action( 'woocommerce_thankyou', 'hygo_track_purchase', 10, 1 );
+function hygo_track_purchase( $order_id ) {
     if ( ! $order_id ) {
         return;
     }
@@ -201,8 +201,8 @@ function rybbit_track_purchase( $order_id ) {
     );
     ?>
     <script type="text/javascript">
-        if (typeof window.rybbit !== 'undefined') {
-            window.rybbit.event('purchase', <?php echo json_encode($purchase_data); ?>);
+        if (typeof window.hygo !== 'undefined') {
+            window.hygo.event('purchase', <?php echo json_encode($purchase_data); ?>);
         }
     </script>
     <?php
@@ -211,10 +211,10 @@ function rybbit_track_purchase( $order_id ) {
 
 ## Important Considerations
 
-*   **Script Loading Order**: Ensure the main Rybbit tracking script (added via the WordPress integration guide) is loaded before these event-specific scripts attempt to call `window.rybbit`. Placing the main script in the `<head>` usually ensures this.
+*   **Script Loading Order**: Ensure the main Hygo tracking script (added via the WordPress integration guide) is loaded before these event-specific scripts attempt to call `window.hygo`. Placing the main script in the `<head>` usually ensures this.
 *   **Data Accuracy**: The product data (SKU, name, price) retrieved in these examples depends on your WooCommerce setup and product configuration. Test thoroughly.
 *   **AJAX Operations**: For themes or plugins that use AJAX heavily (e.g., AJAX add to cart, mini-cart updates), you might need more sophisticated JavaScript event listeners rather than relying solely on PHP action hooks that fire on page load. The AJAX add-to-cart example provides a starting point.
 *   **Performance**: While these snippets are generally lightweight, outputting many inline scripts can have a minor impact. For very high-traffic sites, consider consolidating JavaScript or using more advanced techniques if performance becomes a concern.
 *   **Plugin Conflicts**: Test for conflicts if you are using other analytics or tracking plugins.
 
-By implementing these tracking snippets, you can gain valuable insights into your WooCommerce store's performance using Rybbit.
+By implementing these tracking snippets, you can gain valuable insights into your WooCommerce store's performance using Hygo.

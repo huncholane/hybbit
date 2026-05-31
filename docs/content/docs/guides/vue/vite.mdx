@@ -1,17 +1,17 @@
 ---
 title: Vue.js (Vite / Client-Side)
-description: Integrate Rybbit with your client-side Vue.js application
+description: Integrate Hygo with your client-side Vue.js application
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps'
 import { Callout } from 'fumadocs-ui/components/callout'
 
 
-This guide explains how to integrate Rybbit with your standard client-side Vue.js Single Page Applications (SPAs), typically built using Vite (e.g., via `npm create vue@latest` or `npm create vite@latest -- --template vue`).
+This guide explains how to integrate Hygo with your standard client-side Vue.js Single Page Applications (SPAs), typically built using Vite (e.g., via `npm create vue@latest` or `npm create vite@latest -- --template vue`).
 
-## How to Add Rybbit to Your Client-Side Vue.js App
+## How to Add Hygo to Your Client-Side Vue.js App
 
-The recommended and simplest method for client-side Vue applications is to add the Rybbit tracking script directly to your `index.html` file. This ensures the script is loaded early and reliably.
+The recommended and simplest method for client-side Vue applications is to add the Hygo tracking script directly to your `index.html` file. This ensures the script is loaded early and reliably.
 
 ### Adding to `index.html`
 
@@ -19,11 +19,11 @@ The recommended and simplest method for client-side Vue applications is to add t
 <Step>
 ### Retrieve Your Tracking Script
 
-Navigate to your Rybbit dashboard to obtain your code snippet:
+Navigate to your Hygo dashboard to obtain your code snippet:
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   data-site-id="YOUR_SITE_ID"
   defer
 ></script>
@@ -40,7 +40,7 @@ This file is typically located at the root of your Vite-based Vue project.
 <Step>
 ### Add the Snippet to `index.html`
 
-Open `index.html` and paste the Rybbit tracking snippet just before the closing `</head>` tag or `</body>` tag. Placing it in the `<head>` allows it to load sooner.
+Open `index.html` and paste the Hygo tracking snippet just before the closing `</head>` tag or `</body>` tag. Placing it in the `<head>` allows it to load sooner.
 
 ```html filename="index.html (Vite)"
 <!DOCTYPE html>
@@ -50,9 +50,9 @@ Open `index.html` and paste the Rybbit tracking snippet just before the closing 
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Vue App</title>
-    <!-- Rybbit Tracking Snippet -->
+    <!-- Hygo Tracking Snippet -->
     <script
-      src="https://app.rybbit.io/api/script.js"
+      src="https://app.hygo.ai/api/script.js"
       data-site-id="YOUR_SITE_ID"
       defer
     ></script>
@@ -70,12 +70,12 @@ Ensure `YOUR_SITE_ID` is replaced with your actual Site ID.
 <Step>
 ### Verify Installation
 
-Deploy your application and check your Rybbit dashboard for incoming data. You can also inspect your browser's network tab to confirm that `script.js` is loaded.
+Deploy your application and check your Hygo dashboard for incoming data. You can also inspect your browser's network tab to confirm that `script.js` is loaded.
 </Step>
 </Steps>
 
 <Callout type="info">
-  **SPA Page View Tracking**: Rybbit's script is designed to automatically track route changes in SPAs using Vue Router. If page views aren't tracked correctly after navigation, you might need to manually trigger them using `window.rybbit.pageview()` after each route change. This can be done using Vue Router's navigation guards:
+  **SPA Page View Tracking**: Hygo's script is designed to automatically track route changes in SPAs using Vue Router. If page views aren't tracked correctly after navigation, you might need to manually trigger them using `window.hygo.pageview()` after each route change. This can be done using Vue Router's navigation guards:
   ```javascript
   // Example with Vue Router in your router setup file (e.g., src/router/index.js)
   import { createRouter, createWebHistory } from 'vue-router';
@@ -87,8 +87,8 @@ Deploy your application and check your Rybbit dashboard for incoming data. You c
   });
 
   router.afterEach((to, from) => {
-    if (window.rybbit && typeof window.rybbit.pageview === 'function') {
-      window.rybbit.pageview();
+    if (window.hygo && typeof window.hygo.pageview === 'function') {
+      window.hygo.pageview();
     }
   });
 
@@ -108,10 +108,10 @@ From any Vue component or method, you can track custom events:
 
 <script setup>
 function trackCustomEvent() {
-  if (window.rybbit && typeof window.rybbit.event === 'function') {
-    window.rybbit.event('custom_vue_action', { detail: 'User performed a client-side Vue action' });
+  if (window.hygo && typeof window.hygo.event === 'function') {
+    window.hygo.event('custom_vue_action', { detail: 'User performed a client-side Vue action' });
   }
 }
 </script>
 ```
-Always check if `window.rybbit` and its methods are available before calling them.
+Always check if `window.hygo` and its methods are available before calling them.

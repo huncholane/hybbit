@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, FilterParameter } from "@rybbit/shared";
+import { Filter, FilterParameter } from "@hygo/shared";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { Info, Loader2 } from "lucide-react";
 import { useExtracted } from "next-intl";

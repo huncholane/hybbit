@@ -1,6 +1,6 @@
 import { clearSelfReferrer, getAllUrlParams } from "../../tracker/utils.js";
 import { getChannel } from "../../tracker/getChannel.js";
-import { RybbitEvent } from "./rybbit.js";
+import { HygoEvent } from "./hygo.js";
 import { z } from "zod";
 import { deriveKeyOnlySchema } from "./utils.js";
 
@@ -48,8 +48,8 @@ export class PlausibleImportMapper {
     events: PlausibleEvent[],
     site: number,
     importId: string
-  ): RybbitEvent[] {
-    return events.reduce<RybbitEvent[]>((acc, event) => {
+  ): HygoEvent[] {
+    return events.reduce<HygoEvent[]>((acc, event) => {
       const parsed =
         PlausibleImportMapper.plausibleEventSchema.safeParse(event);
       if (!parsed.success) return acc;

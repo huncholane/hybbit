@@ -87,19 +87,19 @@ function getUserAgent(appVersion) {
     const { Platform } = getReactNative();
     if (Platform.OS === "android") {
       const version = Platform.Version || "";
-      return `Mozilla/5.0 (Linux; Android ${version}) AppleWebKit/537.36 (KHTML, like Gecko) RybbitReactNative/${SDK_VERSION}${appVersion ? ` ${appVersion}` : ""}`;
+      return `Mozilla/5.0 (Linux; Android ${version}) AppleWebKit/537.36 (KHTML, like Gecko) HygoReactNative/${SDK_VERSION}${appVersion ? ` ${appVersion}` : ""}`;
     }
     if (Platform.OS === "ios") {
       const version = String(Platform.Version || "").replace(/\./g, "_");
-      return `Mozilla/5.0 (iPhone; CPU iPhone OS ${version} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) RybbitReactNative/${SDK_VERSION}${appVersion ? ` ${appVersion}` : ""}`;
+      return `Mozilla/5.0 (iPhone; CPU iPhone OS ${version} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) HygoReactNative/${SDK_VERSION}${appVersion ? ` ${appVersion}` : ""}`;
     }
-    return `RybbitReactNative/${SDK_VERSION} (${Platform.OS})${appVersion ? ` ${appVersion}` : ""}`;
+    return `HygoReactNative/${SDK_VERSION} (${Platform.OS})${appVersion ? ` ${appVersion}` : ""}`;
   } catch {
-    return `RybbitReactNative/${SDK_VERSION}`;
+    return `HygoReactNative/${SDK_VERSION}`;
   }
 }
 
-class RybbitReactNative {
+class HygoReactNative {
   constructor() {
     this.config = null;
     this.remoteConfig = {};
@@ -121,7 +121,7 @@ class RybbitReactNative {
       appIdentifier: config.appIdentifier || config.bundleId || "",
       appVersion: config.appVersion || "",
       tag: config.tag || "",
-      storageKeyPrefix: config.storageKeyPrefix || "@rybbit",
+      storageKeyPrefix: config.storageKeyPrefix || "@hygo",
       debug: !!config.debug,
       autoTrackAppLifecycle: config.autoTrackAppLifecycle !== false,
       initialScreenName: config.initialScreenName || "",
@@ -406,7 +406,7 @@ class RybbitReactNative {
 
   ensureInitialized() {
     if (!this.config || !this.anonymousId) {
-      throw new Error("rybbit.init() must be called before tracking");
+      throw new Error("hygo.init() must be called before tracking");
     }
     if (typeof this.config.fetch !== "function") {
       throw new Error("No fetch implementation is available");
@@ -415,13 +415,13 @@ class RybbitReactNative {
 
   debug(message, error) {
     if (this.config?.debug) {
-      console.warn(`[Rybbit] ${message}`, error);
+      console.warn(`[Hygo] ${message}`, error);
     }
   }
 }
 
-const defaultClient = new RybbitReactNative();
+const defaultClient = new HygoReactNative();
 
 module.exports = defaultClient;
 module.exports.default = defaultClient;
-module.exports.RybbitReactNative = RybbitReactNative;
+module.exports.HygoReactNative = HygoReactNative;

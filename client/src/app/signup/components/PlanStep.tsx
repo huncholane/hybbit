@@ -124,10 +124,10 @@ export function PlanStep({
               {t("Need more than 20M events? Contact us for a custom plan.")}
             </p>
             <a
-              href="mailto:hello@rybbit.com"
+              href="mailto:hello@hygo.ai"
               className="text-sm text-emerald-500 hover:text-emerald-400 font-medium"
             >
-              hello@rybbit.com
+              hello@hygo.ai
             </a>
           </div>
         )}

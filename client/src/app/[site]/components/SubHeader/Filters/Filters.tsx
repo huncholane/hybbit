@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import { X } from "lucide-react";
 import { useExtracted } from "next-intl";
 import { Button } from "../../../../../components/ui/button";

@@ -155,12 +155,12 @@ export const faqItems: FAQItem[] = [
   {
     question: "Do I need to set up anything for session tracking?",
     answer:
-      "No. Sessions are tracked automatically as soon as you install the Rybbit script. Every visitor session records device info, location, referrer, pages visited, and events fired without any extra configuration.",
+      "No. Sessions are tracked automatically as soon as you install the Hygo script. Every visitor session records device info, location, referrer, pages visited, and events fired without any extra configuration.",
   },
   {
     question: "Can I filter sessions by identified users only?",
     answer:
-      "Yes. Toggle the 'Identified only' switch to show only sessions from users you've identified with rybbit.identify(). This is great for support and customer success workflows where you need to find a specific person's sessions.",
+      "Yes. Toggle the 'Identified only' switch to show only sessions from users you've identified with hygo.identify(). This is great for support and customer success workflows where you need to find a specific person's sessions.",
   },
   {
     question: "What does the event timeline show?",

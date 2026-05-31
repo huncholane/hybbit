@@ -271,8 +271,8 @@ export const WeeklyReportEmail = ({ userName, organizationName, site }: WeeklyRe
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-8 px-6 max-w-[600px]">
             <Img
-              src="https://app.rybbit.io/rybbit/horizontal_black.svg"
-              alt="Rybbit"
+              src="https://app.hygo.ai/hygo/horizontal_black.svg"
+              alt="Hygo"
               width="120"
               height="28"
               className="mb-8"
@@ -384,7 +384,7 @@ export const WeeklyReportEmail = ({ userName, organizationName, site }: WeeklyRe
               </div>
 
               <Text className="text-darkText text-base leading-relaxed mb-4">
-                <Link href={`https://app.rybbit.io/${site.siteId}`} className="text-brand underline">
+                <Link href={`https://app.hygo.ai/${site.siteId}`} className="text-brand underline">
                   View full dashboard
                 </Link>
               </Text>
@@ -397,11 +397,11 @@ export const WeeklyReportEmail = ({ userName, organizationName, site }: WeeklyRe
             <Hr className="border-borderColor my-8" />
 
             <Text className="text-mutedText text-xs mb-2">
-              <Link href="https://app.rybbit.io/settings/account" className="text-mutedText underline">
+              <Link href="https://app.hygo.ai/settings/account" className="text-mutedText underline">
                 Unsubscribe from weekly reports
               </Link>
             </Text>
-            <Text className="text-mutedText text-xs">© {currentYear} Rybbit Analytics</Text>
+            <Text className="text-mutedText text-xs">© {currentYear} Hygo Analytics</Text>
           </Container>
         </Body>
       </Tailwind>

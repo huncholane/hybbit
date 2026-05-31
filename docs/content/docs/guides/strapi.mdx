@@ -1,17 +1,17 @@
 ---
 title: Strapi
-description: Integrate Rybbit Analytics with your Strapi-powered website
+description: Integrate Hygo Analytics with your Strapi-powered website
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Strapi is an open-source headless CMS that provides an API for your content. Since Strapi is headless, you'll add Rybbit Analytics to your frontend application rather than to Strapi itself.
+Strapi is an open-source headless CMS that provides an API for your content. Since Strapi is headless, you'll add Hygo Analytics to your frontend application rather than to Strapi itself.
 
 <Callout type="info">
 Strapi only serves your content via API - it doesn't render your website. The tracking script goes in your frontend framework (Next.js, Nuxt, Astro, etc.).
 </Callout>
 
-## How to Add Rybbit with Strapi
+## How to Add Hygo with Strapi
 
 Choose the guide that matches your frontend framework:
 
@@ -47,7 +47,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
-          src="https://app.rybbit.io/api/script.js"
+          src="https://app.hygo.ai/api/script.js"
           data-site-id="YOUR_SITE_ID"
           strategy="afterInteractive"
         />
@@ -58,7 +58,7 @@ export default function RootLayout({
 }
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 
 ## Quick Example: Nuxt with Strapi
 
@@ -70,7 +70,7 @@ export default defineNuxtConfig({
     head: {
       script: [
         {
-          src: 'https://app.rybbit.io/api/script.js',
+          src: 'https://app.hygo.ai/api/script.js',
           'data-site-id': 'YOUR_SITE_ID',
           defer: true
         }

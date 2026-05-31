@@ -179,7 +179,7 @@ const pluginList = [
 
 export const auth = betterAuth({
   basePath: "/api/auth",
-  appName: "Rybbit",
+  appName: "Hygo",
   database: new pg.Pool({
     host: process.env.POSTGRES_HOST || "postgres",
     port: parseInt(process.env.POSTGRES_PORT || "5432", 10),

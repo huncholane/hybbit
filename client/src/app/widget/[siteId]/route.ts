@@ -33,7 +33,7 @@ function colors(theme: "dark" | "light") {
 
 function renderCardHTML(c: Config) {
   const col = colors(c.theme);
-  const logo = c.theme === "dark" ? "/rybbit/horizontal_white.svg" : "/rybbit/horizontal_black.svg";
+  const logo = c.theme === "dark" ? "/hygo/horizontal_white.svg" : "/hygo/horizontal_black.svg";
   return `
 <div class="w card">
   <div class="header">
@@ -43,8 +43,8 @@ function renderCardHTML(c: Config) {
   ${c.chart ? `<div class="chart" id="chart"></div>` : ""}
   <div class="window-label">${c.windowLabel}</div>
   ${c.countries ? `<div class="countries" id="countries"></div>` : ""}
-  <a class="footer" href="https://rybbit.com" target="_blank" rel="noopener noreferrer">
-    Powered by <img src="${logo}" alt="Rybbit web analytics" width="60" height="12" />
+  <a class="footer" href="https://hygo.ai" target="_blank" rel="noopener noreferrer">
+    Powered by <img src="${logo}" alt="Hygo web analytics" width="60" height="12" />
   </a>
 </div>
 <style>
@@ -113,15 +113,15 @@ function renderCardHTML(c: Config) {
 
 function renderInlineHTML(c: Config) {
   const col = colors(c.theme);
-  const logo = c.theme === "dark" ? "/rybbit/frog_white.svg" : "/rybbit/frog_black.svg";
+  const logo = c.theme === "dark" ? "/hygo/frog_white.svg" : "/hygo/frog_black.svg";
   return `
 <div class="w inline">
   <span class="pulse pulse-sm"></span>
   <span class="count" id="count">—</span>
   <span class="muted">online</span>
   <span class="sep">·</span>
-  <a href="https://rybbit.com" target="_blank" rel="noopener noreferrer">
-    <img src="${logo}" alt="Rybbit web analytics" width="50" height="10" />
+  <a href="https://hygo.ai" target="_blank" rel="noopener noreferrer">
+    <img src="${logo}" alt="Hygo web analytics" width="50" height="10" />
   </a>
 </div>
 <style>
@@ -163,7 +163,7 @@ function renderHTML(c: Config) {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rybbit live visitors</title>
+<title>Hygo live visitors</title>
 <style>
   html { color-scheme: ${c.theme}; }
   html, body { background: transparent; margin: 0; padding: 0; }
@@ -184,10 +184,10 @@ function renderHTML(c: Config) {
     border-radius: 50%;
     background: ${accentColor};
   }
-  .pulse::before { opacity: 0.4; animation: rybbit-pulse 1.6s ease-out infinite; }
+  .pulse::before { opacity: 0.4; animation: hygo-pulse 1.6s ease-out infinite; }
   .pulse-md::after { inset: 3px; }
   .pulse-sm::after { inset: 2px; }
-  @keyframes rybbit-pulse {
+  @keyframes hygo-pulse {
     0%   { transform: scale(1); opacity: 0.5; }
     100% { transform: scale(2.2); opacity: 0; }
   }

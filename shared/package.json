@@ -1,7 +1,7 @@
 {
-  "name": "@rybbit/shared",
+  "name": "@hygo/shared",
   "version": "1.0.0",
-  "description": "Shared types for Rybbit analytics",
+  "description": "Shared types for Hygo analytics",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [

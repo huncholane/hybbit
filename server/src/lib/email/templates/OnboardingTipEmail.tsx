@@ -31,7 +31,7 @@ export const OnboardingTipEmail = ({ userName, body, linkText, linkUrl, unsubscr
   return (
     <Html>
       <Head />
-      <Preview>{paragraphs[0]?.substring(0, 100) || "A message from Rybbit"}</Preview>
+      <Preview>{paragraphs[0]?.substring(0, 100) || "A message from Hygo"}</Preview>
       <Tailwind
         config={{
           presets: [pixelBasedPreset],
@@ -50,8 +50,8 @@ export const OnboardingTipEmail = ({ userName, body, linkText, linkUrl, unsubscr
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-8 px-6 max-w-[600px]">
             <Img
-              src="https://app.rybbit.io/rybbit/horizontal_black.svg"
-              alt="Rybbit"
+              src="https://app.hygo.ai/hygo/horizontal_black.svg"
+              alt="Hygo"
               width="120"
               height="28"
               className="mb-8"
@@ -76,7 +76,7 @@ export const OnboardingTipEmail = ({ userName, body, linkText, linkUrl, unsubscr
             <Text className="text-darkText text-base leading-relaxed mt-8">
               You can reply to this email,
               <br />
-              Bill – Founder of Rybbit
+              Bill – Founder of Hygo
             </Text>
 
             <Hr className="border-borderColor my-8" />

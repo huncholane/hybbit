@@ -4,7 +4,7 @@ import { useExtracted } from "next-intl";
 import Link from "next/link";
 import { useGetOverviewBucketed } from "../../../../../api/analytics/hooks/useGetOverviewBucketed";
 import { BucketSelection } from "../../../../../components/BucketSelection";
-import { RybbitTextLogo } from "../../../../../components/RybbitLogo";
+import { HygoTextLogo } from "../../../../../components/HygoLogo";
 import { useWhiteLabel } from "../../../../../hooks/useIsWhiteLabel";
 import { authClient } from "../../../../../lib/auth";
 import { useStore } from "../../../../../lib/store";
@@ -49,8 +49,8 @@ export function MainSectionLite() {
           <div className="flex items-center justify-between px-2 md:px-0">
             <div className="flex items-center space-x-4">
               {!isWhiteLabel && (
-                <Link href={session.data ? "/" : "https://rybbit.com"} className="opacity-75">
-                  <RybbitTextLogo width={80} height={0} />
+                <Link href={session.data ? "/" : "https://hygo.ai"} className="opacity-75">
+                  <HygoTextLogo width={80} height={0} />
                 </Link>
               )}
             </div>

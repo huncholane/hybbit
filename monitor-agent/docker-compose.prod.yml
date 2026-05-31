@@ -3,7 +3,7 @@
 
 services:
   monitor-agent:
-    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_IMAGE:-rybbit/monitor-agent}:${REGION:-latest}
+    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_IMAGE:-hygo/monitor-agent}:${REGION:-latest}
     restart: always
     
     # Production logging
@@ -42,7 +42,7 @@ services:
   # Caddy with automatic SSL
   caddy:
     image: caddy:2.10.0
-    container_name: rybbit-monitor-caddy-${REGION}
+    container_name: hygo-monitor-caddy-${REGION}
     ports:
       - "443:443"
       - "80:80"

@@ -1,22 +1,22 @@
 ---
 title: React Native
-description: Official React Native SDK for Rybbit Analytics
+description: Official React Native SDK for Hygo Analytics
 ---
 
 ## Installation
 
 ```bash
-npm install @rybbit/react-native @react-native-async-storage/async-storage
+npm install @hygo/react-native @react-native-async-storage/async-storage
 ```
 
 ## Initialization
 
 ```tsx
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import rybbit from "@rybbit/react-native";
+import hygo from "@hygo/react-native";
 
-await rybbit.init({
-  analyticsHost: "https://app.rybbit.io/api",
+await hygo.init({
+  analyticsHost: "https://app.hygo.ai/api",
   siteId: "1",
   appIdentifier: "com.example.app",
   storage: AsyncStorage,
@@ -27,15 +27,15 @@ await rybbit.init({
 ## Track Events
 
 ```tsx
-await rybbit.event("signup_started", { plan: "pro" });
-await rybbit.identify("user_123", { plan: "pro" });
-await rybbit.error(error);
+await hygo.event("signup_started", { plan: "pro" });
+await hygo.identify("user_123", { plan: "pro" });
+await hygo.error(error);
 ```
 
 ## React Navigation
 
 ```tsx
-const navigationTracker = rybbit.createNavigationTracker();
+const navigationTracker = hygo.createNavigationTracker();
 
 <NavigationContainer
   ref={navigationRef}

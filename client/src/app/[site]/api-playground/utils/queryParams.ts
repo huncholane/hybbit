@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { FilterParameter, FilterType } from "@rybbit/shared";
+import { FilterParameter, FilterType } from "@hygo/shared";
 
 type PlaygroundFilter = {
   parameter: FilterParameter;

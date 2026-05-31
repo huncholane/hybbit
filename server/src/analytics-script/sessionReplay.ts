@@ -1,6 +1,6 @@
 import { ScriptConfig, SessionReplayEvent, SessionReplayBatch } from "./types.js";
 
-const SAMPLE_STORAGE_KEY = "rybbit-replay-sampled";
+const SAMPLE_STORAGE_KEY = "hygo-replay-sampled";
 
 /**
  * Determines if this session should have replay enabled based on sample rate.

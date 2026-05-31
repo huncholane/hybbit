@@ -5,7 +5,7 @@ description: Block traffic from specific IP addresses or countries to improve an
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Rybbit provides server-side filtering to exclude traffic from your analytics. This helps you maintain accurate data by blocking unwanted visits, bot traffic, or your own pageviews.
+Hygo provides server-side filtering to exclude traffic from your analytics. This helps you maintain accurate data by blocking unwanted visits, bot traffic, or your own pageviews.
 
 ## IP Exclusion
 
@@ -23,13 +23,13 @@ Block all traffic from specific countries to filter out unwanted analytics data 
 
 ### Setting Up Country Exclusion
 
-1. **Navigate to Site Settings**: Go to your site's settings page in the Rybbit dashboard
+1. **Navigate to Site Settings**: Go to your site's settings page in the Hygo dashboard
 2. **Find Country Exclusions section**: Scroll down to the "Country Exclusions" configuration
 3. **Select countries to exclude**: Use the searchable dropdown to select countries you want to block
 
 ### How It Works
 
-When an event is received, Rybbit:
+When an event is received, Hygo:
 1. Extracts the visitor's IP address
 2. Performs a GeoIP lookup using the MaxMind GeoLite2 database
 3. Checks if the country matches your exclusion list

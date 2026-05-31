@@ -10,15 +10,15 @@ import {
 } from "./feature-data";
 
 export const metadata: Metadata = {
-  title: "Sessions - Rybbit | Individual Session Browser",
+  title: "Sessions - Hygo | Individual Session Browser",
   description:
     "Browse individual user sessions with rich metadata, event timelines, and click-to-filter exploration. See exactly what each visitor did on your site.",
   openGraph: {
-    title: "Sessions - Rybbit",
+    title: "Sessions - Hygo",
     description:
       "Browse individual user sessions with metadata, event timelines, and one-click filtering.",
     type: "website",
-    url: "https://rybbit.com/features/sessions",
+    url: "https://hygo.ai/features/sessions",
     images: [
       createOGImageUrl(
         "Sessions",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sessions - Rybbit",
+    title: "Sessions - Hygo",
     description:
       "Browse individual user sessions with metadata, event timelines, and one-click filtering.",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: "https://rybbit.com/features/sessions",
+    canonical: "https://hygo.ai/features/sessions",
   },
 };
 
@@ -50,15 +50,15 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/features/sessions",
-      name: "Rybbit Sessions",
+      "@id": "https://hygo.ai/features/sessions",
+      name: "Hygo Sessions",
       description:
         "Browse and analyze individual user sessions with full metadata and event timelines.",
-      url: "https://rybbit.com/features/sessions",
+      url: "https://hygo.ai/features/sessions",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -87,7 +87,7 @@ export default function SessionsPage() {
         headline="Every session, fully inspectable"
         subtitle="Browse individual user sessions with rich metadata cards, expandable event timelines, and click-to-filter exploration. The analytical layer behind session replay."
         badgeText="Sessions"
-        demoUrl="https://demo.rybbit.com/81/sessions"
+        demoUrl="https://demo.hygo.ai/81/sessions"
         demoCaption="Live sessions demo — browse real user sessions with full metadata"
         introParagraphs={[
           <>

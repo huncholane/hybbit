@@ -126,7 +126,7 @@ export default function FunnelsPage() {
           <NothingFound
             icon={<Funnel className="w-10 h-10" />}
             title={t("No funnels yet")}
-            description={<span>{t("Create your first funnel to track conversions through your site's user journey.")} <ExternalLink href="https://rybbit.com/docs/funnels">{t("Learn more")}</ExternalLink></span>}
+            description={<span>{t("Create your first funnel to track conversions through your site's user journey.")} <ExternalLink href="https://hygo.ai/docs/funnels">{t("Learn more")}</ExternalLink></span>}
             action={<CreateFunnelDialog />}
           />
         )}

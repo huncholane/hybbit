@@ -1,7 +1,7 @@
 "use client";
 
 import * as d3 from "d3";
-import type { TimeBucket } from "@rybbit/shared";
+import type { TimeBucket } from "@hygo/shared";
 import { DateTime } from "luxon";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";

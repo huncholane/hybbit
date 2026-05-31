@@ -1,4 +1,4 @@
-import { Filter } from "@rybbit/shared";
+import { Filter } from "@hygo/shared";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { usePerformanceStore } from "../../../../app/[site]/performance/performanceStore";
 import { useStore } from "../../../../lib/store";

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "Discover what analytics and tracking tools any website is using. Analyze privacy implications and understand data collection practices.",
     type: "website",
-    url: "https://rybbit.com/tools/analytics-detector",
+    url: "https://hygo.ai/tools/analytics-detector",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Discover what analytics and tracking tools any website is using.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/analytics-detector",
+    canonical: "https://hygo.ai/tools/analytics-detector",
   },
 };
 
@@ -29,10 +29,10 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://rybbit.com/tools/analytics-detector",
+      "@id": "https://hygo.ai/tools/analytics-detector",
       name: "Analytics Detector",
       description: "Free tool to detect and analyze analytics platforms and tracking tools used on any website",
-      url: "https://rybbit.com/tools/analytics-detector",
+      url: "https://hygo.ai/tools/analytics-detector",
       applicationCategory: "UtilityApplication",
       offers: {
         "@type": "Offer",
@@ -41,8 +41,8 @@ const structuredData = {
       },
       creator: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -69,7 +69,7 @@ const structuredData = {
           name: "Which analytics tools are privacy-focused?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Privacy-focused analytics tools like Rybbit, Fathom, Plausible, and Shynet don't use cookies, don't track users across sites, and are GDPR compliant by default. These alternatives provide valuable insights without compromising user privacy or requiring cookie banners.",
+            text: "Privacy-focused analytics tools like Hygo, Fathom, Plausible, and Shynet don't use cookies, don't track users across sites, and are GDPR compliant by default. These alternatives provide valuable insights without compromising user privacy or requiring cookie banners.",
           },
         },
         {
@@ -114,7 +114,7 @@ const educationalContent = (
           <strong>Tag Managers</strong> - Google Tag Manager, Tealium, and others that deploy multiple tracking codes
         </li>
         <li>
-          <strong>Privacy-focused alternatives</strong> - Rybbit, Plausible, Fathom Analytics that prioritize user
+          <strong>Privacy-focused alternatives</strong> - Hygo, Plausible, Fathom Analytics that prioritize user
           privacy
         </li>
         <li>
@@ -245,8 +245,8 @@ const faqs = [
     answer: (
       <>
         Privacy-focused analytics tools like{" "}
-        <Link href="https://rybbit.com" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit
+        <Link href="https://hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo
         </Link>
         , Plausible, Fathom Analytics, and Shynet don't use cookies, don't track users across sites, and are GDPR
         compliant by default. These alternatives provide valuable insights without compromising user privacy or
@@ -277,7 +277,7 @@ export default function AnalyticsDetectorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="privacy"
-      ctaTitle="Privacy-first analytics with Rybbit"
+      ctaTitle="Privacy-first analytics with Hygo"
       ctaDescription="No cookies, no cross-site tracking, full GDPR compliance."
       ctaEventLocation="analytics_detector_cta"
       structuredData={structuredData}

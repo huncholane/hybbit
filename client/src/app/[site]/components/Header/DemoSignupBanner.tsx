@@ -14,7 +14,7 @@ export function DemoSignupBanner() {
     return null;
   }
 
-  // Only show on demo.rybbit.com and not in an iframe
+  // Only show on demo.hygo.ai and not in an iframe
   if (typeof window === "undefined" || window.location.host !== DEMO_HOSTNAME) {
     return null;
   }
@@ -31,7 +31,7 @@ export function DemoSignupBanner() {
         <span>{t("Enjoying the demo? Get started with your own analytics dashboard!")}</span>
       </div>
       <Button variant="success" size="sm" asChild>
-        <Link href="https://app.rybbit.io/signup" target="_blank" rel="noopener">
+        <Link href="https://app.hygo.ai/signup" target="_blank" rel="noopener">
           {t("Sign Up")} <ArrowRight className="ml-1 h-3 w-3" />
         </Link>
       </Button>

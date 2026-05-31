@@ -1,4 +1,4 @@
-import { Filter, FilterParameter, FilterType, TimeBucket } from "@rybbit/shared";
+import { Filter, FilterParameter, FilterType, TimeBucket } from "@hygo/shared";
 import { createParser, parseAsBoolean, parseAsInteger, parseAsJson, parseAsString, parseAsStringEnum } from "nuqs";
 import { StatType } from "./store";
 import { Time } from "@/components/DateSelector/types";

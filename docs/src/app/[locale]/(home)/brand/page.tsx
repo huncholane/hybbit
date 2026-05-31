@@ -5,12 +5,12 @@ import { createMetadata, createOGImageUrl } from "@/lib/metadata";
 export const metadata = createMetadata({
   title: "Brand Kit",
   description:
-    "Download official Rybbit logos and brand assets for use in your projects",
+    "Download official Hygo logos and brand assets for use in your projects",
   openGraph: {
-    images: [createOGImageUrl("Brand Kit", "Download official Rybbit logos and brand assets for use in your projects")],
+    images: [createOGImageUrl("Brand Kit", "Download official Hygo logos and brand assets for use in your projects")],
   },
   twitter: {
-    images: [createOGImageUrl("Brand Kit", "Download official Rybbit logos and brand assets for use in your projects")],
+    images: [createOGImageUrl("Brand Kit", "Download official Hygo logos and brand assets for use in your projects")],
   },
 });
 
@@ -27,8 +27,8 @@ type LogoSection = {
 };
 
 function LogoCard({ variant, svgLabel, pngLabel }: { variant: Variant; svgLabel: string; pngLabel: string }) {
-  const pngPath = `/rybbit/${variant.file}.png`;
-  const svgPath = `/rybbit/${variant.file}.svg`;
+  const pngPath = `/hygo/${variant.file}.png`;
+  const svgPath = `/hygo/${variant.file}.svg`;
 
   return (
     <div className="border border-neutral-300/50 dark:border-neutral-700/50 rounded-xl overflow-hidden">
@@ -40,7 +40,7 @@ function LogoCard({ variant, svgLabel, pngLabel }: { variant: Variant; svgLabel:
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={pngPath}
-          alt={`Rybbit ${variant.name} logo`}
+          alt={`Hygo ${variant.name} logo`}
           className="max-h-full max-w-full object-contain"
         />
       </div>
@@ -126,7 +126,7 @@ export default function BrandKit() {
     <div className="max-w-5xl mx-auto px-4 py-12">
       <h1 className="text-3xl md:text-4xl font-bold mb-4">{t("Brand Kit")}</h1>
       <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-12 max-w-2xl">
-        {t("Download official Rybbit logos and assets. All logos are available in SVG and PNG formats for use in your projects, integrations, and content.")}
+        {t("Download official Hygo logos and assets. All logos are available in SVG and PNG formats for use in your projects, integrations, and content.")}
       </p>
 
       {SECTIONS.map((section) => (

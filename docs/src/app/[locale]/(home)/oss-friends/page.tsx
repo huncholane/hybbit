@@ -105,7 +105,7 @@ export default async function OSSFriendsPage() {
 import { createMetadata, createOGImageUrl } from "@/lib/metadata";
 
 export const metadata = createMetadata({
-  title: "OSS Friends | Rybbit",
+  title: "OSS Friends | Hygo",
   description: "Open source projects we love and support. Join our OSS Friends community.",
   openGraph: {
     images: [createOGImageUrl("OSS Friends", "Open source projects we love and support. Join our OSS Friends community.")],

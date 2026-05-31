@@ -7,7 +7,7 @@ export function useGithubStarCount() {
   useEffect(() => {
     const fetchStarCount = async () => {
       try {
-        const response = await fetch("https://api.github.com/repos/rybbit-io/rybbit");
+        const response = await fetch("https://api.github.com/repos/hygo-ai/hygo");
         const data = await response.json();
 
         if (data.stargazers_count) {

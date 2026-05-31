@@ -1,4 +1,4 @@
-import { Filter, FilterParameter, FilterType } from "@rybbit/shared";
+import { Filter, FilterParameter, FilterType } from "@hygo/shared";
 import type { ReactNode } from "react";
 import { getCountryName, getLanguageName } from "../../../../../lib/utils";
 import { FilterOptions } from "./const";

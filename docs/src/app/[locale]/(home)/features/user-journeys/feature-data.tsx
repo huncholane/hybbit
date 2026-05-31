@@ -64,7 +64,7 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Pageviews are tracked automatically",
     description:
-      "Rybbit tracks every pageview and navigation event out of the box. No extra setup needed — journey data is available immediately.",
+      "Hygo tracks every pageview and navigation event out of the box. No extra setup needed — journey data is available immediately.",
   },
   {
     step: 2,
@@ -129,7 +129,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Do I need to set up anything for user journeys?",
     answer:
-      "No. User journeys are built from pageview data that Rybbit tracks automatically. As soon as you install the script and have traffic, journey data is available.",
+      "No. User journeys are built from pageview data that Hygo tracks automatically. As soon as you install the script and have traffic, journey data is available.",
   },
   {
     question: "What's the difference between user journeys and funnels?",
@@ -139,7 +139,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Can I filter journeys by traffic source or device?",
     answer:
-      "Yes. All the standard filters in Rybbit — country, device, browser, referrer, UTM parameters — apply to user journey data. This lets you see how navigation patterns differ across segments.",
+      "Yes. All the standard filters in Hygo — country, device, browser, referrer, UTM parameters — apply to user journey data. This lets you see how navigation patterns differ across segments.",
   },
   {
     question: "How many journey steps can I visualize?",

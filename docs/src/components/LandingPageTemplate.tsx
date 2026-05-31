@@ -38,50 +38,50 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Is Rybbit GDPR and CCPA compliant?",
+      name: "Is Hygo GDPR and CCPA compliant?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes, Rybbit is fully compliant with GDPR, CCPA, and other privacy regulations. We don't use cookies or collect any personal data that could identify your users. We salt user IDs daily to ensure users are not fingerprinted. You will not need to display a cookie consent banner to your users.",
+        text: "Yes, Hygo is fully compliant with GDPR, CCPA, and other privacy regulations. We don't use cookies or collect any personal data that could identify your users. We salt user IDs daily to ensure users are not fingerprinted. You will not need to display a cookie consent banner to your users.",
       },
     },
     {
       "@type": "Question",
-      name: "How does Rybbit compare to Google Analytics?",
+      name: "How does Hygo compare to Google Analytics?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Rybbit is much less bloated than Google Analytics, both in terms of our tracking script and the UX of the dashboard. We show you exactly what you need to see. The difference in usability is night and day.",
+        text: "Hygo is much less bloated than Google Analytics, both in terms of our tracking script and the UX of the dashboard. We show you exactly what you need to see. The difference in usability is night and day.",
       },
     },
     {
       "@type": "Question",
-      name: "Can I self-host Rybbit?",
+      name: "Can I self-host Hygo?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Absolutely! Rybbit is available as a self-hosted option. You can install it on your own server and have complete control over your data. We also offer a cloud version if you prefer a managed solution.",
+        text: "Absolutely! Hygo is available as a self-hosted option. You can install it on your own server and have complete control over your data. We also offer a cloud version if you prefer a managed solution.",
       },
     },
     {
       "@type": "Question",
-      name: "How easy is it to set up Rybbit?",
+      name: "How easy is it to set up Hygo?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Setting up Rybbit is incredibly simple. Just add a small script to your website or install @rybbit/js from npm, and you're good to go. Most users are up and running in less than 5 minutes.",
+        text: "Setting up Hygo is incredibly simple. Just add a small script to your website or install @hygo/js from npm, and you're good to go. Most users are up and running in less than 5 minutes.",
       },
     },
     {
       "@type": "Question",
-      name: "What platforms does Rybbit support?",
+      name: "What platforms does Hygo support?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Rybbit works with virtually any website platform. Whether you're using WordPress, Shopify, Next.js, React, Vue, or any other framework, our simple tracking snippet integrates seamlessly.",
+        text: "Hygo works with virtually any website platform. Whether you're using WordPress, Shopify, Next.js, React, Vue, or any other framework, our simple tracking snippet integrates seamlessly.",
       },
     },
     {
       "@type": "Question",
-      name: "Is Rybbit truly open source?",
+      name: "Is Hygo truly open source?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes, Rybbit is 100% open source. Every single line of code, including for our cloud/enterprise offerings, is available on GitHub under the AGPL 3.0 license.",
+        text: "Yes, Hygo is 100% open source. Every single line of code, including for our cloud/enterprise offerings, is available on GitHub under the AGPL 3.0 license.",
       },
     },
   ],
@@ -276,7 +276,7 @@ export function LandingPageTemplate({ title, subtitle, showEUFlag = true }: Land
 
       <section className="py-14 md:py-20 w-full max-w-[1200px] px-4 mx-auto">
         <div className="text-center mb-10 md:mb-12">
-          <SectionBadge className="mb-4">{t("Why Rybbit")}</SectionBadge>
+          <SectionBadge className="mb-4">{t("Why Hygo")}</SectionBadge>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight">{t("Everything you need")}</h2>
           <p className="mt-4 text-base md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto font-light">
             {t("Powerful analytics without the complexity. Privacy-friendly tools that just work.")}
@@ -325,7 +325,7 @@ export function LandingPageTemplate({ title, subtitle, showEUFlag = true }: Land
               <SectionBadge className="mb-4">{t("Seamless Integration")}</SectionBadge>
               <h2 className="text-3xl md:text-4xl font-bold">{t("Works with all your favorite platforms")}</h2>
               <p className="mt-4 text-neutral-600 dark:text-neutral-300 font-light">
-                {t("Integrate Rybbit with any platform in minutes")}
+                {t("Integrate Hygo with any platform in minutes")}
               </p>
             </div>
             <IntegrationsGrid />
@@ -338,9 +338,9 @@ export function LandingPageTemplate({ title, subtitle, showEUFlag = true }: Land
         <div className="max-w-[1200px] mx-auto px-4">
           <div className="text-center mb-10 md:mb-16">
             <SectionBadge className="mb-4">{t("User Testimonials")}</SectionBadge>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">{t("People love Rybbit")}</h2>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">{t("People love Hygo")}</h2>
             <p className="mt-4 text-base md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto font-light">
-              {t("See what others think about Rybbit Analytics")}
+              {t("See what others think about Hygo Analytics")}
             </p>
           </div>
           <div className="relative bg-neutral-100/50 dark:bg-neutral-800/20 backdrop-blur-sm border border-neutral-300/50 dark:border-neutral-800/50 rounded-3xl overflow-hidden">
@@ -387,7 +387,7 @@ export function LandingPageTemplate({ title, subtitle, showEUFlag = true }: Land
             <div className="md:sticky md:top-24 md:self-start">
               <h2 className="text-3xl md:text-4xl font-bold">{t("Frequently Asked Questions")}</h2>
               <p className="mt-4 text-neutral-600 dark:text-neutral-300 font-light">
-                {t("Everything you need to know about Rybbit Analytics")}
+                {t("Everything you need to know about Hygo Analytics")}
               </p>
             </div>
             <FAQAccordion />

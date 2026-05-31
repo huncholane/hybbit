@@ -360,8 +360,8 @@ export function PageSpeedForm() {
                 CSS/JS files, enabling browser caching, using a Content Delivery Network (CDN), reducing server response
                 time, eliminating render-blocking resources, lazy-loading below-the-fold content, and choosing
                 lightweight analytics tools like{" "}
-                <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-                  Rybbit
+                <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+                  Hygo
                 </Link>{" "}
                 which adds minimal overhead (just 3KB).
               </AccordionContent>
@@ -372,7 +372,7 @@ export function PageSpeedForm() {
               <AccordionContent>
                 Many analytics tools can significantly impact page performance by loading large scripts synchronously
                 and making blocking network requests. This reduces your page's speed and negatively affects user
-                experience. Tools like Rybbit are designed to minimize this impact with lightweight asynchronous loading
+                experience. Tools like Hygo are designed to minimize this impact with lightweight asynchronous loading
                 (3KB script, loaded after page interactive), ensuring you get the insights you need without compromising
                 performance.
               </AccordionContent>
@@ -388,11 +388,11 @@ export function PageSpeedForm() {
             Lightning-fast analytics that won't slow you down
           </h2>
           <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl mx-auto">
-            Rybbit's tiny 3KB script loads asynchronously and won't impact your page speed. Get started for free with up
+            Hygo's tiny 3KB script loads asynchronously and won't impact your page speed. Get started for free with up
             to {DEFAULT_EVENT_LIMIT.toLocaleString()} pageviews per month.
           </p>
           <TrackedButton
-            href="https://app.rybbit.io/signup"
+            href="https://app.hygo.ai/signup"
             eventName="signup"
             eventProps={{ location: "page_speed_calculator_cta" }}
             className="inline-block bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-10 py-4 text-lg rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200"

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "Create optimized OG tags for social sharing. Generate Facebook, Twitter, and LinkedIn previews in seconds with our free tool.",
     type: "website",
-    url: "https://rybbit.com/tools/og-tag-generator",
+    url: "https://hygo.ai/tools/og-tag-generator",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Generate optimized OG tags for social sharing. Perfect previews on Facebook, Twitter, and LinkedIn.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/og-tag-generator",
+    canonical: "https://hygo.ai/tools/og-tag-generator",
   },
 };
 
@@ -46,7 +46,7 @@ const structuredData = {
         "Image size recommendations",
       ],
       operatingSystem: "Any",
-      url: "https://rybbit.com/tools/og-tag-generator",
+      url: "https://hygo.ai/tools/og-tag-generator",
     },
     {
       "@type": "FAQPage",
@@ -80,7 +80,7 @@ const structuredData = {
           name: "How do I test my Open Graph tags?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Use Facebook's Sharing Debugger (facebook.com/developers/tools/debug/) to see how your pages appear on Facebook. Use LinkedIn's Post Inspector (linkedin.com/feed/update/urn:li:activity) to test LinkedIn previews. For Twitter, use the Card Validator (cards-dev.twitter.com/validator). Always clear the cache after making changes. Test on actual social platforms by pasting your URL in the status update box. Track social referral traffic with Rybbit Analytics to see which OG tags drive the most clicks.",
+            text: "Use Facebook's Sharing Debugger (facebook.com/developers/tools/debug/) to see how your pages appear on Facebook. Use LinkedIn's Post Inspector (linkedin.com/feed/update/urn:li:activity) to test LinkedIn previews. For Twitter, use the Card Validator (cards-dev.twitter.com/validator). Always clear the cache after making changes. Test on actual social platforms by pasting your URL in the status update box. Track social referral traffic with Hygo Analytics to see which OG tags drive the most clicks.",
           },
         },
         {
@@ -222,10 +222,10 @@ const educationalContent = (
       <li>
         <strong>Track Performance with Analytics:</strong> Use{" "}
         <Link
-          href="https://app.rybbit.io"
+          href="https://app.hygo.ai"
           className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
         >
-          Rybbit Analytics
+          Hygo Analytics
         </Link>{" "}
         to track which social platforms drive the most traffic to your pages. Measure CTR by platform to see which OG
         tags perform best and optimize accordingly.
@@ -261,8 +261,8 @@ const faqs = [
       <>
         Use Facebook's Sharing Debugger, LinkedIn's Post Inspector, or Twitter's Card Validator to test how your OG tags
         appear. Track social referral traffic with{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit Analytics
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo Analytics
         </Link>{" "}
         to see which OG tags drive the most clicks.
       </>
@@ -301,7 +301,7 @@ export default function OGTagGeneratorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="seo"
-      ctaTitle="Track your social media traffic with Rybbit"
+      ctaTitle="Track your social media traffic with Hygo"
       ctaDescription="See which social platforms drive the most traffic and optimize your OG tags based on real data."
       ctaEventLocation="og_tag_generator_cta"
       structuredData={structuredData}

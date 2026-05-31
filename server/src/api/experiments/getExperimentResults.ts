@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import type { FilterParams } from "@rybbit/shared";
+import type { FilterParams } from "@hygo/shared";
 import SqlString from "sqlstring";
 import { z } from "zod";
 import { clickhouse } from "../../db/clickhouse/clickhouse.js";
@@ -76,7 +76,7 @@ export async function getExperimentResults(
       )`;
 
     // Exposure-based: counts only sessions that explicitly read the flag via
-    // rybbit.flag(), which emits a feature_flag_exposure event. This is the
+    // hygo.flag(), which emits a feature_flag_exposure event. This is the
     // statistically correct unit of analysis for an experiment.
     const exposureQuery = `
         WITH
@@ -112,7 +112,7 @@ export async function getExperimentResults(
     let rows = await processResults<ExperimentResultRow>(exposureResult);
     let measurement: "exposure" | "assignment" = "exposure";
 
-    // Fallback: if no exposures were recorded (the app never calls rybbit.flag
+    // Fallback: if no exposures were recorded (the app never calls hygo.flag
     // for this key), count sessions that were assigned the variant via the
     // feature_flags map attached to every event. Looser, but avoids a confusing
     // empty result when the flag is clearly assigning traffic.

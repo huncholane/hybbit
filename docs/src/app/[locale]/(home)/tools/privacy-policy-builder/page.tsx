@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "Generate a customized privacy policy for your website in minutes. GDPR and CCPA compliant. Free tool with no sign-up required.",
     type: "website",
-    url: "https://rybbit.com/tools/privacy-policy-builder",
+    url: "https://hygo.ai/tools/privacy-policy-builder",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Create a custom privacy policy for your website instantly. GDPR and CCPA compliant.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/privacy-policy-builder",
+    canonical: "https://hygo.ai/tools/privacy-policy-builder",
   },
 };
 
@@ -46,7 +46,7 @@ const structuredData = {
         "Download as Markdown",
       ],
       operatingSystem: "Any",
-      url: "https://rybbit.com/tools/privacy-policy-builder",
+      url: "https://hygo.ai/tools/privacy-policy-builder",
     },
     {
       "@type": "FAQPage",
@@ -72,7 +72,7 @@ const structuredData = {
           name: "Is analytics data considered personal data under GDPR?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Under GDPR and similar regulations, IP addresses and analytics data can be considered personal data. However, privacy-focused analytics tools like Rybbit don't use cookies and anonymize data, making compliance much easier. If you use Rybbit, you typically won't need a cookie consent banner.",
+            text: "Under GDPR and similar regulations, IP addresses and analytics data can be considered personal data. However, privacy-focused analytics tools like Hygo don't use cookies and anonymize data, making compliance much easier. If you use Hygo, you typically won't need a cookie consent banner.",
           },
         },
         {
@@ -235,8 +235,8 @@ const faqs = [
       <>
         Under GDPR and similar regulations, IP addresses and analytics data can be considered personal data. However,
         privacy-focused analytics tools like{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo
         </Link>{" "}
         don't use cookies and anonymize data, making compliance much easier. If you use privacy-first analytics, you
         typically won't need a cookie consent banner.
@@ -278,7 +278,7 @@ export default function PrivacyPolicyBuilderPage() {
       faqs={faqs}
       relatedToolsCategory="privacy"
       ctaTitle="Stay compliant with privacy-first analytics"
-      ctaDescription="Rybbit doesn't use cookies and anonymizes all data, making GDPR and CCPA compliance simple. No cookie banners needed."
+      ctaDescription="Hygo doesn't use cookies and anonymizes all data, making GDPR and CCPA compliance simple. No cookie banners needed."
       ctaEventLocation="privacy_policy_builder_cta"
       structuredData={structuredData}
     />

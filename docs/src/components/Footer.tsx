@@ -13,7 +13,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <Image src="/rybbit/horizontal_white.svg" alt="Rybbit" width={140} height={0} style={{ height: "auto" }}
+            <Image src="/hygo/horizontal_white.svg" alt="Hygo" width={140} height={0} style={{ height: "auto" }}
               className="dark:invert-0 invert"
 
             />
@@ -22,12 +22,12 @@ export function Footer() {
               user privacy.
             </p> */}
             <a
-              href="https://www.producthunt.com/products/rybbit?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_source=badge-rybbit&#0045;2"
+              href="https://www.producthunt.com/products/hygo?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_source=badge-hygo&#0045;2"
               target="_blank"
             >
               <img
                 src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1028220&theme=neutral&period=daily&t=1761001525479"
-                alt="Rybbit - Open&#0032;Source&#0032;Google&#0032;Analytics&#0032;Replacement | Product Hunt"
+                alt="Hygo - Open&#0032;Source&#0032;Google&#0032;Analytics&#0032;Replacement | Product Hunt"
                 style={{ width: "250px", height: "54px", margin: "20px 0px" }}
                 width="250"
                 height="54"
@@ -36,7 +36,7 @@ export function Footer() {
             {/* Social Media Links */}
             <div className="flex gap-4">
               <a
-                href="https://github.com/rybbit-io/rybbit"
+                href="https://github.com/hygo-ai/hygo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
@@ -214,7 +214,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/rybbit-io/rybbit"
+                  href="https://github.com/hygo-ai/hygo"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
@@ -285,7 +285,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:hello@rybbit.com" className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                <a href="mailto:hello@hygo.ai" className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">
                   {t("Support")}
                 </a>
               </li>
@@ -296,7 +296,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-neutral-400">{t("© {year} Rybbit. All rights reserved.", { year: String(new Date().getFullYear()) })}</div>
+            <div className="text-sm text-neutral-400">{t("© {year} Hygo. All rights reserved.", { year: String(new Date().getFullYear()) })}</div>
             <div className="text-sm text-neutral-400 space-x-4 flex items-center">
               <ThemeSwitcher />
               <LanguageSwitcher />

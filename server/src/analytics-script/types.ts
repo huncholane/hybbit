@@ -89,7 +89,7 @@ export interface TrackingPayload extends BasePayload {
 
 export interface ButtonClickProperties {
   text?: string;
-  [key: string]: string | undefined; // Additional data-rybbit-* attributes
+  [key: string]: string | undefined; // Additional data-hygo-* attributes
 }
 
 export interface CopyProperties {
@@ -132,7 +132,7 @@ export interface ErrorProperties {
   [key: string]: any;
 }
 
-export interface RybbitAPI {
+export interface HygoAPI {
   pageview: () => void;
   event: (name: string, properties?: Record<string, any>) => void;
   error: (error: Error, properties?: ErrorProperties) => void;
@@ -145,7 +145,7 @@ export interface RybbitAPI {
   flagPayload: <T = unknown>(key: string, fallback?: T) => T;
   flags: () => Record<string, unknown>;
   flagPayloads: () => Record<string, unknown>;
-  onReady: (callback: (api: RybbitAPI) => void) => void;
+  onReady: (callback: (api: HygoAPI) => void) => void;
   startSessionReplay: () => void;
   stopSessionReplay: () => void;
   isSessionReplayActive: () => boolean;

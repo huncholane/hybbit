@@ -94,11 +94,11 @@ export function NoData() {
             />
             <span className="text-xs text-muted-foreground">
               {t("See our")}{" "}
-              <ExternalLink href="https://rybbit.com/docs/script">
+              <ExternalLink href="https://hygo.ai/docs/script">
                 {t("docs")}
               </ExternalLink>{" "}
               {t("for more information, or")}{" "}
-              <ExternalLink href="https://rybbit.com/docs/script-troubleshooting">
+              <ExternalLink href="https://hygo.ai/docs/script-troubleshooting">
                 {t("troubleshoot")}
               </ExternalLink>{" "}
               {t("if your script isn't sending traffic.")}
@@ -112,212 +112,212 @@ export function NoData() {
                   icon={<SiGoogletagmanager className="w-5 h-5" />}
                   title="Google Tag Manager"
                   description=""
-                  href="https://rybbit.com/docs/guides/google-tag-manager"
+                  href="https://hygo.ai/docs/guides/google-tag-manager"
                 />
                 <Card
                   icon={<SiReact className="w-5 h-5" />}
                   title="React"
                   description=""
-                  href="https://rybbit.com/docs/guides/react/vite-cra"
+                  href="https://hygo.ai/docs/guides/react/vite-cra"
                 />
                 <Card
                   icon={<SiNextdotjs className="w-5 h-5" />}
                   title="Next.js"
                   description=""
-                  href="https://rybbit.com/docs/guides/react/next-js"
+                  href="https://hygo.ai/docs/guides/react/next-js"
                 />
                 <Card
                   icon={<SiAngular className="w-5 h-5" />}
                   title="Angular"
                   description=""
-                  href="https://rybbit.com/docs/guides/angular"
+                  href="https://hygo.ai/docs/guides/angular"
                 />
                 <Card
                   icon={<SiVuedotjs className="w-5 h-5" />}
                   title="Vue"
                   description=""
-                  href="https://rybbit.com/docs/guides/vue/vite"
+                  href="https://hygo.ai/docs/guides/vue/vite"
                 />
                 <Card
                   icon={<SiNuxt className="w-5 h-5" />}
                   title="Nuxt"
                   description=""
-                  href="https://rybbit.com/docs/guides/vue/nuxt"
+                  href="https://hygo.ai/docs/guides/vue/nuxt"
                 />
                 <Card
                   icon={<SiSvelte className="w-5 h-5" />}
                   title="Svelte"
                   description=""
-                  href="https://rybbit.com/docs/guides/svelte/vite"
+                  href="https://hygo.ai/docs/guides/svelte/vite"
                 />
                 <Card
                   icon={<SiSvelte className="w-5 h-5" />}
                   title="SvelteKit"
                   description=""
-                  href="https://rybbit.com/docs/guides/svelte/sveltekit"
+                  href="https://hygo.ai/docs/guides/svelte/sveltekit"
                 />
                 <Card
                   icon={<img src="/platforms/thrivecart.svg" alt="ThriveCart" className="w-5 h-5 grayscale" />}
                   title="ThriveCart"
                   description=""
-                  href="https://rybbit.com/docs/guides/thrivecart"
+                  href="https://hygo.ai/docs/guides/thrivecart"
                 />
                 <Card
                   icon={<SiAstro className="w-5 h-5" />}
                   title="Astro"
                   description=""
-                  href="https://rybbit.com/docs/guides/astro"
+                  href="https://hygo.ai/docs/guides/astro"
                 />
                 <Card
                   icon={<SiBigcommerce className="w-5 h-5" />}
                   title="BigCommerce"
                   description=""
-                  href="https://rybbit.com/docs/guides/bigcommerce"
+                  href="https://hygo.ai/docs/guides/bigcommerce"
                 />
                 <Card
                   icon={<SiCarrd className="w-5 h-5" />}
                   title="Carrd"
                   description=""
-                  href="https://rybbit.com/docs/guides/carrd"
+                  href="https://hygo.ai/docs/guides/carrd"
                 />
                 <Card
                   icon={<SiContentful className="w-5 h-5" />}
                   title="Contentful"
                   description=""
-                  href="https://rybbit.com/docs/guides/contentful"
+                  href="https://hygo.ai/docs/guides/contentful"
                 />
                 <Card
                   icon={<SiGatsby className="w-5 h-5" />}
                   title="Gatsby"
                   description=""
-                  href="https://rybbit.com/docs/guides/react/gatsby"
+                  href="https://hygo.ai/docs/guides/react/gatsby"
                 />
                 <Card
                   icon={<SiGhost className="w-5 h-5" />}
                   title="Ghost"
                   description=""
-                  href="https://rybbit.com/docs/guides/ghost"
+                  href="https://hygo.ai/docs/guides/ghost"
                 />
                 <Card
                   icon={<SiGitbook className="w-5 h-5" />}
                   title="GitBook"
                   description=""
-                  href="https://rybbit.com/docs/guides/gitbook"
+                  href="https://hygo.ai/docs/guides/gitbook"
                 />
                 <Card
                   icon={<SiRemix className="w-5 h-5" />}
                   title="Remix"
                   description=""
-                  href="https://rybbit.com/docs/guides/react/remix"
+                  href="https://hygo.ai/docs/guides/react/remix"
                 />
                 <Card
                   icon={<SiDocusaurus className="w-5 h-5" />}
                   title="Docusaurus"
                   description=""
-                  href="https://rybbit.com/docs/guides/docusaurus"
+                  href="https://hygo.ai/docs/guides/docusaurus"
                 />
                 <Card
                   icon={<SiDrupal className="w-5 h-5" />}
                   title="Drupal"
                   description=""
-                  href="https://rybbit.com/docs/guides/drupal"
+                  href="https://hygo.ai/docs/guides/drupal"
                 />
                 <Card
                   icon={<SiFramer className="w-5 h-5" />}
                   title="Framer"
                   description=""
-                  href="https://rybbit.com/docs/guides/framer"
+                  href="https://hygo.ai/docs/guides/framer"
                 />
 
                 <Card
                   icon={<SiHugo className="w-5 h-5" />}
                   title="Hugo"
                   description=""
-                  href="https://rybbit.com/docs/guides/hugo"
+                  href="https://hygo.ai/docs/guides/hugo"
                 />
                 <Card
                   icon={<SiJekyll className="w-5 h-5" />}
                   title="Jekyll"
                   description=""
-                  href="https://rybbit.com/docs/guides/jekyll"
+                  href="https://hygo.ai/docs/guides/jekyll"
                 />
                 <Card
                   icon={<SiJoomla className="w-5 h-5" />}
                   title="Joomla"
                   description=""
-                  href="https://rybbit.com/docs/guides/joomla"
+                  href="https://hygo.ai/docs/guides/joomla"
                 />
                 <Card
                   icon={<SiLaravel className="w-5 h-5" />}
                   title="Laravel"
                   description=""
-                  href="https://rybbit.com/docs/guides/laravel"
+                  href="https://hygo.ai/docs/guides/laravel"
                 />
                 <Card
                   icon={<SiMintlify className="w-5 h-5" />}
                   title="Mintlify"
                   description=""
-                  href="https://rybbit.com/docs/guides/mintlify"
+                  href="https://hygo.ai/docs/guides/mintlify"
                 />
                 <Card
                   icon={<SiPrestashop className="w-5 h-5" />}
                   title="PrestaShop"
                   description=""
-                  href="https://rybbit.com/docs/guides/prestashop"
+                  href="https://hygo.ai/docs/guides/prestashop"
                 />
                 <Card
                   icon={<SiSanity className="w-5 h-5" />}
                   title="Sanity"
                   description=""
-                  href="https://rybbit.com/docs/guides/sanity"
+                  href="https://hygo.ai/docs/guides/sanity"
                 />
                 <Card
                   icon={<SiShopify className="w-5 h-5" />}
                   title="Shopify"
                   description=""
-                  href="https://rybbit.com/docs/guides/shopify"
+                  href="https://hygo.ai/docs/guides/shopify"
                 />
                 <Card
                   icon={<SiSquarespace className="w-5 h-5" />}
                   title="Squarespace"
                   description=""
-                  href="https://rybbit.com/docs/guides/squarespace"
+                  href="https://hygo.ai/docs/guides/squarespace"
                 />
                 <Card
                   icon={<SiStrapi className="w-5 h-5" />}
                   title="Strapi"
                   description=""
-                  href="https://rybbit.com/docs/guides/strapi"
+                  href="https://hygo.ai/docs/guides/strapi"
                 />
                 <Card
                   icon={<SiVitepress className="w-5 h-5" />}
                   title="VitePress"
                   description=""
-                  href="https://rybbit.com/docs/guides/vitepress"
+                  href="https://hygo.ai/docs/guides/vitepress"
                 />
                 <Card
                   icon={<SiWordpress className="w-5 h-5" />}
                   title="WordPress"
                   description=""
-                  href="https://rybbit.com/docs/guides/wordpress"
+                  href="https://hygo.ai/docs/guides/wordpress"
                 />
                 <Card
                   icon={<SiWebflow className="w-5 h-5" />}
                   title="Webflow"
                   description=""
-                  href="https://rybbit.com/docs/guides/webflow"
+                  href="https://hygo.ai/docs/guides/webflow"
                 />
                 <Card
                   icon={<SiWix className="w-5 h-5" />}
                   title="Wix"
                   description=""
-                  href="https://rybbit.com/docs/guides/wix"
+                  href="https://hygo.ai/docs/guides/wix"
                 />
                 <Card
                   icon={<SiWoocommerce className="w-5 h-5" />}
                   title="WooCommerce"
                   description=""
-                  href="https://rybbit.com/docs/guides/woocommerce"
+                  href="https://hygo.ai/docs/guides/woocommerce"
                 />
               </div>
             </div>

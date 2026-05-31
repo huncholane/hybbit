@@ -1,4 +1,4 @@
-import { Filter, FilterParameter, TimeBucket } from "@rybbit/shared";
+import { Filter, FilterParameter, TimeBucket } from "@hygo/shared";
 
 /**
  * Common parameters shared across most analytics API endpoints

@@ -1,4 +1,4 @@
-import { Filter } from "@rybbit/shared";
+import { Filter } from "@hygo/shared";
 import { authedFetch } from "../../utils";
 import {
   BucketedParams,

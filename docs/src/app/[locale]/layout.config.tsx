@@ -14,8 +14,8 @@ export function baseOptions(lang: string): BaseLayoutProps {
       title: (
         <>
           <Image
-            src="/rybbit/horizontal_white.svg"
-            alt="Rybbit"
+            src="/hygo/horizontal_white.svg"
+            alt="Hygo"
             width={120}
             height={0}
             style={{ height: "auto" }}
@@ -28,7 +28,7 @@ export function baseOptions(lang: string): BaseLayoutProps {
     links: [
       {
         text: "Demo",
-        url: "https://demo.rybbit.com/81",
+        url: "https://demo.hygo.ai/81",
         external: true,
       },
     ],

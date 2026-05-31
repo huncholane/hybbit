@@ -1,15 +1,15 @@
 ---
 title: Mintlify
-description: Integrate Rybbit Analytics with your Mintlify documentation site
+description: Integrate Hygo Analytics with your Mintlify documentation site
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide explains how to integrate Rybbit with your Mintlify documentation site for analytics tracking. Mintlify uses a file-based approach for custom scripts where any JavaScript file in your content directory is automatically included on every documentation page.
+This guide explains how to integrate Hygo with your Mintlify documentation site for analytics tracking. Mintlify uses a file-based approach for custom scripts where any JavaScript file in your content directory is automatically included on every documentation page.
 
-## How to Add Rybbit to Your Mintlify Docs
+## How to Add Hygo to Your Mintlify Docs
 
 Mintlify allows you to add custom JavaScript files to your documentation by placing `.js` files inside your content directory. These files will be automatically included on every page.
 
@@ -17,20 +17,20 @@ Mintlify allows you to add custom JavaScript files to your documentation by plac
 <Step>
 ### Retrieve Your Tracking Script Details
 
-Navigate to your Rybbit dashboard to obtain your **Site ID**. The script source will be `https://app.rybbit.io/api/script.js` (or your self-hosted URL if applicable).
+Navigate to your Hygo dashboard to obtain your **Site ID**. The script source will be `https://app.hygo.ai/api/script.js` (or your self-hosted URL if applicable).
 </Step>
 
 <Step>
 ### Create a Custom JavaScript File
 
-Create a new JavaScript file in your Mintlify content directory (typically where your `.mdx` files are located). You can name it something descriptive like `rybbit-analytics.js`.
+Create a new JavaScript file in your Mintlify content directory (typically where your `.mdx` files are located). You can name it something descriptive like `hygo-analytics.js`.
 
-```javascript filename="rybbit-analytics.js"
-// Rybbit Analytics Integration
+```javascript filename="hygo-analytics.js"
+// Hygo Analytics Integration
 (function() {
   // Create the script element
   const script = document.createElement('script');
-  script.src = 'https://app.rybbit.io/api/script.js';
+  script.src = 'https://app.hygo.ai/api/script.js';
   script.defer = true;
   script.setAttribute('data-site-id', 'YOUR_SITE_ID'); // Replace with your actual Site ID
 
@@ -39,36 +39,36 @@ Create a new JavaScript file in your Mintlify content directory (typically where
 })();
 ```
 
-Make sure to replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Make sure to replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 
-If you're self-hosting Rybbit, replace `https://app.rybbit.io/api/script.js` with your self-hosted URL (e.g., `https://your-domain.com/api/script.js`).
+If you're self-hosting Hygo, replace `https://app.hygo.ai/api/script.js` with your self-hosted URL (e.g., `https://your-domain.com/api/script.js`).
 </Step>
 
 <Step>
 ### Verify Installation
 
-After deploying your Mintlify documentation site, open your Rybbit dashboard to check if data is being received. You can also inspect your browser's network tab to confirm that `script.js` is loaded on your pages and the Rybbit tracking requests are being sent.
+After deploying your Mintlify documentation site, open your Hygo dashboard to check if data is being received. You can also inspect your browser's network tab to confirm that `script.js` is loaded on your pages and the Hygo tracking requests are being sent.
 
 Look for:
 - The `script.js` file being loaded in the Network tab
-- POST requests to your Rybbit analytics endpoint (e.g., `/api/event`)
+- POST requests to your Hygo analytics endpoint (e.g., `/api/event`)
 </Step>
 </Steps>
 
 <Callout type="info">
-  **Page View Tracking**: Mintlify documentation sites are Single Page Applications (SPAs). Rybbit's tracking script is designed to automatically detect route changes in SPAs and track them as page views. The default configuration should work out of the box without any additional setup.
+  **Page View Tracking**: Mintlify documentation sites are Single Page Applications (SPAs). Hygo's tracking script is designed to automatically detect route changes in SPAs and track them as page views. The default configuration should work out of the box without any additional setup.
 </Callout>
 
 ## Advanced Configuration
 
 ### Custom Script Attributes
 
-You can customize the Rybbit script behavior by adding data attributes to the script tag:
+You can customize the Hygo script behavior by adding data attributes to the script tag:
 
-```javascript filename="rybbit-analytics.js"
+```javascript filename="hygo-analytics.js"
 (function() {
   const script = document.createElement('script');
-  script.src = 'https://app.rybbit.io/api/script.js';
+  script.src = 'https://app.hygo.ai/api/script.js';
   script.defer = true;
   script.setAttribute('data-site-id', 'YOUR_SITE_ID');
 
@@ -86,7 +86,7 @@ You can customize the Rybbit script behavior by adding data attributes to the sc
 ```
 
 Available script attributes:
-- `data-site-id` (required): Your Rybbit site ID
+- `data-site-id` (required): Your Hygo site ID
 - `data-debounce`: Debounce duration in milliseconds for tracking events (default: 500)
 - `data-skip-patterns`: JSON array of URL patterns to skip tracking
 - `data-mask-patterns`: JSON array of patterns to mask in tracked data
@@ -95,7 +95,7 @@ Available script attributes:
 
 ## Custom Event Tracking
 
-You can track custom events in your Mintlify documentation using the global `window.rybbit` API. This is useful for tracking specific user interactions like button clicks, downloads, or form submissions.
+You can track custom events in your Mintlify documentation using the global `window.hygo` API. This is useful for tracking specific user interactions like button clicks, downloads, or form submissions.
 
 ### Tracking Custom Events in MDX
 
@@ -104,8 +104,8 @@ Since Mintlify supports MDX, you can add inline event handlers to track custom e
 ```mdx
 <button
   onClick={() => {
-    if (typeof window !== 'undefined' && window.rybbit) {
-      window.rybbit.event('download_clicked', {
+    if (typeof window !== 'undefined' && window.hygo) {
+      window.hygo.event('download_clicked', {
         file: 'getting-started-guide.pdf',
         section: 'introduction'
       });
@@ -119,7 +119,7 @@ Since Mintlify supports MDX, you can add inline event handlers to track custom e
 
 ## Related Resources
 
-- [Rybbit Script Configuration](/docs/script)
+- [Hygo Script Configuration](/docs/script)
 - [Custom Event Tracking](/docs/track-events)
 - [Mintlify Documentation](https://mintlify.com/docs)
 - [Mintlify Custom Scripts](https://www.mintlify.com/docs/customize/custom-scripts)

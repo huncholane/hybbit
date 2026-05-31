@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Free Marketing ROI Calculator | Calculate Return on Investment & ROAS",
     description: "Calculate your marketing ROI, ROAS, profit margins, and net profit instantly.",
     type: "website",
-    url: "https://rybbit.com/tools/marketing-roi-calculator",
+    url: "https://hygo.ai/tools/marketing-roi-calculator",
   },
   twitter: {
     card: "summary_large_image",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: "Calculate your marketing ROI, ROAS, profit margins, and net profit instantly.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/marketing-roi-calculator",
+    canonical: "https://hygo.ai/tools/marketing-roi-calculator",
   },
 };
 
@@ -30,7 +30,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Marketing ROI Calculator",
       description: "Calculate ROI, ROAS, profit margins, and net profit for your marketing campaigns",
-      url: "https://rybbit.com/tools/marketing-roi-calculator",
+      url: "https://hygo.ai/tools/marketing-roi-calculator",
       applicationCategory: "BusinessApplication",
       featureList: [
         "ROI Calculation",
@@ -308,8 +308,8 @@ const faqs = [
         To improve ROI, focus on: targeting high-intent audiences, optimizing conversion rates, reducing customer
         acquisition costs, improving ad creative and messaging, A/B testing campaigns, focusing on high-performing
         channels, and tracking performance with analytics. Use{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit Analytics
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo Analytics
         </Link>{" "}
         to identify which campaigns and channels drive the best returns.
       </>
@@ -328,7 +328,7 @@ export default function MarketingROICalculatorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track your marketing ROI with Rybbit"
+      ctaTitle="Track your marketing ROI with Hygo"
       ctaDescription="See which campaigns generate the best ROI and optimize your marketing spend."
       ctaEventLocation="roi_calculator_cta"
       structuredData={structuredData}

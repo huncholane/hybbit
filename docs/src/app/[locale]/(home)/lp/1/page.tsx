@@ -2,7 +2,7 @@ import { LandingPageTemplate } from "@/components/LandingPageTemplate";
 import { createMetadata, createOGImageUrl } from "@/lib/metadata";
 
 export const metadata = createMetadata({
-  title: "Rybbit - Simple Analytics You'll Actually Use",
+  title: "Hygo - Simple Analytics You'll Actually Use",
   description:
     "See where your visitors come from, watch what they do, and find exactly where you lose them — in one dashboard that takes 5 minutes to set up.",
   openGraph: {

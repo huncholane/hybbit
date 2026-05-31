@@ -22,7 +22,7 @@ function pillClass(active: boolean) {
 }
 
 export function DashboardEmbedDemo() {
-  const [origin, setOrigin] = useState("https://app.rybbit.io");
+  const [origin, setOrigin] = useState("https://app.hygo.ai");
   const [siteId, setSiteId] = useState("YOUR_SITE_ID");
   const [privateLinkKey, setPrivateLinkKey] = useState("YOUR_PRIVATE_LINK_KEY");
   const [theme, setTheme] = useState<Theme>("system");
@@ -31,7 +31,7 @@ export function DashboardEmbedDemo() {
   const dashboardUrl = useMemo(() => {
     const normalizedOrigin = origin.replace(/\/+$/, "");
     const path = `/${siteId || "YOUR_SITE_ID"}/${privateLinkKey || "YOUR_PRIVATE_LINK_KEY"}/main`;
-    const url = new URL(path, normalizedOrigin || "https://app.rybbit.io");
+    const url = new URL(path, normalizedOrigin || "https://app.hygo.ai");
     url.searchParams.set("embed", "true");
     url.searchParams.set("theme", theme);
 
@@ -53,7 +53,7 @@ export function DashboardEmbedDemo() {
     <div className="not-prose my-6 space-y-6 rounded-lg border border-fd-border bg-fd-card p-5">
       <div className="grid gap-3 md:grid-cols-3">
         <label className="space-y-1.5">
-          <span className="text-xs font-semibold uppercase tracking-wide">Rybbit URL</span>
+          <span className="text-xs font-semibold uppercase tracking-wide">Hygo URL</span>
           <input
             value={origin}
             onChange={event => setOrigin(event.target.value)}

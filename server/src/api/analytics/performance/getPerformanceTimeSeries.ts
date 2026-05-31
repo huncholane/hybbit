@@ -4,7 +4,7 @@ import { getTimeStatement, processResults, TimeBucketToFn, bucketIntervalMap } f
 import SqlString from "sqlstring";
 import { validateTimeStatementFillParams } from "../utils/query-validation.js";
 import { TimeBucket, PerformanceTimeSeriesPoint } from "../types.js";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { getFilterStatement } from "../utils/getFilterStatement.js";
 
 function getTimeStatementFill(params: FilterParams, bucket: TimeBucket) {

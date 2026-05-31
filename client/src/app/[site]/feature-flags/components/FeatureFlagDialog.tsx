@@ -75,15 +75,15 @@ function buildFlagSnippets(form: FlagFormState): { jsCode: string; tsCode: strin
 
   if (form.flagType === "boolean") {
     return {
-      jsCode: `window.rybbit.onReady((rybbit) => {
-  const enabled = rybbit.flag(${key}, false);
+      jsCode: `window.hygo.onReady((hygo) => {
+  const enabled = hygo.flag(${key}, false);
 
   if (enabled) {
     // Feature is on for this visitor.
   }
 });`,
-      tsCode: `window.rybbit.onReady((rybbit) => {
-  const enabled: boolean = rybbit.flag(${key}, false);
+      tsCode: `window.hygo.onReady((hygo) => {
+  const enabled: boolean = hygo.flag(${key}, false);
 
   if (enabled) {
     // Feature is on for this visitor.
@@ -99,8 +99,8 @@ function buildFlagSnippets(form: FlagFormState): { jsCode: string; tsCode: strin
     const variantUnion = variants.length ? variants.map(variant => JSON.stringify(variant)).join(" | ") : '"control"';
 
     return {
-      jsCode: `window.rybbit.onReady((rybbit) => {
-  const variant = rybbit.flag(${key}, ${JSON.stringify(fallbackVariant)});
+      jsCode: `window.hygo.onReady((hygo) => {
+  const variant = hygo.flag(${key}, ${JSON.stringify(fallbackVariant)});
 
   if (variant === ${JSON.stringify(alternateVariant)}) {
     // Render this variant.
@@ -110,8 +110,8 @@ function buildFlagSnippets(form: FlagFormState): { jsCode: string; tsCode: strin
 });`,
       tsCode: `type FlagVariant = ${variantUnion};
 
-window.rybbit.onReady((rybbit) => {
-  const variant = rybbit.flag(${key}, ${JSON.stringify(fallbackVariant)}) as FlagVariant;
+window.hygo.onReady((hygo) => {
+  const variant = hygo.flag(${key}, ${JSON.stringify(fallbackVariant)}) as FlagVariant;
 
   switch (variant) {
     case ${JSON.stringify(alternateVariant)}:
@@ -126,9 +126,9 @@ window.rybbit.onReady((rybbit) => {
   }
 
   return {
-    jsCode: `window.rybbit.onReady((rybbit) => {
-  const matched = rybbit.flag(${key}, false);
-  const config = rybbit.flagPayload(${key}, {});
+    jsCode: `window.hygo.onReady((hygo) => {
+  const matched = hygo.flag(${key}, false);
+  const config = hygo.flagPayload(${key}, {});
 
   if (matched) {
     // Use config to drive your UI.
@@ -139,8 +139,8 @@ window.rybbit.onReady((rybbit) => {
   [key: string]: unknown;
 }
 
-window.rybbit.onReady((rybbit) => {
-  const config = rybbit.flagPayload<FlagConfig>(${key}, {});
+window.hygo.onReady((hygo) => {
+  const config = hygo.flagPayload<FlagConfig>(${key}, {});
 
   // Use config to drive your UI.
 });`,

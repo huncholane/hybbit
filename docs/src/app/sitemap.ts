@@ -5,7 +5,7 @@ import { readdirSync } from "fs";
 import { join } from "path";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://rybbit.com";
+  const baseUrl = "https://hygo.ai";
 
   // Get all documentation pages
   const docPages = source.getPages().map(page => ({

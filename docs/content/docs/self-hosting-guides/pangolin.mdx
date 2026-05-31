@@ -1,12 +1,12 @@
 ---
 title: Pangolin setup
-description: Set up Rybbit with Pangolin as a self-hosted reverse proxy using Newt
+description: Set up Hygo with Pangolin as a self-hosted reverse proxy using Newt
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-This guide shows you how to set up Rybbit with [Pangolin](https://github.com/fosrl/pangolin), a self-hosted reverse proxy, using a Newt container inside the Docker Compose stack. This approach avoids exposing ports directly on your host network.
+This guide shows you how to set up Hygo with [Pangolin](https://github.com/fosrl/pangolin), a self-hosted reverse proxy, using a Newt container inside the Docker Compose stack. This approach avoids exposing ports directly on your host network.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ You **must** generate a proper `BETTER_AUTH_SECRET` before starting. Without a v
 <Step>
 ### Configure Environment Variables
 
-Create a `.env` file in your Rybbit directory:
+Create a `.env` file in your Hygo directory:
 
 ```bash
 # Required: Your domain and base URL
@@ -68,13 +68,13 @@ The `HOST_BACKEND_PORT` and `HOST_CLIENT_PORT` values use the `host:container` f
 <Step>
 ### Create Docker Compose File
 
-Create a `docker-compose.yml` file in the same directory. This includes a Newt container that connects Pangolin to your Rybbit services:
+Create a `docker-compose.yml` file in the same directory. This includes a Newt container that connects Pangolin to your Hygo services:
 
 ```yaml
 services:
   newt:
     image: fosrl/newt
-    container_name: newt-rybbit
+    container_name: newt-hygo
     restart: unless-stopped
     environment:
       - PANGOLIN_ENDPOINT=https://pangolin.yourdomain.com
@@ -129,7 +129,7 @@ services:
       - "5432:5432"
 
   backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:${IMAGE_TAG:-latest}
+    image: ghcr.io/hygo-ai/hygo-backend:${IMAGE_TAG:-latest}
     container_name: backend
     ports:
       - "${HOST_BACKEND_PORT:-127.0.0.1:3001:3001}"
@@ -162,7 +162,7 @@ services:
     restart: unless-stopped
 
   client:
-    image: ghcr.io/rybbit-io/rybbit-client:${IMAGE_TAG:-latest}
+    image: ghcr.io/hygo-ai/hygo-client:${IMAGE_TAG:-latest}
     container_name: client
     ports:
       - "${HOST_CLIENT_PORT:-127.0.0.1:3002:3002}"
@@ -255,13 +255,13 @@ docker compose logs backend
 <Step>
 ### Configure Pangolin
 
-In your Pangolin dashboard, create a new site for your Rybbit domain and configure two resources:
+In your Pangolin dashboard, create a new site for your Hygo domain and configure two resources:
 
-1. **Client resource** — routes the root domain to the Rybbit frontend:
+1. **Client resource** — routes the root domain to the Hygo frontend:
    - Target: `client` (the Docker container hostname)
    - Port: `3002`
 
-2. **Backend resource** — routes `/api` traffic to the Rybbit backend:
+2. **Backend resource** — routes `/api` traffic to the Hygo backend:
    - Target: `backend` (the Docker container hostname)
    - Port: `3001`
 
@@ -284,7 +284,7 @@ You do **not** need to enable "Advanced Mode" in Pangolin. The standard configur
 </Step>
 
 <Step>
-### Access Rybbit
+### Access Hygo
 
 Navigate to `https://tracking.yourdomain.com` and create your admin account.
 
@@ -333,14 +333,14 @@ docker compose ps
 Verify your Newt credentials and Pangolin endpoint:
 
 ```bash
-docker compose logs -f newt-rybbit
+docker compose logs -f newt-hygo
 ```
 
 Make sure `PANGOLIN_ENDPOINT`, `NEWT_ID`, and `NEWT_SECRET` are correct in your `docker-compose.yml`.
 
 ## Video Reference
 
-For a visual walkthrough of setting up Rybbit with Pangolin, see the official Pangolin YouTube guide:
+For a visual walkthrough of setting up Hygo with Pangolin, see the official Pangolin YouTube guide:
 
 <iframe
   width="560"

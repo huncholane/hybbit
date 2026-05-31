@@ -1,28 +1,28 @@
 ---
 title: Custom Nginx setup
-description: Set up Rybbit with your own Nginx installation instead of using the built-in Caddy server
+description: Set up Hygo with your own Nginx installation instead of using the built-in Caddy server
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide shows you how to set up Rybbit with your own Nginx installation instead of using the built-in Caddy server.
+This guide shows you how to set up Hygo with your own Nginx installation instead of using the built-in Caddy server.
 
 ## Prerequisites
 
 - Existing Nginx installation
 - SSL certificates (Let's Encrypt recommended)
 - Domain pointed to your server
-- Rybbit running with `--no-webserver` flag
+- Hygo running with `--no-webserver` flag
 
 ## Setup Steps
 
 <Steps>
 <Step>
-### Run Rybbit without Caddy
+### Run Hygo without Caddy
 
-First, set up Rybbit to expose ports without the built-in webserver:
+First, set up Hygo to expose ports without the built-in webserver:
 
 ```bash
 ./setup.sh your.domain.name --no-webserver
@@ -128,7 +128,7 @@ Check that everything is working:
 # Check Nginx status
 sudo systemctl status nginx
 
-# Check Rybbit services
+# Check Hygo services
 docker compose ps
 
 # Test the website
@@ -186,7 +186,7 @@ Certbot usually sets up auto-renewal automatically, but you can add this cron jo
 
 ## Custom Ports
 
-If you need to use custom ports for Rybbit:
+If you need to use custom ports for Hygo:
 
 ```bash
 ./setup.sh your.domain.name --no-webserver --backend-port 8080 --client-port 8081
@@ -213,7 +213,7 @@ location / {
 
 ### Common Issues
 
-**502 Bad Gateway**: Check if Rybbit services are running:
+**502 Bad Gateway**: Check if Hygo services are running:
 ```bash
 docker compose ps
 docker compose logs
@@ -240,6 +240,6 @@ sudo tail -f /var/log/nginx/access.log
 # Nginx error logs
 sudo tail -f /var/log/nginx/error.log
 
-# Rybbit logs
+# Hygo logs
 docker compose logs -f
 ```

@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Free Cost Per Acquisition (CPA) Calculator",
     description: "Calculate and optimize your customer acquisition costs with industry benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/cost-per-acquisition-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/cost-per-acquisition-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Calculate your cost per acquisition and compare against industry benchmarks",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/cost-per-acquisition-calculator",
+    canonical: "https://hygo.ai/tools/cost-per-acquisition-calculator",
   },
 };
 
@@ -31,7 +31,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "Cost Per Acquisition Calculator",
       description: "Free CPA calculator to measure customer acquisition costs and compare against industry benchmarks",
-      url: "https://rybbit.com/tools/cost-per-acquisition-calculator",
+      url: "https://hygo.ai/tools/cost-per-acquisition-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -234,8 +234,8 @@ export default function CostPerAcquisitionPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track your acquisition costs with Rybbit"
-      ctaDescription="Monitor CPA, conversion rates, and campaign performance in real-time with Rybbit's analytics platform."
+      ctaTitle="Track your acquisition costs with Hygo"
+      ctaDescription="Monitor CPA, conversion rates, and campaign performance in real-time with Hygo's analytics platform."
       ctaEventLocation="cost_per_acquisition_calculator_cta"
       structuredData={structuredData}
     />

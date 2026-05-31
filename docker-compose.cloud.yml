@@ -98,7 +98,7 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - BASE_URL=${BASE_URL}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
-      # below is only for rybbit cloud
+      # below is only for hygo cloud
       - CLOUD=${CLOUD}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
@@ -118,7 +118,7 @@ services:
       - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
       - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
       - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
-      - R2_BUCKET_NAME=${R2_BUCKET_NAME:-rybbit}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME:-hygo}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme}

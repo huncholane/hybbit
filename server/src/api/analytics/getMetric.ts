@@ -3,7 +3,7 @@ import { clickhouse } from "../../db/clickhouse/clickhouse.js";
 import { FilterParameter } from "./types.js";
 import { getTimeStatement, processResults } from "./utils/utils.js";
 import { getFilterStatement, getSqlParam } from "./utils/getFilterStatement.js";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 
 interface GetMetricRequest {
   Params: {

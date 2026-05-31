@@ -63,7 +63,7 @@ import {
 } from "@icons-pack/react-simple-icons";
 
 export const metadata = {
-  title: "Free Marketing Tools | Rybbit",
+  title: "Free Marketing Tools | Hygo",
   description:
     "Free calculators and AI-powered tools for marketers. UTM builder, CTR calculator, ROI calculator, SEO generators, and more.",
 };

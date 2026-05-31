@@ -1,13 +1,13 @@
 ---
 title: Nginx Proxy Manager (NPM) setup
-description: Set up Rybbit with Nginx Proxy Manager without exposing ports directly to the host
+description: Set up Hygo with Nginx Proxy Manager without exposing ports directly to the host
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide shows you how to set up Rybbit with Nginx Proxy Manager without exposing ports directly to the host.
+This guide shows you how to set up Hygo with Nginx Proxy Manager without exposing ports directly to the host.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ This guide shows you how to set up Rybbit with Nginx Proxy Manager without expos
 - Domain name pointed to your server
 
 <Callout type="info">
-This setup assumes you have NPM running and are capable of creating SSL certificates. You can also use any other reverse proxy as long as you can put it on the same Docker network as Rybbit.
+This setup assumes you have NPM running and are capable of creating SSL certificates. You can also use any other reverse proxy as long as you can put it on the same Docker network as Hygo.
 </Callout>
 
 ## Setup Steps
@@ -25,13 +25,13 @@ This setup assumes you have NPM running and are capable of creating SSL certific
 <Step>
 ### Create Custom Docker Compose
 
-Create a new directory for your Rybbit installation and create a `docker-compose.yml` file:
+Create a new directory for your Hygo installation and create a `docker-compose.yml` file:
 
 ```yaml
 services:
-  rybbit_clickhouse:
+  hygo_clickhouse:
     image: clickhouse/clickhouse-server:25.4.2
-    container_name: rybbit_clickhouse
+    container_name: hygo_clickhouse
     volumes:
       - ./clickhouse-data:/var/lib/clickhouse
     configs:
@@ -57,9 +57,9 @@ services:
     networks:
       - internal
 
-  rybbit_postgres:
+  hygo_postgres:
     image: postgres:17.4
-    container_name: rybbit_postgres
+    container_name: hygo_postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-frog}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
@@ -76,15 +76,15 @@ services:
     networks:
       - internal
 
-  rybbit_backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:${IMAGE_TAG:-latest}
-    container_name: rybbit_backend
+  hygo_backend:
+    image: ghcr.io/hygo-ai/hygo-backend:${IMAGE_TAG:-latest}
+    container_name: hygo_backend
     environment:
       - NODE_ENV=production
-      - CLICKHOUSE_HOST=http://rybbit_clickhouse:8123
+      - CLICKHOUSE_HOST=http://hygo_clickhouse:8123
       - CLICKHOUSE_DB=${CLICKHOUSE_DB:-analytics}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-frog}
-      - POSTGRES_HOST=rybbit_postgres
+      - POSTGRES_HOST=hygo_postgres
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB:-analytics}
       - POSTGRES_USER=${POSTGRES_USER:-frog}
@@ -94,9 +94,9 @@ services:
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
       - MAPBOX_TOKEN=${MAPBOX_TOKEN}
     depends_on:
-      rybbit_clickhouse:
+      hygo_clickhouse:
         condition: service_healthy
-      rybbit_postgres:
+      hygo_postgres:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/api/health"]
@@ -109,15 +109,15 @@ services:
       - internal
       - npm_proxy
 
-  rybbit_client:
-    image: ghcr.io/rybbit-io/rybbit-client:${IMAGE_TAG:-latest}
-    container_name: rybbit_client
+  hygo_client:
+    image: ghcr.io/hygo-ai/hygo-client:${IMAGE_TAG:-latest}
+    container_name: hygo_client
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_BACKEND_URL=${BASE_URL}
       - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
     depends_on:
-      - rybbit_backend
+      - hygo_backend
     restart: unless-stopped
     networks:
       - internal
@@ -228,7 +228,7 @@ docker network connect npm_proxy <npm_container_name>
 <Step>
 ### Start Services
 
-Start all Rybbit services:
+Start all Hygo services:
 
 ```bash
 docker compose up -d
@@ -249,20 +249,20 @@ In your Nginx Proxy Manager interface:
 1. **Create Proxy Host**:
    - Domain Names: `your.domain.com`
    - Scheme: `http`
-   - Forward Hostname/IP: `rybbit_client`
+   - Forward Hostname/IP: `hygo_client`
    - Forward Port: `3002`
    - Enable "Cache Assets", "Block Common Exploits", "Websockets Support"
 
 2. **Add Custom Location**:
    - Location: `/api`
    - Scheme: `http`
-   - Forward Hostname/IP: `rybbit_backend`
+   - Forward Hostname/IP: `hygo_backend`
    - Forward Port: `3001`
 
 3. **Advanced Configuration** (in the custom location):
    ```nginx
    location /api/ {
-       proxy_pass http://rybbit_backend:3001;
+       proxy_pass http://hygo_backend:3001;
        proxy_set_header Host $host;
        proxy_set_header X-Real-IP $remote_addr;
        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -277,7 +277,7 @@ In your Nginx Proxy Manager interface:
 </Step>
 
 <Step>
-### Access Rybbit
+### Access Hygo
 
 Navigate to `https://your.domain.com` and create your admin account.
 </Step>
@@ -291,22 +291,22 @@ If you're using Traefik instead, add these labels to your services:
 
 ```yaml
 services:
-  rybbit_backend:
+  hygo_backend:
     # ... existing config
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rybbit-api.rule=Host(`your.domain.com`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.rybbit-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.rybbit-api.loadbalancer.server.port=3001"
+      - "traefik.http.routers.hygo-api.rule=Host(`your.domain.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.hygo-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.hygo-api.loadbalancer.server.port=3001"
       - "traefik.docker.network=traefik_proxy"
   
-  rybbit_client:
+  hygo_client:
     # ... existing config
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rybbit-client.rule=Host(`your.domain.com`)"
-      - "traefik.http.routers.rybbit-client.tls.certresolver=letsencrypt"
-      - "traefik.http.services.rybbit-client.loadbalancer.server.port=3002"
+      - "traefik.http.routers.hygo-client.rule=Host(`your.domain.com`)"
+      - "traefik.http.routers.hygo-client.tls.certresolver=letsencrypt"
+      - "traefik.http.services.hygo-client.loadbalancer.server.port=3002"
       - "traefik.docker.network=traefik_proxy"
 
 networks:
@@ -325,9 +325,9 @@ credentials-file: /path/to/credentials.json
 ingress:
   - hostname: your.domain.com
     path: /api
-    service: http://rybbit_backend:3001
+    service: http://hygo_backend:3001
   - hostname: your.domain.com
-    service: http://rybbit_client:3002
+    service: http://hygo_client:3002
   - service: http_status:404
 ```
 
@@ -336,7 +336,7 @@ ingress:
 ### Common Issues
 
 **NPM can't reach containers**:
-- Verify both NPM and Rybbit are on the same network
+- Verify both NPM and Hygo are on the same network
 - Check container names match the proxy configuration
 
 **SSL certificate issues**:
@@ -344,7 +344,7 @@ ingress:
 - Check NPM logs for certificate generation errors
 
 **502 Bad Gateway**:
-- Verify Rybbit services are healthy: `docker compose ps`
+- Verify Hygo services are healthy: `docker compose ps`
 - Check container logs: `docker compose logs`
 
 ### Networking
@@ -367,11 +367,11 @@ docker ps --format "table {{.Names}}\t{{.Networks}}"
 Monitor logs for debugging:
 
 ```bash
-# Rybbit services
+# Hygo services
 docker compose logs -f
 
 # Specific service
-docker compose logs -f rybbit_backend
+docker compose logs -f hygo_backend
 
 # NPM logs (adjust container name)
 docker logs -f nginx-proxy-manager

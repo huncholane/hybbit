@@ -10,7 +10,7 @@ import { ChartTooltip } from "../../../../components/charts/ChartTooltip";
 import { TimeSeriesChart } from "../../../../components/charts/TimeSeriesChart";
 import type { TimeSeriesChartPoint } from "../../../../components/charts/TimeSeriesChart";
 import { getChartTimeBounds } from "../../../../components/charts/timeSeriesChartUtils";
-import { RybbitTextLogo } from "../../../../components/RybbitLogo";
+import { HygoTextLogo } from "../../../../components/HygoLogo";
 import { Card, CardContent, CardLoader } from "../../../../components/ui/card";
 import { Skeleton } from "../../../../components/ui/skeleton";
 import { useWhiteLabel } from "../../../../hooks/useIsWhiteLabel";
@@ -73,8 +73,8 @@ export function BotChart() {
         <div className="flex items-center justify-between px-2 md:px-0">
           <div className="flex items-center space-x-4">
             {!isWhiteLabel && (
-              <Link href={session.data ? "/" : "https://rybbit.com"} className="opacity-75">
-                <RybbitTextLogo width={80} />
+              <Link href={session.data ? "/" : "https://hygo.ai"} className="opacity-75">
+                <HygoTextLogo width={80} />
               </Link>
             )}
           </div>

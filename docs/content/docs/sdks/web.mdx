@@ -1,6 +1,6 @@
 ---
 title: JavaScript (Web)
-description: Official JavaScript SDK for Rybbit Analytics
+description: Official JavaScript SDK for Hygo Analytics
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
@@ -9,11 +9,11 @@ import { Callout } from 'fumadocs-ui/components/callout';
 ## Installation
 
 ```bash
-npm install @rybbit/js
+npm install @hygo/js
 ```
 
 ```bash
-yarn add @rybbit/js
+yarn add @hygo/js
 ```
 
 ## Peer Dependencies
@@ -29,28 +29,28 @@ yarn add rrweb
 ```
 
 <Callout type="info">
-The `rrweb` package is only required if you enable session replay in your Rybbit dashboard. The SDK will work without it for all other tracking features.
+The `rrweb` package is only required if you enable session replay in your Hygo dashboard. The SDK will work without it for all other tracking features.
 </Callout>
 
 ## Initialization
 
 <Callout type="warning">
-`rybbit.init()` **must** be called once before any other tracking methods (`pageview`, `event`, etc.) can be used. Attempting to call other methods before `init` will result in errors or no tracking.
+`hygo.init()` **must** be called once before any other tracking methods (`pageview`, `event`, etc.) can be used. Attempting to call other methods before `init` will result in errors or no tracking.
 </Callout>
 
 ### Syntax
 
 ```typescript
-async rybbit.init(config: RybbitConfig): Promise<void>;
+async hygo.init(config: HygoConfig): Promise<void>;
 ```
 
 ### Example
 
 ```javascript
-import rybbit from "@rybbit/js";
+import hygo from "@hygo/js";
 
-await rybbit.init({
-  analyticsHost: "https://app.rybbit.io/api",
+await hygo.init({
+  analyticsHost: "https://app.hygo.ai/api",
   siteId: "1",
 });
 ```
@@ -61,8 +61,8 @@ await rybbit.init({
 
 | Option          | Type     | Description                                                                          |
 | :-------------- | :------- | :----------------------------------------------------------------------------------- |
-| `analyticsHost` | `string` | URL of your Rybbit analytics instance (e.g., `https://rybbit.yourdomain.com/api`). |
-| `siteId`        | `string` | The Site ID for your website obtained from your Rybbit instance.       |
+| `analyticsHost` | `string` | URL of your Hygo analytics instance (e.g., `https://hygo.yourdomain.com/api`). |
+| `siteId`        | `string` | The Site ID for your website obtained from your Hygo instance.       |
 
 #### Local Configuration Options
 
@@ -78,7 +78,7 @@ These options are configured in your code and control SDK behavior locally:
 
 #### Remote Configuration
 
-These settings are controlled through your Rybbit dashboard and cannot be set in the init config:
+These settings are controlled through your Hygo dashboard and cannot be set in the init config:
 
 | Dashboard Setting      | Description                                                | Default |
 | :--------------------- | :--------------------------------------------------------- | :------ |
@@ -102,7 +102,7 @@ Pageviews are tracked automatically based on your dashboard settings. This inclu
 ### Syntax
 
 ```typescript
-rybbit.pageview(path?: string);
+hygo.pageview(path?: string);
 ```
 
 ### Parameters
@@ -123,19 +123,19 @@ rybbit.pageview(path?: string);
 
 ```javascript
 // Standard manual pageview (usually not needed if auto-tracking is on)
-rybbit.pageview();
+hygo.pageview();
 
 // Example: Track a step within a multi-step modal
 function openUserDetailsModal(userId, step) {
   // ... logic to open and display the modal step ...
-  rybbit.pageview(`/users/${userId}/modal/${step}`);
+  hygo.pageview(`/users/${userId}/modal/${step}`);
 }
 openUserDetailsModal("user-abc", "contact-info");
 
 // Example: Track a virtual pageview with its own query parameters
 function showFilteredProductList(category, sortBy) {
    let virtualPathWithQuery = `/products/category/${category}?sort=${sortBy}&view=grid`;
-   rybbit.pageview(virtualPathWithQuery);
+   hygo.pageview(virtualPathWithQuery);
 }
 showFilteredProductList("electronics", "price_desc");
 ```
@@ -151,7 +151,7 @@ You can trigger events from your JavaScript code.
 #### Syntax
 
 ```typescript
-rybbit.event(name: string, properties?: TrackProperties);
+hygo.event(name: string, properties?: TrackProperties);
 ```
 
 #### Parameters
@@ -164,13 +164,13 @@ rybbit.event(name: string, properties?: TrackProperties);
 ```javascript
 // Track a simple button click
 document.getElementById("cta-button")?.addEventListener("click", () => {
-  rybbit.event("cta_click");
+  hygo.event("cta_click");
 });
 
 // Track adding an item to a shopping cart with properties
 function addToCart(item) {
   // ... add item ...
-  rybbit.event("add_to_cart", {
+  hygo.event("add_to_cart", {
     itemId: item.id,
     itemName: item.name,
     price: item.price,
@@ -181,21 +181,21 @@ function addToCart(item) {
 
 ### Declarative Tracking with Data Attributes
 
-The SDK automatically listens for clicks on elements with the `data-rybbit-event` attribute.
+The SDK automatically listens for clicks on elements with the `data-hygo-event` attribute.
 
-- `data-rybbit-event="<event-name>"`: This attribute makes the element trackable. The value is used as the event name.
-- `data-rybbit-prop-<property-name>="<value>"`: You can add multiple properties to the event by using this attribute format. The SDK collects all attributes starting with `data-rybbit-prop-` and includes them as key-value pairs in the event data.
+- `data-hygo-event="<event-name>"`: This attribute makes the element trackable. The value is used as the event name.
+- `data-hygo-prop-<property-name>="<value>"`: You can add multiple properties to the event by using this attribute format. The SDK collects all attributes starting with `data-hygo-prop-` and includes them as key-value pairs in the event data.
 
 #### Example
 
 ```html
-<button data-rybbit-event="cta_click">Click Me</button>
+<button data-hygo-event="cta_click">Click Me</button>
 
 <button
-  data-rybbit-event="add_to_cart"
-  data-rybbit-prop-item_id="product-123"
-  data-rybbit-prop-item_name="Classic T-Shirt"
-  data-rybbit-prop-price="29.99"
+  data-hygo-event="add_to_cart"
+  data-hygo-prop-item_id="product-123"
+  data-hygo-prop-item_name="Classic T-Shirt"
+  data-hygo-prop-price="29.99"
 >
   Add to Cart
 </button>
@@ -208,7 +208,7 @@ Outbound links (links to external domains) are tracked automatically by default 
 ### Syntax
 
 ```typescript
-rybbit.trackOutbound(url: string, text?: string, target?: string);
+hygo.trackOutbound(url: string, text?: string, target?: string);
 ```
 
 ### Parameters
@@ -228,7 +228,7 @@ rybbit.trackOutbound(url: string, text?: string, target?: string);
 // Manually track an outbound click triggered by a button
 document.getElementById("external-service-button")?.addEventListener("click", () => {
   let url = "https://external-service.com";
-  rybbit.trackOutbound(url, "Visit External Service", "_blank");
+  hygo.trackOutbound(url, "Visit External Service", "_blank");
   // Optionally navigate after tracking
   window.open(url, "_blank");
 });
@@ -236,7 +236,7 @@ document.getElementById("external-service-button")?.addEventListener("click", ()
 
 ## Error Tracking
 
-The SDK can automatically capture JavaScript errors and unhandled promise rejections. This feature must be enabled in your Rybbit dashboard.
+The SDK can automatically capture JavaScript errors and unhandled promise rejections. This feature must be enabled in your Hygo dashboard.
 
 ### Automatic Error Capture
 
@@ -251,7 +251,7 @@ You can manually capture errors with additional context:
 #### Syntax
 
 ```typescript
-rybbit.error(error: Error | ErrorEvent, context?: TrackProperties);
+hygo.error(error: Error | ErrorEvent, context?: TrackProperties);
 ```
 
 #### Parameters
@@ -266,7 +266,7 @@ try {
   // Some risky operation
   processPayment(orderData);
 } catch (error) {
-  rybbit.error(error, {
+  hygo.error(error, {
     component: "checkout",
     orderId: "order-123",
     userId: currentUser.id
@@ -281,7 +281,7 @@ async function fetchUserData(userId) {
     const response = await fetch(`/api/users/${userId}`);
     return await response.json();
   } catch (error) {
-    rybbit.error(error, {
+    hygo.error(error, {
       endpoint: "/api/users",
       userId: userId
     });
@@ -306,7 +306,7 @@ npm install rrweb
 
 ### Enabling Session Replay
 
-Session replay must be enabled in your Rybbit dashboard under. Once enabled, recording starts automatically when the SDK initializes.
+Session replay must be enabled in your Hygo dashboard under. Once enabled, recording starts automatically when the SDK initializes.
 
 ### Manual Controls
 
@@ -314,13 +314,13 @@ You can manually start, stop, and check the status of session replay:
 
 ```typescript
 // Start recording (only works if enabled in dashboard)
-rybbit.startSessionReplay();
+hygo.startSessionReplay();
 
 // Stop recording
-rybbit.stopSessionReplay();
+hygo.stopSessionReplay();
 
 // Check if currently recording
-const isRecording = rybbit.isSessionReplayActive();
+const isRecording = hygo.isSessionReplayActive();
 if (isRecording) {
   console.log("Session is being recorded");
 }
@@ -331,8 +331,8 @@ if (isRecording) {
 Session replay includes privacy-focused defaults and configuration options:
 
 ```javascript
-await rybbit.init({
-  analyticsHost: "https://app.rybbit.io/api",
+await hygo.init({
+  analyticsHost: "https://app.hygo.ai/api",
   siteId: "1",
   replayPrivacyConfig: {
     maskAllInputs: true, // Mask all input values (default: true)
@@ -367,7 +367,7 @@ You can associate tracking events with a specific user ID and optional traits. T
 Assigns a user ID with optional traits.
 
 ```typescript
-rybbit.identify(userId: string, traits?: Record<string, unknown>);
+hygo.identify(userId: string, traits?: Record<string, unknown>);
 ```
 
 **Parameters:**
@@ -379,10 +379,10 @@ rybbit.identify(userId: string, traits?: Record<string, unknown>);
 
 ```javascript
 // After a user logs in
-rybbit.identify("user-xzy-123");
+hygo.identify("user-xzy-123");
 
 // With traits
-rybbit.identify("user-xzy-123", {
+hygo.identify("user-xzy-123", {
   email: "user@example.com",
   plan: "premium",
   signupDate: "2024-01-15"
@@ -394,14 +394,14 @@ rybbit.identify("user-xzy-123", {
 Updates traits for the currently identified user without changing the user ID.
 
 ```typescript
-rybbit.setTraits(traits: Record<string, unknown>);
+hygo.setTraits(traits: Record<string, unknown>);
 ```
 
 **Example:**
 
 ```javascript
 // Update user traits after they upgrade
-rybbit.setTraits({
+hygo.setTraits({
   plan: "enterprise",
   upgradeDate: "2024-03-01"
 });
@@ -412,14 +412,14 @@ rybbit.setTraits({
 Clears the stored user ID.
 
 ```typescript
-rybbit.clearUserId();
+hygo.clearUserId();
 ```
 
 **Example:**
 
 ```javascript
 // When a user logs out
-rybbit.clearUserId();
+hygo.clearUserId();
 ```
 
 ### `getUserId`
@@ -427,14 +427,14 @@ rybbit.clearUserId();
 Retrieves the currently stored user ID.
 
 ```typescript
-rybbit.getUserId(): string | null;
+hygo.getUserId(): string | null;
 ```
 
 **Example:**
 
 ```javascript
-let currentUserId = rybbit.getUserId();
-console.log("Current Rybbit User ID:", currentUserId);
+let currentUserId = hygo.getUserId();
+console.log("Current Hygo User ID:", currentUserId);
 ```
 
 ## Page Change Callbacks
@@ -444,7 +444,7 @@ Register callbacks that execute when the page or route changes. This is useful f
 ### Syntax
 
 ```typescript
-rybbit.onPageChange(callback: (newPath: string, previousPath: string) => void): () => void;
+hygo.onPageChange(callback: (newPath: string, previousPath: string) => void): () => void;
 ```
 
 ### Parameters
@@ -461,7 +461,7 @@ Returns an unsubscribe function to remove the callback.
 
 ```javascript
 // Register a callback
-const unsubscribe = rybbit.onPageChange((newPath, previousPath) => {
+const unsubscribe = hygo.onPageChange((newPath, previousPath) => {
   console.log(`Navigated from ${previousPath} to ${newPath}`);
 
   // Example: Track scroll position reset
@@ -472,12 +472,12 @@ const unsubscribe = rybbit.onPageChange((newPath, previousPath) => {
 unsubscribe();
 
 // Example: Multiple callbacks can be registered
-rybbit.onPageChange((newPath) => {
+hygo.onPageChange((newPath) => {
   // Update page title
   document.title = `${newPath} - My Site`;
 });
 
-rybbit.onPageChange((newPath, previousPath) => {
+hygo.onPageChange((newPath, previousPath) => {
   // Log navigation for debugging
   if (process.env.NODE_ENV === 'development') {
     console.log('Navigation:', { from: previousPath, to: newPath });
@@ -495,16 +495,16 @@ Users can opt out of all tracking by setting a flag in `localStorage` or on the 
 
 ```javascript
 // Opt out via localStorage (persists across sessions)
-localStorage.setItem("disable-rybbit", "true");
+localStorage.setItem("disable-hygo", "true");
 
 // Opt out via window flag (current session only)
-window.__RYBBIT_OPTOUT__ = true;
+window.__HYGO_OPTOUT__ = true;
 ```
 
 To re-enable tracking, remove the localStorage item and reload the page:
 
 ```javascript
-localStorage.removeItem("disable-rybbit");
+localStorage.removeItem("disable-hygo");
 ```
 
 ## Cleanup
@@ -514,7 +514,7 @@ In Single Page Applications or other dynamic environments, you may need to manua
 ### Syntax
 
 ```typescript
-rybbit.cleanup();
+hygo.cleanup();
 ```
 
 ### What Gets Cleaned Up
@@ -532,13 +532,13 @@ rybbit.cleanup();
 ```javascript
 // In React
 useEffect(() => {
-  rybbit.init({
-    analyticsHost: "https://app.rybbit.io/api",
+  hygo.init({
+    analyticsHost: "https://app.hygo.ai/api",
     siteId: "1",
   });
 
   return () => {
-    rybbit.cleanup();
+    hygo.cleanup();
   };
 }, []);
 ```
@@ -575,7 +575,7 @@ If a page's path matches any pattern in `skipPatterns`, the pageview for that pa
 
 ```javascript
 // Example skipPatterns in init
-await rybbit.init({
+await hygo.init({
   // ... other options
   skipPatterns: [
     "/admin/**",        // Skip all admin sections
@@ -602,7 +602,7 @@ If a path matches both a `skipPatterns` and a `maskPatterns` pattern, **skipping
 
 ```javascript
 // Example maskPatterns in init
-await rybbit.init({
+await hygo.init({
   // ... other options
   maskPatterns: [
     "/users/*/profile",  // Group all user profile views

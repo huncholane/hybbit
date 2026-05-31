@@ -6,7 +6,7 @@ description: Track analytics during development using API keys
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-By default, Rybbit validates tracking events come from your registered domain. During development, you can use API keys to track from localhost.
+By default, Hygo validates tracking events come from your registered domain. During development, you can use API keys to track from localhost.
 
 <Callout type="warning">
   **Important**: Remember to remove the API key before deploying to production!
@@ -27,7 +27,7 @@ In your site dashboard: Settings → API Key tab → Generate API Key
 ```html
 <script 
   defer 
-  src="https://app.rybbit.io/api/script.js" 
+  src="https://app.hygo.ai/api/script.js" 
   data-site-id="YOUR_SITE_ID" 
   data-api-key="rb_your_api_key_here">
 </script>
@@ -45,7 +45,7 @@ In your site dashboard: Settings → API Key tab → Generate API Key
 <!-- Production: NO API KEY -->
 <script 
   defer 
-  src="https://app.rybbit.io/api/script.js" 
+  src="https://app.hygo.ai/api/script.js" 
   data-site-id="YOUR_SITE_ID">
 </script>
 ```
@@ -64,9 +64,9 @@ export function Analytics() {
   return (
     <script
       defer
-      src="https://app.rybbit.io/api/script.js"
-      data-site-id={process.env.NEXT_PUBLIC_RYBBIT_SITE_ID}
-      {...(isDev && { 'data-api-key': process.env.NEXT_PUBLIC_RYBBIT_API_KEY })}
+      src="https://app.hygo.ai/api/script.js"
+      data-site-id={process.env.NEXT_PUBLIC_HYGO_SITE_ID}
+      {...(isDev && { 'data-api-key': process.env.NEXT_PUBLIC_HYGO_API_KEY })}
     />
   );
 }
@@ -76,12 +76,12 @@ export function Analytics() {
 // Vanilla JS example
 const script = document.createElement('script');
 script.defer = true;
-script.src = 'https://app.rybbit.io/api/script.js';
+script.src = 'https://app.hygo.ai/api/script.js';
 script.setAttribute('data-site-id', 'YOUR_SITE_ID');
 
 // Only add API key in development
 if (process.env.NODE_ENV === 'development') {
-  script.setAttribute('data-api-key', process.env.RYBBIT_API_KEY);
+  script.setAttribute('data-api-key', process.env.HYGO_API_KEY);
 }
 
 document.head.appendChild(script);

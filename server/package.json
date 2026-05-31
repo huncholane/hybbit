@@ -1,7 +1,7 @@
 {
-  "name": "rybbit-backend",
+  "name": "hygo-backend",
   "version": "2.6.0",
-  "description": "Rybbit backend",
+  "description": "Hygo backend",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -42,7 +42,7 @@
     "@mongodb-js/zstd": "^2.0.1",
     "@react-email/components": "1.0.1",
     "@react-email/tailwind": "2.0.1",
-    "@rybbit/shared": "file:../shared",
+    "@hygo/shared": "file:../shared",
     "better-auth": "1.5.5",
     "bullmq": "^5.56.5",
     "dotenv": "16.5.0",

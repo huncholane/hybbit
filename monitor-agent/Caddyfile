@@ -1,4 +1,4 @@
-# Caddyfile for Rybbit Monitor Agent
+# Caddyfile for Hygo Monitor Agent
 {$DOMAIN_NAME} {
     # Enable compression
     encode zstd gzip

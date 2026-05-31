@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 
 export const BOT_AVAILABLE_FILTERS: FilterParameter[] = [
   "hostname",

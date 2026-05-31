@@ -1,23 +1,23 @@
 ---
 title: TYPO3
-description: Integrate Rybbit Analytics with your TYPO3 sitepackage
+description: Integrate Hygo Analytics with your TYPO3 sitepackage
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 
-Integrating Rybbit Analytics with your TYPO3 website is straightforward. You'll
-typically add the Rybbit tracking script to your main sitepackage
+Integrating Hygo Analytics with your TYPO3 website is straightforward. You'll
+typically add the Hygo tracking script to your main sitepackage
 `setup.typoscript` file.
 
 <Steps>
 <Step>
 ### Get Your Tracking script
 
-First, you'll need your Rybbit tracking script. You can find this in your Rybbit
+First, you'll need your Hygo tracking script. You can find this in your Hygo
 dashboard under **Site Settings > Tracking Code**. It will look something like this:
 
 ```html
-<script defer src="https://app.rybbit.io/api/script.js" data-site-id="YOUR_SITE_ID"></script>
+<script defer src="https://app.hygo.ai/api/script.js" data-site-id="YOUR_SITE_ID"></script>
 ```
 
 For TYPO3 we will need pieces of this, not the full script.
@@ -44,15 +44,15 @@ page = PAGE
 page {
   # ...
   includeJS {
-      rybbit = https://app.rybbit.io/api/script.js
-      rybbit.defer = 1
-      rybbit.data.data-site-id = YOUR_SITE_ID
+      hygo = https://app.hygo.ai/api/script.js
+      hygo.defer = 1
+      hygo.data.data-site-id = YOUR_SITE_ID
   }
   # ...
 }
 ```
 
-This creates a new `<script>` tag, loads the rybbit script and adds the Site ID
+This creates a new `<script>` tag, loads the hygo script and adds the Site ID
 data attribute.
 
 Most likely you will already have the line `page = PAGE` somewhere in your
@@ -66,9 +66,9 @@ to add a condition for the `applicationContext`:
 [applicationContext == "Production"]
 page {
   includeJS {
-      rybbit = https://app.rybbit.io/api/script.js
-      rybbit.defer = 1
-      rybbit.data.data-site-id = YOUR_SITE_ID
+      hygo = https://app.hygo.ai/api/script.js
+      hygo.defer = 1
+      hygo.data.data-site-id = YOUR_SITE_ID
   }
 }
 [END]
@@ -79,7 +79,7 @@ page {
 <Step>
 ### Configure values as constants
 
-It's best practice to store your Rybbit Site ID and instance URL in your site
+It's best practice to store your Hygo Site ID and instance URL in your site
 constants. You might have a `constants.typoscript` file in your codebase, which
 you'll use when you want to add the values to the Git repository.
 
@@ -93,11 +93,11 @@ You can also add the values into a TypoScript record in the TYPO3 backend.
   `applicationContext` accordingly.
 - Open your live website in a browser.
 - Navigate through a few pages.
-- Check your Rybbit dashboard for incoming data. It might take a few minutes
+- Check your Hygo dashboard for incoming data. It might take a few minutes
   for the first events to appear.
 </Step>
 
 </Steps>
 
-That's it! Rybbit Analytics is now integrated with your TYPO3 sitepackage and
+That's it! Hygo Analytics is now integrated with your TYPO3 sitepackage and
 will only track visits in your production environment.

@@ -1,9 +1,9 @@
 ---
-title: What is Multivariate Testing? Examples and How to Run Tests with Rybbit
+title: What is Multivariate Testing? Examples and How to Run Tests with Hygo
 date: 2025-11-22
-description: A complete guide to multivariate testing - how it works, when to use it, real-world examples, and how to run multivariate tests with Rybbit Analytics
+description: A complete guide to multivariate testing - how it works, when to use it, real-world examples, and how to run multivariate tests with Hygo Analytics
 tags: ["testing", "experimentation", "optimization", "analytics"]
-author: Rybbit Team
+author: Hygo Team
 ---
 
 You have a checkout page that isn't converting as well as you'd like. The problem is obvious: something needs to change. But what?
@@ -14,7 +14,7 @@ If you test each change one at a time (button color this week, copy next week), 
 
 This is where multivariate testing comes in. Instead of testing one variable at a time, you test multiple variables simultaneously. It's faster, cheaper, and gives you deeper insights into what actually drives conversions.
 
-Let's walk through what multivariate testing is, how it works, when to use it, and how to implement it with Rybbit Analytics.
+Let's walk through what multivariate testing is, how it works, when to use it, and how to implement it with Hygo Analytics.
 
 ## What is Multivariate Testing?
 
@@ -145,13 +145,13 @@ This is nearly impossible to discover with A/B testing alone. You'd test progres
 
 Multivariate testing reveals these hidden synergies.
 
-## How to Run a Multivariate Test with Rybbit
+## How to Run a Multivariate Test with Hygo
 
-Rybbit Analytics lets you set up and analyze multivariate tests by tracking variations and comparing performance metrics.
+Hygo Analytics lets you set up and analyze multivariate tests by tracking variations and comparing performance metrics.
 
-![Rybbit Main Dashboard](/blog/rybbit_main_dashboard.png)
+![Hygo Main Dashboard](/blog/hygo_main_dashboard.png)
 
-The Rybbit dashboard provides detailed metrics that let you compare performance across your different test variations and identify winning combinations.
+The Hygo dashboard provides detailed metrics that let you compare performance across your different test variations and identify winning combinations.
 
 ### Step 1: Define Your Variables and Create Variations
 
@@ -164,27 +164,27 @@ First, identify what you want to test. Let's say you're optimizing your signup p
 
 **Result:** 2 × 2 × 2 = 8 variations to test
 
-### Step 2: Implement Variation Tracking with Rybbit
+### Step 2: Implement Variation Tracking with Hygo
 
-When you expose users to different variations, track which variation each user sees. Use Rybbit's event tracking to record variation assignments. Refer to the [event tracking documentation](/docs/track-events) for specific implementation details on how to properly record variation assignments.
+When you expose users to different variations, track which variation each user sees. Use Hygo's event tracking to record variation assignments. Refer to the [event tracking documentation](/docs/track-events) for specific implementation details on how to properly record variation assignments.
 
 ### Step 3: Track Conversion Events
 
-Track when users complete the desired action (signup, purchase, etc.). See the [event tracking documentation](/docs/track-events) for details on how to properly record conversion events in Rybbit.
+Track when users complete the desired action (signup, purchase, etc.). See the [event tracking documentation](/docs/track-events) for details on how to properly record conversion events in Hygo.
 
-### Step 4: Analyze Results in Rybbit
+### Step 4: Analyze Results in Hygo
 
-Use Rybbit's filtering and segmentation to compare conversion rates across variations:
+Use Hygo's filtering and segmentation to compare conversion rates across variations:
 
-<img src="/blog/rybbit_funnels_dashboard.png" alt="Rybbit's funnels dashboard for analyzing conversions" />
+<img src="/blog/hygo_funnels_dashboard.png" alt="Hygo's funnels dashboard for analyzing conversions" />
 
-The Funnels section in Rybbit allows you to create custom conversion funnels and view performance across your different test variations, making it simple to see which combination is winning.
+The Funnels section in Hygo allows you to create custom conversion funnels and view performance across your different test variations, making it simple to see which combination is winning.
 
 1. Go to **Product Analytics → Funnels**
 2. Create a funnel from "Signup_Variation_Shown" to "Signup_Completed"
 3. Use the "Breakdown by" option in the Funnels interface to select your variation property and compare which combination wins
 
-<img src="/blog/rybbit_pages_dashboard.png" alt="Rybbit's pages dashboard showing page-level performance" />
+<img src="/blog/hygo_pages_dashboard.png" alt="Hygo's pages dashboard showing page-level performance" />
 
 Use the Pages dashboard to analyze which page variations are performing best, showing traffic and engagement metrics for each variation.
 
@@ -196,13 +196,13 @@ Use the Pages dashboard to analyze which page variations are performing best, sh
 
 ### Step 5: Analyze Interaction Effects
 
-To understand which variable combinations matter most, create additional analysis by tracking the individual variables within your events. This allows you to create custom cohorts by each variable in Rybbit to see conversion rates for each combination.
+To understand which variable combinations matter most, create additional analysis by tracking the individual variables within your events. This allows you to create custom cohorts by each variable in Hygo to see conversion rates for each combination.
 
 ### Step 6: Determine Statistical Significance
 
 This is crucial: **Don't stop the test too early just because one variation is winning.**
 
-Rybbit doesn't automatically calculate statistical significance (you'll need to use an external tool like [this calculator](https://www.optimizely.com/sample-size-calculator/)), but you can estimate:
+Hygo doesn't automatically calculate statistical significance (you'll need to use an external tool like [this calculator](https://www.optimizely.com/sample-size-calculator/)), but you can estimate:
 
 **Rule of thumb:** Run the test until each variation has at least 100-200 conversions.
 
@@ -305,7 +305,7 @@ Don't test random combinations. Have a theory about what will work and why.
 4. ✅ You want to discover interaction effects
 5. ✅ You're testing independent variables
 
-## Multivariate Testing with Rybbit: Real Example
+## Multivariate Testing with Hygo: Real Example
 
 Let's walk through a complete multivariate testing approach.
 
@@ -324,11 +324,11 @@ You run an online store and want to increase purchase completion.
 
 ### Week 1-3: Run the Test
 
-Implement variation tracking using Rybbit's event system. Record when each user sees a variation and when they complete (or abandon) the checkout.
+Implement variation tracking using Hygo's event system. Record when each user sees a variation and when they complete (or abandon) the checkout.
 
-### Week 4: Analyze in Rybbit
+### Week 4: Analyze in Hygo
 
-Use Rybbit's filtering and segmentation features to compare conversion rates across your variations.
+Use Hygo's filtering and segmentation features to compare conversion rates across your variations.
 
 Look for:
 - Which variation has the highest conversion rate
@@ -346,7 +346,7 @@ The key requirements are:
 4. **Proper tracking** - Know which variation each user saw
 5. **Statistical rigor** - Wait for real significance, not random luck
 
-With Rybbit's event tracking and analytics, you can set up and measure multivariate tests without complex testing platforms. You get the data, you make the decisions.
+With Hygo's event tracking and analytics, you can set up and measure multivariate tests without complex testing platforms. You get the data, you make the decisions.
 
 The companies that win are the ones that test relentlessly and act on data. Multivariate testing is how you scale optimization from "one variable at a time" to "multiple hypotheses, simultaneously."
 
@@ -361,6 +361,6 @@ The companies that win are the ones that test relentlessly and act on data. Mult
 - [Blog: Churn Rate vs Retention Rate](/blog/churn-rate-vs-retention-rate)
 - [Blog: E-commerce Analytics](/blog/ecommerce-analytics)
 - [Blog: Content Marketing Funnel](/blog/content-marketing-funnel)
-- [Blog: Sales Funnel Guide](/blog/what-is-sales-funnel-rybbit)
+- [Blog: Sales Funnel Guide](/blog/what-is-sales-funnel-hygo)
 - [Blog: Website Traffic Drop Analysis](/blog/website-traffic-drop)
 - [Blog: Web Analytics Guide](/blog/what-is-web-analytics)

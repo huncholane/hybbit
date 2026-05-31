@@ -1,4 +1,4 @@
-import { Filter, TimeBucket } from "@rybbit/shared";
+import { Filter, TimeBucket } from "@hygo/shared";
 import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 import { usePerformanceStore } from "../../../../app/[site]/performance/performanceStore";
 import { useStore } from "../../../../lib/store";

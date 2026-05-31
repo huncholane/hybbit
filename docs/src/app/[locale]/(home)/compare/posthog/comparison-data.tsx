@@ -4,58 +4,58 @@ export const posthogComparisonData: ComparisonSection[] = [
   {
     title: "Analytics Features",
     features: [
-      { name: "Real-time analytics", rybbitValue: true, competitorValue: true },
-      { name: "Custom events", rybbitValue: "With attributes", competitorValue: "With properties" },
-      { name: "Funnels", rybbitValue: true, competitorValue: true },
-      { name: "User journeys (Sankey)", rybbitValue: true, competitorValue: true },
-      { name: "Conversion goals", rybbitValue: true, competitorValue: true },
-      { name: "UTM tracking", rybbitValue: true, competitorValue: true },
-      { name: "Public dashboards", rybbitValue: true, competitorValue: true },
+      { name: "Real-time analytics", hygoValue: true, competitorValue: true },
+      { name: "Custom events", hygoValue: "With attributes", competitorValue: "With properties" },
+      { name: "Funnels", hygoValue: true, competitorValue: true },
+      { name: "User journeys (Sankey)", hygoValue: true, competitorValue: true },
+      { name: "Conversion goals", hygoValue: true, competitorValue: true },
+      { name: "UTM tracking", hygoValue: true, competitorValue: true },
+      { name: "Public dashboards", hygoValue: true, competitorValue: true },
     ],
   },
   {
     title: "Advanced Features",
     features: [
-      { name: "Session Replay", rybbitValue: true, competitorValue: true },
-      { name: "User profiles", rybbitValue: true, competitorValue: true },
-      { name: "Web Vitals monitoring", rybbitValue: true, competitorValue: true },
-      { name: "Error tracking", rybbitValue: true, competitorValue: true },
-      { name: "Real-time globe view", rybbitValue: true, competitorValue: false },
-      { name: "Autocapture", rybbitValue: true, competitorValue: true },
+      { name: "Session Replay", hygoValue: true, competitorValue: true },
+      { name: "User profiles", hygoValue: true, competitorValue: true },
+      { name: "Web Vitals monitoring", hygoValue: true, competitorValue: true },
+      { name: "Error tracking", hygoValue: true, competitorValue: true },
+      { name: "Real-time globe view", hygoValue: true, competitorValue: false },
+      { name: "Autocapture", hygoValue: true, competitorValue: true },
     ],
   },
   {
     title: "Privacy & Open Source",
     features: [
-      { name: "Cookie-free tracking", rybbitValue: true, competitorValue: "Optional" },
-      { name: "No personal data collection", rybbitValue: true, competitorValue: false },
-      { name: "Daily rotating salt", rybbitValue: true, competitorValue: false },
-      { name: "Open source", rybbitValue: true, competitorValue: true },
-      { name: "Self-hostable", rybbitValue: true, competitorValue: "Very difficult" },
+      { name: "Cookie-free tracking", hygoValue: true, competitorValue: "Optional" },
+      { name: "No personal data collection", hygoValue: true, competitorValue: false },
+      { name: "Daily rotating salt", hygoValue: true, competitorValue: false },
+      { name: "Open source", hygoValue: true, competitorValue: true },
+      { name: "Self-hostable", hygoValue: true, competitorValue: "Very difficult" },
     ],
   },
   {
     title: "Technical & Pricing",
     features: [
-      { name: "Script size", rybbitValue: "18KB", competitorValue: "~60KB" },
-      { name: "Bypasses ad blockers", rybbitValue: true, competitorValue: "With proxy" },
-      { name: "API access", rybbitValue: true, competitorValue: true },
-      { name: "Starting price", rybbitValue: "$19/mo", competitorValue: "Free" },
+      { name: "Script size", hygoValue: "18KB", competitorValue: "~60KB" },
+      { name: "Bypasses ad blockers", hygoValue: true, competitorValue: "With proxy" },
+      { name: "API access", hygoValue: true, competitorValue: true },
+      { name: "Starting price", hygoValue: "$19/mo", competitorValue: "Free" },
     ],
   },
 ];
 
 export const posthogExtendedData = {
-  subtitle: "Rybbit's focused web analytics vs PostHog's complex product suite. See which approach fits your team.",
+  subtitle: "Hygo's focused web analytics vs PostHog's complex product suite. See which approach fits your team.",
 
-  introHeading: "Why consider Rybbit over PostHog?",
+  introHeading: "Why consider Hygo over PostHog?",
   introParagraphs: [
     "PostHog is an ambitious all-in-one product analytics platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single tool. It's powerful, but that power comes with significant complexity. Teams often find themselves spending more time configuring PostHog than actually using it, and the ~60KB script can noticeably impact page performance.",
-    "Rybbit takes the opposite approach: do web analytics exceptionally well instead of doing everything adequately. The single-page dashboard gives your entire team instant access to the metrics that matter, with no training required. Non-technical team members can understand user behavior, track conversions, and watch session replays without learning a complex query language or navigating dozens of menus.",
-    "Privacy is another key difference. Rybbit is cookie-free by default and never collects personal data, with no configuration needed. PostHog uses cookies by default and requires setup to achieve privacy compliance. Self-hosting is also dramatically simpler: Rybbit runs on TypeScript and ClickHouse, while PostHog requires Kafka, Redis, PostgreSQL, and ClickHouse. If you need focused, privacy-first web analytics that your whole team can use from day one, Rybbit is the better fit.",
+    "Hygo takes the opposite approach: do web analytics exceptionally well instead of doing everything adequately. The single-page dashboard gives your entire team instant access to the metrics that matter, with no training required. Non-technical team members can understand user behavior, track conversions, and watch session replays without learning a complex query language or navigating dozens of menus.",
+    "Privacy is another key difference. Hygo is cookie-free by default and never collects personal data, with no configuration needed. PostHog uses cookies by default and requires setup to achieve privacy compliance. Self-hosting is also dramatically simpler: Hygo runs on TypeScript and ClickHouse, while PostHog requires Kafka, Redis, PostgreSQL, and ClickHouse. If you need focused, privacy-first web analytics that your whole team can use from day one, Hygo is the better fit.",
   ],
 
-  chooseRybbit: [
+  chooseHygo: [
     "You want focused web analytics without the bloat",
     "You need a dashboard your non-technical team can use immediately",
     "You want privacy-first analytics that's cookie-free by default",
@@ -73,8 +73,8 @@ export const posthogExtendedData = {
     "You prefer an all-in-one product analytics platform",
   ],
 
-  rybbitPricing: {
-    name: "Rybbit",
+  hygoPricing: {
+    name: "Hygo",
     model: "Events-based pricing",
     startingPrice: "$19/mo",
     highlights: [
@@ -99,52 +99,52 @@ export const posthogExtendedData = {
 
   faqItems: [
     {
-      question: "How is Rybbit different from PostHog?",
-      answer: "Rybbit focuses exclusively on web analytics with a clean, simple interface. PostHog is an all-in-one product suite with analytics, feature flags, A/B testing, surveys, and more. If you primarily need web analytics, Rybbit delivers a faster, simpler experience.",
+      question: "How is Hygo different from PostHog?",
+      answer: "Hygo focuses exclusively on web analytics with a clean, simple interface. PostHog is an all-in-one product suite with analytics, feature flags, A/B testing, surveys, and more. If you primarily need web analytics, Hygo delivers a faster, simpler experience.",
     },
     {
-      question: "Is Rybbit really simpler than PostHog?",
-      answer: "Yes. Rybbit provides a single-page dashboard where all essential metrics are visible at a glance. PostHog's extensive feature set means more menus, more configuration, and a steeper learning curve, especially for non-technical team members.",
+      question: "Is Hygo really simpler than PostHog?",
+      answer: "Yes. Hygo provides a single-page dashboard where all essential metrics are visible at a glance. PostHog's extensive feature set means more menus, more configuration, and a steeper learning curve, especially for non-technical team members.",
     },
     {
-      question: "Does PostHog have features Rybbit doesn't?",
-      answer: "Yes, PostHog offers feature flags, A/B testing, surveys, heatmaps, and a SQL query interface that Rybbit doesn't have. These are powerful tools for product teams, but they add complexity. Rybbit intentionally focuses on doing web analytics well.",
+      question: "Does PostHog have features Hygo doesn't?",
+      answer: "Yes, PostHog offers feature flags, A/B testing, surveys, heatmaps, and a SQL query interface that Hygo doesn't have. These are powerful tools for product teams, but they add complexity. Hygo intentionally focuses on doing web analytics well.",
     },
     {
       question: "How does self-hosting compare?",
-      answer: "Rybbit is straightforward to self-host with a modern TypeScript/ClickHouse stack. PostHog's self-hosted version requires significantly more infrastructure (Kafka, Redis, PostgreSQL, ClickHouse, and more) and is much harder to maintain.",
+      answer: "Hygo is straightforward to self-host with a modern TypeScript/ClickHouse stack. PostHog's self-hosted version requires significantly more infrastructure (Kafka, Redis, PostgreSQL, ClickHouse, and more) and is much harder to maintain.",
     },
     {
-      question: "Can I migrate from PostHog to Rybbit?",
-      answer: "Yes. Just add Rybbit's script tag to your site and data starts flowing immediately. You can run both tools in parallel during the transition. Since Rybbit uses a different data model, historical PostHog data won't transfer, but new data collection begins instantly.",
+      question: "Can I migrate from PostHog to Hygo?",
+      answer: "Yes. Just add Hygo's script tag to your site and data starts flowing immediately. You can run both tools in parallel during the transition. Since Hygo uses a different data model, historical PostHog data won't transfer, but new data collection begins instantly.",
     },
   ] satisfies FAQItem[],
 
   relatedResources: [
     {
-      title: "Rybbit vs Google Analytics",
+      title: "Hygo vs Google Analytics",
       href: "/compare/google-analytics",
       description: "The privacy-first alternative to GA4",
     },
     {
-      title: "Rybbit vs Plausible",
+      title: "Hygo vs Plausible",
       href: "/compare/plausible",
       description: "Compare two privacy-first analytics platforms",
     },
     {
-      title: "Rybbit vs Umami",
+      title: "Hygo vs Umami",
       href: "/compare/umami",
       description: "Two open-source analytics tools compared",
     },
     {
-      title: "Getting started with Rybbit",
+      title: "Getting started with Hygo",
       href: "/docs",
-      description: "Set up Rybbit in under 5 minutes",
+      description: "Set up Hygo in under 5 minutes",
     },
     {
       title: "Self-hosting guide",
       href: "/docs/self-hosting",
-      description: "Deploy Rybbit on your own infrastructure",
+      description: "Deploy Hygo on your own infrastructure",
     },
     {
       title: "Pricing",

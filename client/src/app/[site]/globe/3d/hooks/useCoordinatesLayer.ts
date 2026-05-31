@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared/dist/filters";
+import { FilterParameter } from "@hygo/shared/dist/filters";
 import round from "lodash/round";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";

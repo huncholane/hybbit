@@ -3,7 +3,7 @@
 import { getTimezone, useStore } from "@/lib/store";
 import { LITE_DASHBOARD } from "@/lib/const";
 import { SelectItem, Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { DateTime } from "luxon";
 import { useExtracted } from "next-intl";
 import { Time } from "./DateSelector/types";

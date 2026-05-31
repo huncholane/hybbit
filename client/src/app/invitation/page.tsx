@@ -5,7 +5,7 @@ import { useExtracted } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { ThreeDotLoader } from "../../components/Loaders";
-import { RybbitLogo } from "../../components/RybbitLogo";
+import { HygoLogo } from "../../components/HygoLogo";
 import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
@@ -30,7 +30,7 @@ function AuthComponent() {
   return (
     <Card className="w-full max-w-md p-1">
       <CardHeader>
-        <RybbitLogo width={32} height={32} />
+        <HygoLogo width={32} height={32} />
         <CardTitle className="text-2xl flex justify-center">{t("Join {organization}", { organization: organization ?? "" })}</CardTitle>
         <p className="text-center text-sm text-muted-foreground mt-2">{t("You've been invited by {inviterEmail}", { inviterEmail: inviterEmail ?? "" })}</p>
       </CardHeader>
@@ -87,7 +87,7 @@ function AcceptInvitationInner() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <RybbitLogo width={32} height={32} />
+        <HygoLogo width={32} height={32} />
         <CardTitle className="text-2xl flex justify-center">{t("Invitation")}</CardTitle>
       </CardHeader>
       <CardContent>

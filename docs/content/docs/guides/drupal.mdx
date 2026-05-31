@@ -1,47 +1,47 @@
 ---
 title: Drupal
-description: Integrate Rybbit Analytics with your Drupal site using the rybbit module
+description: Integrate Hygo Analytics with your Drupal site using the hygo module
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Drupal is a flexible and secure content management system that features robust content modeling and user management tools. You can add Rybbit to Drupal to track anonymous and logged-in users.
+Drupal is a flexible and secure content management system that features robust content modeling and user management tools. You can add Hygo to Drupal to track anonymous and logged-in users.
 
-## How to Add Rybbit to Drupal
+## How to Add Hygo to Drupal
 
-You can add Rybbit to your site by installing the [Rybbit](https://drupal.org/project/rybbit) module from Drupal.org
+You can add Hygo to your site by installing the [Hygo](https://drupal.org/project/hygo) module from Drupal.org
 
 <Steps>
 <Step>
 
 ### Get Your Tracking Script
 
-First, you'll need your Rybbit tracking script. You can find this in your Rybbit dashboard under **Site Settings > Tracking Code**. It will look something like this:
+First, you'll need your Hygo tracking script. You can find this in your Hygo dashboard under **Site Settings > Tracking Code**. It will look something like this:
 
 ```html
-<script defer src="https://app.rybbit.io/api/script.js" data-site-id="YOUR_SITE_ID"></script>
+<script defer src="https://app.hygo.ai/api/script.js" data-site-id="YOUR_SITE_ID"></script>
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 </Step>
 <Step>
 
-### Download and install the Rybbit module
+### Download and install the Hygo module
 
-Follow Drupal's [recommended procedure](https://www.drupal.org/docs/extending-drupal/installing-modules) for installing the Rybbit module from https://www.drupal.org/project/rybbit:
+Follow Drupal's [recommended procedure](https://www.drupal.org/docs/extending-drupal/installing-modules) for installing the Hygo module from https://www.drupal.org/project/hygo:
 ```
-  $ composer require drupal/rybbit
-  $ drush en rybbit
+  $ composer require drupal/hygo
+  $ drush en hygo
 ```
 </Step>
 <Step>
 
 ### Configure module settings
 
-Visit `admin/services/rybbit` and add your Site ID to the site's configuration page.
+Visit `admin/services/hygo` and add your Site ID to the site's configuration page.
 
-You can also modify the script's source and loading optimizations, set rules for when the script gets loaded, and configure the site to use the `identify()` method to pass details about logged-in users from Drupal to Rybbit.
+You can also modify the script's source and loading optimizations, set rules for when the script gets loaded, and configure the site to use the `identify()` method to pass details about logged-in users from Drupal to Hygo.
 </Step>
 </Steps>
 
@@ -54,8 +54,8 @@ You can also modify the script's source and loading optimizations, set rules for
 
 - Open your live Drupal website in a browser.
 - Navigate through a few pages.
-- Check your Rybbit dashboard for incoming data. It might take a few minutes for the first events to appear.
+- Check your Hygo dashboard for incoming data. It might take a few minutes for the first events to appear.
 </Step>
 </Steps>
 
-That's it! Rybbit Analytics should now be integrated with your Drupal site.
+That's it! Hygo Analytics should now be integrated with your Drupal site.

@@ -10,15 +10,15 @@ import {
 } from "./feature-data";
 
 export const metadata: Metadata = {
-  title: "User Journeys - Rybbit | Sankey Navigation Flow Diagrams",
+  title: "User Journeys - Hygo | Sankey Navigation Flow Diagrams",
   description:
     "Visualize how users navigate your site with interactive Sankey diagrams. See entry points, exit pages, and the most common paths between them.",
   openGraph: {
-    title: "User Journeys - Rybbit",
+    title: "User Journeys - Hygo",
     description:
       "See how users actually navigate your site with interactive Sankey flow diagrams.",
     type: "website",
-    url: "https://rybbit.com/features/user-journeys",
+    url: "https://hygo.ai/features/user-journeys",
     images: [
       createOGImageUrl(
         "User Journeys",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "User Journeys - Rybbit",
+    title: "User Journeys - Hygo",
     description:
       "See how users actually navigate your site with interactive Sankey flow diagrams.",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: "https://rybbit.com/features/user-journeys",
+    canonical: "https://hygo.ai/features/user-journeys",
   },
 };
 
@@ -50,15 +50,15 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/features/user-journeys",
-      name: "Rybbit User Journeys",
+      "@id": "https://hygo.ai/features/user-journeys",
+      name: "Hygo User Journeys",
       description:
         "Interactive Sankey diagrams showing user navigation flows.",
-      url: "https://rybbit.com/features/user-journeys",
+      url: "https://hygo.ai/features/user-journeys",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -87,7 +87,7 @@ export default function UserJourneysPage() {
         headline="Map how users really navigate"
         subtitle="Interactive Sankey diagrams that reveal the actual paths users take through your site — from landing page to conversion and beyond."
         badgeText="User Journeys"
-        demoUrl="https://demo.rybbit.com/81/journeys"
+        demoUrl="https://demo.hygo.ai/81/journeys"
         demoCaption="Live user journeys demo — interactive Sankey diagrams from real traffic"
         introParagraphs={[
           <>
@@ -97,7 +97,7 @@ export default function UserJourneysPage() {
             Unlike funnels, which track a predefined sequence, user journeys are <strong className="text-neutral-900 dark:text-white">exploratory</strong>. They reveal paths you didn&apos;t design for — the blog post that accidentally became your best conversion page, the documentation section that&apos;s acting as a landing page, or the settings page where users get stuck.
           </>,
           <>
-            Rybbit renders your journey data as <strong className="text-neutral-900 dark:text-white">interactive Sankey diagrams</strong> where flow thickness represents user volume. Hover over any path to see exact numbers. Filter by wildcards to group similar pages. Adjust depth from 2 to 6 steps to zoom in or out. It works out of the box with <strong className="text-neutral-900 dark:text-white">zero setup</strong> — just install Rybbit and your journey data is ready.
+            Hygo renders your journey data as <strong className="text-neutral-900 dark:text-white">interactive Sankey diagrams</strong> where flow thickness represents user volume. Hover over any path to see exact numbers. Filter by wildcards to group similar pages. Adjust depth from 2 to 6 steps to zoom in or out. It works out of the box with <strong className="text-neutral-900 dark:text-white">zero setup</strong> — just install Hygo and your journey data is ready.
           </>,
         ]}
         capabilities={capabilities}

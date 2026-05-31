@@ -4,24 +4,24 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Rybbit vs Cloudflare Analytics: Full-Featured Alternative",
+  title: "Hygo vs Cloudflare Analytics: Full-Featured Alternative",
   description:
-    "Compare Rybbit and Cloudflare Web Analytics. While Cloudflare is free and basic, Rybbit offers advanced features like session replay, funnels, and custom events.",
+    "Compare Hygo and Cloudflare Web Analytics. While Cloudflare is free and basic, Hygo offers advanced features like session replay, funnels, and custom events.",
   openGraph: {
-    title: "Rybbit vs Cloudflare Analytics: Basic vs Full-Featured",
-    description: "Cloudflare is free but limited. Rybbit offers the full analytics experience. Compare features.",
+    title: "Hygo vs Cloudflare Analytics: Basic vs Full-Featured",
+    description: "Cloudflare is free but limited. Hygo offers the full analytics experience. Compare features.",
     type: "website",
-    url: "https://rybbit.com/compare/cloudflare-analytics",
-    images: [createOGImageUrl("Rybbit vs Cloudflare Analytics: Basic vs Full-Featured", "Cloudflare is free but limited. Rybbit offers the full analytics experience. Compare features.", "Compare")],
+    url: "https://hygo.ai/compare/cloudflare-analytics",
+    images: [createOGImageUrl("Hygo vs Cloudflare Analytics: Basic vs Full-Featured", "Cloudflare is free but limited. Hygo offers the full analytics experience. Compare features.", "Compare")],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rybbit vs Cloudflare Analytics",
+    title: "Hygo vs Cloudflare Analytics",
     description: "Free basic analytics vs full-featured platform. See the difference.",
-    images: [createOGImageUrl("Rybbit vs Cloudflare Analytics", "Free basic analytics vs full-featured platform. See the difference.", "Compare")],
+    images: [createOGImageUrl("Hygo vs Cloudflare Analytics", "Free basic analytics vs full-featured platform. See the difference.", "Compare")],
   },
   alternates: {
-    canonical: "https://rybbit.com/compare/cloudflare-analytics",
+    canonical: "https://hygo.ai/compare/cloudflare-analytics",
   },
 };
 
@@ -30,14 +30,14 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/compare/cloudflare-analytics",
-      name: "Rybbit vs Cloudflare Analytics Comparison",
-      description: "Compare Rybbit and Cloudflare Web Analytics",
-      url: "https://rybbit.com/compare/cloudflare-analytics",
+      "@id": "https://hygo.ai/compare/cloudflare-analytics",
+      name: "Hygo vs Cloudflare Analytics Comparison",
+      description: "Compare Hygo and Cloudflare Web Analytics",
+      url: "https://hygo.ai/compare/cloudflare-analytics",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -48,7 +48,7 @@ const structuredData = {
           name: "Why is Cloudflare Analytics data inaccurate?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Cloudflare Analytics samples only about 10% of your traffic and extrapolates the rest. This means visitor counts are often significantly overcounted and you can't trust the exact numbers. Rybbit processes 100% of your events with no sampling.",
+            text: "Cloudflare Analytics samples only about 10% of your traffic and extrapolates the rest. This means visitor counts are often significantly overcounted and you can't trust the exact numbers. Hygo processes 100% of your events with no sampling.",
           },
         },
         {
@@ -56,7 +56,7 @@ const structuredData = {
           name: "Do I need Cloudflare CDN to use Cloudflare Analytics?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Cloudflare Analytics requires routing your DNS through Cloudflare. Rybbit works with any website regardless of CDN or hosting provider. Just add a single script tag.",
+            text: "Yes. Cloudflare Analytics requires routing your DNS through Cloudflare. Hygo works with any website regardless of CDN or hosting provider. Just add a single script tag.",
           },
         },
         {
@@ -72,15 +72,15 @@ const structuredData = {
           name: "How long does Cloudflare keep my data?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Cloudflare retains analytics data for only 6 months. Rybbit retains data for 3-5+ years depending on your plan, and you can export your data at any time.",
+            text: "Cloudflare retains analytics data for only 6 months. Hygo retains data for 3-5+ years depending on your plan, and you can export your data at any time.",
           },
         },
         {
           "@type": "Question",
-          name: "Can I use Rybbit alongside Cloudflare Analytics?",
+          name: "Can I use Hygo alongside Cloudflare Analytics?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Many teams add Rybbit for detailed analytics while keeping Cloudflare for basic CDN-level traffic monitoring. Just add Rybbit's script tag to your site, and it works alongside any other analytics tool.",
+            text: "Yes. Many teams add Hygo for detailed analytics while keeping Cloudflare for basic CDN-level traffic monitoring. Just add Hygo's script tag to your site, and it works alongside any other analytics tool.",
           },
         },
       ],
@@ -98,9 +98,9 @@ export default function CloudflareAnalytics() {
         subtitle={cloudflareAnalyticsExtendedData.subtitle}
         introHeading={cloudflareAnalyticsExtendedData.introHeading}
         introParagraphs={cloudflareAnalyticsExtendedData.introParagraphs}
-        chooseRybbit={cloudflareAnalyticsExtendedData.chooseRybbit}
+        chooseHygo={cloudflareAnalyticsExtendedData.chooseHygo}
         chooseCompetitor={cloudflareAnalyticsExtendedData.chooseCompetitor}
-        rybbitPricing={cloudflareAnalyticsExtendedData.rybbitPricing}
+        hygoPricing={cloudflareAnalyticsExtendedData.hygoPricing}
         competitorPricing={cloudflareAnalyticsExtendedData.competitorPricing}
         faqItems={cloudflareAnalyticsExtendedData.faqItems}
         relatedResources={cloudflareAnalyticsExtendedData.relatedResources}

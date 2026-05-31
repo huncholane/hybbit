@@ -9,7 +9,7 @@ function getTextLogoHeight(width: number, height?: number) {
   return height && height > 0 ? height : Math.round(width / HORIZONTAL_LOGO_ASPECT_RATIO);
 }
 
-export function RybbitLogo({ width = 32, height = 32 }: { width?: number; height?: number }) {
+export function HygoLogo({ width = 32, height = 32 }: { width?: number; height?: number }) {
   const { whiteLabelImage, isPending } = useWhiteLabel();
   const [mounted, setMounted] = useState(false);
   const imageStyle = { width, height, objectFit: "contain" as const };
@@ -23,13 +23,13 @@ export function RybbitLogo({ width = 32, height = 32 }: { width?: number; height
   }
 
   if (whiteLabelImage) {
-    return <Image src={whiteLabelImage} alt="Rybbit" width={width} height={height} style={imageStyle} />;
+    return <Image src={whiteLabelImage} alt="Hygo" width={width} height={height} style={imageStyle} />;
   }
 
   return (
     <Image
-      src="/rybbit/frog_white.svg"
-      alt="Rybbit"
+      src="/hygo/frog_white.svg"
+      alt="Hygo"
       width={width}
       height={height}
       style={imageStyle}
@@ -38,7 +38,7 @@ export function RybbitLogo({ width = 32, height = 32 }: { width?: number; height
   );
 }
 
-export function RybbitTextLogo({ width = 150, height }: { width?: number; height?: number }) {
+export function HygoTextLogo({ width = 150, height }: { width?: number; height?: number }) {
   const { whiteLabelImage, isPending } = useWhiteLabel();
   const [mounted, setMounted] = useState(false);
   const resolvedHeight = getTextLogoHeight(width, height);
@@ -56,7 +56,7 @@ export function RybbitTextLogo({ width = 150, height }: { width?: number; height
     return (
       <Image
         src={whiteLabelImage}
-        alt="Rybbit"
+        alt="Hygo"
         width={width}
         height={resolvedHeight}
         style={imageStyle}
@@ -67,8 +67,8 @@ export function RybbitTextLogo({ width = 150, height }: { width?: number; height
 
   return (
     <Image
-      src="/rybbit/horizontal_white.svg"
-      alt="Rybbit"
+      src="/hygo/horizontal_white.svg"
+      alt="Hygo"
       width={width}
       height={resolvedHeight}
       style={imageStyle}

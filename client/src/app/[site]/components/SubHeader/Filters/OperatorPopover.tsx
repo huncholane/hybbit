@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, FilterType } from "@rybbit/shared";
+import { Filter, FilterType } from "@hygo/shared";
 import { useExtracted } from "next-intl";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../../components/ui/popover";

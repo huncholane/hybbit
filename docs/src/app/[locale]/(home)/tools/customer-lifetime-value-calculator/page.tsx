@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Free Customer Lifetime Value (CLV) Calculator",
     description: "Calculate CLV with retention rates and profit margins, compare against industry benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/customer-lifetime-value-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/customer-lifetime-value-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Calculate customer lifetime value with retention rate analysis",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/customer-lifetime-value-calculator",
+    canonical: "https://hygo.ai/tools/customer-lifetime-value-calculator",
   },
 };
 
@@ -32,7 +32,7 @@ const structuredData = {
       name: "Customer Lifetime Value Calculator",
       description:
         "Free CLV calculator with retention rate analysis to predict customer revenue and compare against industry benchmarks",
-      url: "https://rybbit.com/tools/customer-lifetime-value-calculator",
+      url: "https://hygo.ai/tools/customer-lifetime-value-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -281,8 +281,8 @@ export default function CustomerLifetimeValuePage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track CLV and customer metrics with Rybbit"
-      ctaDescription="Monitor customer lifetime value, retention cohorts, and revenue trends in real-time with Rybbit's analytics platform."
+      ctaTitle="Track CLV and customer metrics with Hygo"
+      ctaDescription="Monitor customer lifetime value, retention cohorts, and revenue trends in real-time with Hygo's analytics platform."
       ctaEventLocation="customer_lifetime_value_calculator_cta"
       structuredData={structuredData}
     />

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Latest updates and insights from Rybbit",
+  description: "Latest updates and insights from Hygo",
 };
 
 export default function BlogPage() {
@@ -21,7 +21,7 @@ export default function BlogPage() {
     <div className="max-w-6xl mx-auto px-4 py-16">
       <div className="mb-12">
         <h1 className="text-4xl font-bold mb-4">Blog</h1>
-        <p className="text-xl text-neutral-600 dark:text-neutral-400">Latest updates, tutorials, and insights from the Rybbit team</p>
+        <p className="text-xl text-neutral-600 dark:text-neutral-400">Latest updates, tutorials, and insights from the Hygo team</p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

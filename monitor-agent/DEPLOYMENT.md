@@ -1,13 +1,13 @@
-# Rybbit Monitor Agent Deployment Guide
+# Hygo Monitor Agent Deployment Guide
 
-This guide covers deploying the Rybbit Monitor Agent to VPS instances in different regions.
+This guide covers deploying the Hygo Monitor Agent to VPS instances in different regions.
 
 ## Prerequisites
 
 - VPS instances in desired regions (us-east, us-west, europe, asia)
 - Docker installed on each VPS
 - SSL certificates (or use Let's Encrypt)
-- Main Rybbit server IP address for whitelisting
+- Main Hygo server IP address for whitelisting
 
 ## Deployment Methods
 
@@ -20,8 +20,8 @@ This guide covers deploying the Rybbit Monitor Agent to VPS instances in differe
 ssh user@your-vps-ip
 
 # Create directory for the agent
-sudo mkdir -p /opt/rybbit-monitor-agent
-cd /opt/rybbit-monitor-agent
+sudo mkdir -p /opt/hygo-monitor-agent
+cd /opt/hygo-monitor-agent
 
 # Create environment file
 sudo nano .env
@@ -41,9 +41,9 @@ LOG_LEVEL=info
 
 ```bash
 # Download docker-compose files
-wget https://raw.githubusercontent.com/your-repo/rybbit/main/monitor-agent/docker-compose.yml
-wget https://raw.githubusercontent.com/your-repo/rybbit/main/monitor-agent/docker-compose.prod.yml
-wget https://raw.githubusercontent.com/your-repo/rybbit/main/monitor-agent/Caddyfile
+wget https://raw.githubusercontent.com/your-repo/hygo/main/monitor-agent/docker-compose.yml
+wget https://raw.githubusercontent.com/your-repo/hygo/main/monitor-agent/docker-compose.prod.yml
+wget https://raw.githubusercontent.com/your-repo/hygo/main/monitor-agent/Caddyfile
 
 # Start the services
 REGION=us-east docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
@@ -107,17 +107,17 @@ cd /tmp/systemd
 sudo ./setup.sh
 
 # Configure the environment
-sudo nano /opt/rybbit-monitor-agent/.env
+sudo nano /opt/hygo-monitor-agent/.env
 
 # Restart the service
-sudo systemctl restart rybbit-monitor-agent
+sudo systemctl restart hygo-monitor-agent
 ```
 
 ## Post-Deployment Configuration
 
 ### 1. Update Main Server Database
 
-Add the agent regions to your main Rybbit server database:
+Add the agent regions to your main Hygo server database:
 
 ```sql
 UPDATE agent_regions 
@@ -160,7 +160,7 @@ Monitor your agents using:
 
 1. **Health Endpoint**: `https://your-monitor-domain.com/health`
 2. **Metrics Endpoint**: `https://your-monitor-domain.com/metrics`
-3. **Main Server**: Check region health in the Rybbit UI
+3. **Main Server**: Check region health in the Hygo UI
 
 ## Security Considerations
 
@@ -179,8 +179,8 @@ docker compose logs monitor-agent
 curl http://localhost:3003/health
 
 # Systemd deployment
-sudo journalctl -u rybbit-monitor-agent -f
-sudo systemctl status rybbit-monitor-agent
+sudo journalctl -u hygo-monitor-agent -f
+sudo systemctl status hygo-monitor-agent
 ```
 
 ### Common Issues
@@ -204,13 +204,13 @@ docker compose up -d
 
 # Systemd
 # Copy new files and restart
-sudo systemctl restart rybbit-monitor-agent
+sudo systemctl restart hygo-monitor-agent
 ```
 
 ### Backup Configuration
 ```bash
 # Backup environment file
-cp /opt/rybbit-monitor-agent/.env /opt/rybbit-monitor-agent/.env.backup
+cp /opt/hygo-monitor-agent/.env /opt/hygo-monitor-agent/.env.backup
 ```
 
 ### Log Rotation

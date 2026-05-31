@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
-const WIDGET_ORIGIN = "https://demo.rybbit.com";
+const WIDGET_ORIGIN = "https://demo.hygo.ai";
 const SITE_ID = "81";
 const DEFAULT_ACCENT = "#10b981";
 

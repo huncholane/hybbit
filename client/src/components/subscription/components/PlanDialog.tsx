@@ -274,10 +274,10 @@ export function PlanDialog({ open, onOpenChange, currentPlanName, hasActiveSubsc
                   Need more than {formatEventTier(STRIPE_TIERS[STRIPE_TIERS.length - 1].events)} events? Contact us for a custom plan.
                 </p>
                 <a
-                  href="mailto:hello@rybbit.com"
+                  href="mailto:hello@hygo.ai"
                   className="text-sm text-emerald-500 hover:text-emerald-400 font-medium"
                 >
-                  hello@rybbit.com
+                  hello@hygo.ai
                 </a>
               </div>
             )}
@@ -306,7 +306,7 @@ export function PlanDialog({ open, onOpenChange, currentPlanName, hasActiveSubsc
             {/* Features comparison link */}
             <div className="text-center">
               <a
-                href="https://www.rybbit.com/pricing"
+                href="https://www.hygo.ai/pricing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-600 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-neutral-100 text-sm underline"

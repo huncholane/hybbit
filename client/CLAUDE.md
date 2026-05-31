@@ -1,4 +1,4 @@
-# CLAUDE.md – Rybbit Client
+# CLAUDE.md – Hygo Client
 
 This file provides guidance to Claude Code when working in the `/client` directory.
 

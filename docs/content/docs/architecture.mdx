@@ -1,11 +1,11 @@
 ---
 title: Architecture
-description: Understanding Rybbit's architecture
+description: Understanding Hygo's architecture
 ---
 
 ## Overview
 
-Rybbit is a modern, open-source web and product analytics platform designed as a privacy-friendly alternative to Google Analytics. Built with a full-stack TypeScript architecture, it provides real-time analytics, session replay, performance monitoring, and uptime tracking capabilities.
+Hygo is a modern, open-source web and product analytics platform designed as a privacy-friendly alternative to Google Analytics. Built with a full-stack TypeScript architecture, it provides real-time analytics, session replay, performance monitoring, and uptime tracking capabilities.
 
 ## System Architecture
 
@@ -19,7 +19,7 @@ graph TB
         B[Dashboard UI<br/>Next.js 15]
     end
 
-    subgraph Rybbit Server
+    subgraph Hygo Server
         C[Caddy<br/>HTTP/3 Support]
         subgraph Backend Service
             D[Fastify Server<br/>Node.js]
@@ -53,7 +53,7 @@ graph TB
         B[Dashboard UI<br/>Next.js 15]
     end
 
-    subgraph Rybbit Server
+    subgraph Hygo Server
         C[Caddy<br/>HTTP/3 Support]
         subgraph Backend Service
             D[Fastify Server<br/>Node.js]
@@ -225,7 +225,7 @@ graph TB
 - No external dependencies required
 - Docker Compose deployment
 
-### Cloud (rybbit.io)
+### Cloud (hygo.ai)
 - Managed hosting on Hetzner (EU)
 - Stripe integration for billing
 - Cloudflare R2 storage for session replays

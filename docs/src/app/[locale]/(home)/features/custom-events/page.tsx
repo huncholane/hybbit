@@ -10,15 +10,15 @@ import {
 } from "./feature-data";
 
 export const metadata: Metadata = {
-  title: "Custom Events - Rybbit | Event Tracking & Analytics",
+  title: "Custom Events - Hygo | Event Tracking & Analytics",
   description:
     "Track signups, purchases, clicks, and any user interaction. Custom properties, real-time event stream, autocapture, and full API access. One line of code.",
   openGraph: {
-    title: "Custom Events - Rybbit",
+    title: "Custom Events - Hygo",
     description:
       "Track any user interaction with one line of code. Custom properties, real-time stream, autocapture.",
     type: "website",
-    url: "https://rybbit.com/features/custom-events",
+    url: "https://hygo.ai/features/custom-events",
     images: [
       createOGImageUrl(
         "Custom Events",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Custom Events - Rybbit",
+    title: "Custom Events - Hygo",
     description:
       "Track any user interaction with one line of code. Custom properties, real-time stream, autocapture.",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: "https://rybbit.com/features/custom-events",
+    canonical: "https://hygo.ai/features/custom-events",
   },
 };
 
@@ -50,14 +50,14 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/features/custom-events",
-      name: "Rybbit Custom Events",
+      "@id": "https://hygo.ai/features/custom-events",
+      name: "Hygo Custom Events",
       description: "Custom event tracking for websites and products.",
-      url: "https://rybbit.com/features/custom-events",
+      url: "https://hygo.ai/features/custom-events",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -86,11 +86,11 @@ export default function CustomEventsPage() {
         headline="Track every interaction that matters"
         subtitle="One function call to track signups, purchases, clicks, and any user action. Attach custom properties, view real-time streams, and power your funnels and goals."
         badgeText="Custom Events"
-        demoUrl="https://demo.rybbit.com/81/events"
+        demoUrl="https://demo.hygo.ai/81/events"
         demoCaption="Live events demo — real-time event stream and analytics"
         introParagraphs={[
           <>
-            Pageviews tell you <em>where</em> users go. Custom events tell you <strong className="text-neutral-900 dark:text-white">what they do</strong>. Every button click, form submission, signup, purchase, feature toggle, and video play can be tracked with a single function call — <code className="bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-sm">rybbit.event(&apos;name&apos;, &#123; props &#125;)</code>.
+            Pageviews tell you <em>where</em> users go. Custom events tell you <strong className="text-neutral-900 dark:text-white">what they do</strong>. Every button click, form submission, signup, purchase, feature toggle, and video play can be tracked with a single function call — <code className="bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-sm">hygo.event(&apos;name&apos;, &#123; props &#125;)</code>.
           </>,
           <>
             Attach <strong className="text-neutral-900 dark:text-white">custom properties</strong> to any event — purchase amounts, plan types, feature names, or any metadata your team needs. Then filter, break down, and trend your events by those properties. Want to know which pricing plan gets the most upgrades from mobile users in Germany? One click.

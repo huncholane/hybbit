@@ -1,4 +1,4 @@
-# Caddyfile for Rybbit Monitor Agent with IP Whitelisting
+# Caddyfile for Hygo Monitor Agent with IP Whitelisting
 {$DOMAIN_NAME} {
     # Enable compression
     encode zstd gzip

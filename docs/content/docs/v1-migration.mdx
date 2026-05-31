@@ -1,12 +1,12 @@
 ---
 title: Migration to v1.0
-description: Breaking changes and migration steps when upgrading to Rybbit v1.0
+description: Breaking changes and migration steps when upgrading to Hygo v1.0
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide covers the breaking changes and migration steps when upgrading to Rybbit v1.0.
+This guide covers the breaking changes and migration steps when upgrading to Hygo v1.0.
 
 ## API Path Changes
 
@@ -68,7 +68,7 @@ ProxyPassReverse /api/ http://localhost:3001/api/
 # ❌ Remove rewrite rules like this
 location /api/ {
     rewrite ^/api(/.*)$ $1 break;
-    proxy_pass http://rybbit_backend:3001;
+    proxy_pass http://hygo_backend:3001;
 }
 ```
 
@@ -76,7 +76,7 @@ location /api/ {
 ```yaml
 # ✅ Correct v1.0 configuration
 location /api/ {
-    proxy_pass http://rybbit_backend:3001;
+    proxy_pass http://hygo_backend:3001;
 }
 ```
 
@@ -92,7 +92,7 @@ This change simplifies the reverse proxy setup and eliminates a common source of
    ```bash
    ./update.sh
    ```
-4. **Verify your setup** by checking that your Rybbit instance is accessible and functioning correctly
+4. **Verify your setup** by checking that your Hygo instance is accessible and functioning correctly
 
 ## Need Help?
 

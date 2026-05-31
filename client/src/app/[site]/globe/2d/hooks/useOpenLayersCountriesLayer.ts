@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import Map from "ol/Map";
 import { unByKey as dispose } from "ol/Observable";
 import GeoJSON from "ol/format/GeoJSON";

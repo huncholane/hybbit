@@ -12,23 +12,23 @@ const tilt_wrap = Tilt_Warp({
 });
 
 export const metadata: Metadata = {
-  title: "Sponsors - Rybbit Analytics",
-  description: "Meet the sponsors who support Rybbit, the open-source privacy-first analytics platform.",
+  title: "Sponsors - Hygo Analytics",
+  description: "Meet the sponsors who support Hygo, the open-source privacy-first analytics platform.",
   openGraph: {
-    title: "Rybbit Sponsors",
-    description: "Meet the sponsors who support Rybbit, the open-source privacy-first analytics platform.",
+    title: "Hygo Sponsors",
+    description: "Meet the sponsors who support Hygo, the open-source privacy-first analytics platform.",
     type: "website",
-    url: "https://rybbit.com/sponsors",
-    images: [createOGImageUrl("Rybbit Sponsors", "Meet the sponsors who support Rybbit, the open-source privacy-first analytics platform.")],
+    url: "https://hygo.ai/sponsors",
+    images: [createOGImageUrl("Hygo Sponsors", "Meet the sponsors who support Hygo, the open-source privacy-first analytics platform.")],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rybbit Sponsors",
-    description: "Meet the sponsors who support Rybbit, the open-source privacy-first analytics platform.",
-    images: [createOGImageUrl("Rybbit Sponsors", "Meet the sponsors who support Rybbit, the open-source privacy-first analytics platform.")],
+    title: "Hygo Sponsors",
+    description: "Meet the sponsors who support Hygo, the open-source privacy-first analytics platform.",
+    images: [createOGImageUrl("Hygo Sponsors", "Meet the sponsors who support Hygo, the open-source privacy-first analytics platform.")],
   },
   alternates: {
-    canonical: "https://rybbit.com/sponsors",
+    canonical: "https://hygo.ai/sponsors",
   },
 };
 
@@ -115,7 +115,7 @@ export default function SponsorsPage() {
           Our Sponsors
         </h1>
         <h2 className="relative z-10 text-base md:text-xl pt-4 md:pt-6 px-4 tracking-tight max-w-4xl text-center text-neutral-600 dark:text-neutral-300 font-light">
-          Thank you to the amazing companies that support Rybbit&apos;s development.
+          Thank you to the amazing companies that support Hygo&apos;s development.
         </h2>
 
         <div className="relative z-10 flex flex-col items-center my-8 md:my-10">

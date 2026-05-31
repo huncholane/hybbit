@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "Calculate how many visitors you need for statistically significant A/B test results. Get accurate sample size calculations with confidence levels and statistical power.",
     type: "website",
-    url: "https://rybbit.com/tools/sample-size-calculator",
+    url: "https://hygo.ai/tools/sample-size-calculator",
   },
   twitter: {
     card: "summary_large_image",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
       "Calculate sample size needed for statistically significant A/B test results. Determine confidence levels and statistical power.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/sample-size-calculator",
+    canonical: "https://hygo.ai/tools/sample-size-calculator",
   },
 };
 
@@ -47,7 +47,7 @@ const structuredData = {
         "Real-time results visualization",
       ],
       operatingSystem: "Any",
-      url: "https://rybbit.com/tools/sample-size-calculator",
+      url: "https://hygo.ai/tools/sample-size-calculator",
     },
     {
       "@type": "FAQPage",
@@ -97,7 +97,7 @@ const structuredData = {
           name: "What baseline conversion rate should I use?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Your baseline conversion rate is your current control variant's conversion rate. If you're testing a website redesign and currently 2.5% of visitors convert, use 2.5% as your baseline. You can get this from your analytics tools (Google Analytics, Rybbit Analytics, etc.). Use your most recent data that's representative of normal traffic. Seasonal variations and traffic changes can affect your baseline, so update it if conditions change significantly. More accurate baselines lead to more realistic sample size calculations.",
+            text: "Your baseline conversion rate is your current control variant's conversion rate. If you're testing a website redesign and currently 2.5% of visitors convert, use 2.5% as your baseline. You can get this from your analytics tools (Google Analytics, Hygo Analytics, etc.). Use your most recent data that's representative of normal traffic. Seasonal variations and traffic changes can affect your baseline, so update it if conditions change significantly. More accurate baselines lead to more realistic sample size calculations.",
           },
         },
       ],
@@ -231,7 +231,7 @@ const educationalContent = (
     <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4 mt-8">How to Use This Calculator</h2>
     <ol className="space-y-2 text-neutral-700 dark:text-neutral-300 mb-6">
       <li>
-        <strong>Enter Your Baseline Conversion Rate:</strong> Get this from your analytics (Google Analytics, Rybbit,
+        <strong>Enter Your Baseline Conversion Rate:</strong> Get this from your analytics (Google Analytics, Hygo,
         etc.). If 100 visitors and 3 convert, your baseline is 3%. Use your most recent representative data.
       </li>
       <li>
@@ -251,7 +251,7 @@ const educationalContent = (
       </li>
       <li>
         <strong>Calculate and Plan Your Test:</strong> The calculator shows the required sample size per variant, total
-        visitors needed, and estimated test duration. Use Rybbit Analytics to monitor progress and track when you reach
+        visitors needed, and estimated test duration. Use Hygo Analytics to monitor progress and track when you reach
         statistical significance.
       </li>
     </ol>
@@ -310,8 +310,8 @@ const faqs = [
         Run your test until you reach the calculated sample size, even if you see apparent "winners" mid-test. Stopping
         early increases false positive risk. The duration depends on your daily visitor volume - if you need 10,000
         visitors and get 1,000/day, run it about 10 days. Use{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit Analytics
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo Analytics
         </Link>{" "}
         to track progress and know when you reach statistical significance.
       </>
@@ -341,7 +341,7 @@ export default function SampleSizeCalculatorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Run better A/B tests with Rybbit"
+      ctaTitle="Run better A/B tests with Hygo"
       ctaDescription="Track conversions, variants, and statistical significance in real-time. Know exactly when you've reached statistical significance and avoid costly false positives."
       ctaEventLocation="sample_size_calculator_cta"
       structuredData={structuredData}

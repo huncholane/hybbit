@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { generateOGImage } from '@/app/og/[...slug]/generate';
 
 const logoBase64 = readFile(
-  join(process.cwd(), 'public/rybbit/horizontal_white.png'),
+  join(process.cwd(), 'public/hygo/horizontal_white.png'),
 ).then((buf) => `data:image/png;base64,${buf.toString('base64')}`);
 
 async function loadInterFont(
@@ -24,7 +24,7 @@ async function loadInterFont(
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const title = searchParams.get('title') ?? 'Rybbit';
+  const title = searchParams.get('title') ?? 'Hygo';
   const description = searchParams.get('description') ?? undefined;
 
   const [interRegular, interBoldFont, logoSrc] = await Promise.all([

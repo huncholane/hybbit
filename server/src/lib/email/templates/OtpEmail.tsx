@@ -24,23 +24,23 @@ const getContent = (type: OtpEmailType) => {
   switch (type) {
     case "sign-in":
       return {
-        preview: "Your Rybbit sign-in code",
-        description: "Here is your one-time password to sign in to Rybbit:",
+        preview: "Your Hygo sign-in code",
+        description: "Here is your one-time password to sign in to Hygo:",
       };
     case "email-verification":
       return {
         preview: "Verify your email address",
-        description: "Here is your verification code for Rybbit:",
+        description: "Here is your verification code for Hygo:",
       };
     case "forget-password":
       return {
         preview: "Reset your password",
-        description: "You requested to reset your password for Rybbit. Here is your one-time password:",
+        description: "You requested to reset your password for Hygo. Here is your one-time password:",
       };
     case "change-email":
       return {
         preview: "Change your email address",
-        description: "Here is your verification code for Rybbit:",
+        description: "Here is your verification code for Hygo:",
       };
   }
 };
@@ -72,8 +72,8 @@ export const OtpEmail = ({ otp, type }: OtpEmailProps) => {
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-8 px-6 max-w-[600px]">
             <Img
-              src="https://app.rybbit.io/rybbit/horizontal_black.svg"
-              alt="Rybbit"
+              src="https://app.hygo.ai/hygo/horizontal_black.svg"
+              alt="Hygo"
               width="120"
               height="28"
               className="mb-8"
@@ -96,7 +96,7 @@ export const OtpEmail = ({ otp, type }: OtpEmailProps) => {
 
             <Hr className="border-borderColor my-8" />
 
-            <Text className="text-mutedText text-xs">© {currentYear} Rybbit Analytics</Text>
+            <Text className="text-mutedText text-xs">© {currentYear} Hygo Analytics</Text>
           </Container>
         </Body>
       </Tailwind>

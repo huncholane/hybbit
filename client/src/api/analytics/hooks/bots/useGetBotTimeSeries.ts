@@ -1,4 +1,4 @@
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { UseQueryOptions, UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useBotsStore } from "../../../../app/[site]/bots/botsStore";
 import { useStore } from "../../../../lib/store";

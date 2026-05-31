@@ -1,6 +1,6 @@
 ---
 title: "Shopify"
-description: "Integrate Rybbit with your Shopify store to capture events, track conversions, and analyze user behavior."
+description: "Integrate Hygo with your Shopify store to capture events, track conversions, and analyze user behavior."
 ---
 
 import { Step, Steps } from "fumadocs-ui/components/steps";
@@ -8,19 +8,19 @@ import { Callout } from "fumadocs-ui/components/callout";
 
 # Shopify
 
-Rybbit can be integrated with your Shopify store to capture events, track conversions, and analyze user behavior.
+Hygo can be integrated with your Shopify store to capture events, track conversions, and analyze user behavior.
 
-## How to Add Rybbit to Shopify
+## How to Add Hygo to Shopify
 
 <Steps>
 <Step>
 ### Retrieve Your Tracking Script
 
-Navigate to your Rybbit dashboard to obtain your code snippet.
+Navigate to your Hygo dashboard to obtain your code snippet.
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   data-site-id="YOUR_SITE_ID"
   defer
 ></script>
@@ -42,7 +42,7 @@ Navigate to your Rybbit dashboard to obtain your code snippet.
 
 ## Tracking E-commerce Events
 
-To get the most out of Rybbit with Shopify, you should track key e-commerce events. This typically involves adding small Liquid and JavaScript snippets to your theme files.
+To get the most out of Hygo with Shopify, you should track key e-commerce events. This typically involves adding small Liquid and JavaScript snippets to your theme files.
 
 <Callout type="warn">
   Always back up your theme before making code changes. If you are not comfortable editing theme code, consider hiring a Shopify expert. The following snippets are examples and might need adjustments based on your specific theme structure and Shopify version.
@@ -59,15 +59,15 @@ Add the following script towards the end of the file, or within a relevant produ
 ```liquid
 {% raw %}{% comment %} Add to product.liquid or main product section {% endcomment %}
 <script type="text/javascript">
-  if (typeof window.rybbit !== 'undefined' && {{ product | json }}) {
-    const rybbitProduct = {{ product | json }};
-    const rybbitCurrentVariant = {{ product.selected_or_first_available_variant | json }};
+  if (typeof window.hygo !== 'undefined' && {{ product | json }}) {
+    const hygoProduct = {{ product | json }};
+    const hygoCurrentVariant = {{ product.selected_or_first_available_variant | json }};
 
-    window.rybbit.event('view_item', {
-      item_id: rybbitCurrentVariant.sku || rybbitCurrentVariant.id,
-      item_name: rybbitProduct.title,
-      item_variant: rybbitCurrentVariant.title === 'Default Title' ? null : rybbitCurrentVariant.title,
-      price: parseFloat(rybbitCurrentVariant.price) / 100, // Price is in cents
+    window.hygo.event('view_item', {
+      item_id: hygoCurrentVariant.sku || hygoCurrentVariant.id,
+      item_name: hygoProduct.title,
+      item_variant: hygoCurrentVariant.title === 'Default Title' ? null : hygoCurrentVariant.title,
+      price: parseFloat(hygoCurrentVariant.price) / 100, // Price is in cents
       currency: {{ cart.currency.iso_code | json }}
     });
   }
@@ -90,20 +90,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const addToCartButton = document.getElementById('add-to-cart-button') || addToCartForm?.querySelector('[type="submit"]');
 
   const trackAddToCart = function() {
-    if (typeof window.rybbit !== 'undefined' && {{ product | json }}) {
-      const rybbitProduct = {{ product | json }};
-      const rybbitCurrentVariant = {{ product.selected_or_first_available_variant | json }};
+    if (typeof window.hygo !== 'undefined' && {{ product | json }}) {
+      const hygoProduct = {{ product | json }};
+      const hygoCurrentVariant = {{ product.selected_or_first_available_variant | json }};
       let quantity = 1;
       const quantityInput = addToCartForm?.querySelector('[name="quantity"], input[type="number"]'); // Common quantity input selectors
       if (quantityInput && quantityInput.value) {
         quantity = parseInt(quantityInput.value, 10);
       }
 
-      window.rybbit.event('add_to_cart', {
-        item_id: rybbitCurrentVariant.sku || rybbitCurrentVariant.id,
-        item_name: rybbitProduct.title,
-        item_variant: rybbitCurrentVariant.title === 'Default Title' ? null : rybbitCurrentVariant.title,
-        price: parseFloat(rybbitCurrentVariant.price) / 100,
+      window.hygo.event('add_to_cart', {
+        item_id: hygoCurrentVariant.sku || hygoCurrentVariant.id,
+        item_name: hygoProduct.title,
+        item_variant: hygoCurrentVariant.title === 'Default Title' ? null : hygoCurrentVariant.title,
+        price: parseFloat(hygoCurrentVariant.price) / 100,
         currency: {{ cart.currency.iso_code | json }},
         quantity: quantity > 0 ? quantity : 1
       });
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ### 3. Begin Checkout (`begin_checkout`)
 
-Shopify's checkout process is on a separate domain (`checkout.shopify.com`), and direct script injection into the checkout pages (beyond the "Order status" page) is limited for most plans. However, Rybbit's script, if loaded on your main store, should persist session information.
+Shopify's checkout process is on a separate domain (`checkout.shopify.com`), and direct script injection into the checkout pages (beyond the "Order status" page) is limited for most plans. However, Hygo's script, if loaded on your main store, should persist session information.
 
 A common way to track "begin_checkout" is by tracking clicks on checkout buttons.
 
@@ -144,11 +144,11 @@ Find your "Checkout" button and add an ID to it if it doesn't have one (e.g., `i
 document.addEventListener('DOMContentLoaded', function() {
   const checkoutButton = document.getElementById('checkout-button') || document.querySelector('[name="checkout"], form[action$="/checkout"] [type="submit"]'); // Common selectors
 
-  if (checkoutButton && typeof window.rybbit !== 'undefined' && {{ cart | json }}) {
+  if (checkoutButton && typeof window.hygo !== 'undefined' && {{ cart | json }}) {
     checkoutButton.addEventListener('click', function() {
-      const rybbitCart = {{ cart | json }};
+      const hygoCart = {{ cart | json }};
       let items = [];
-      rybbitCart.items.forEach(function(item) {
+      hygoCart.items.forEach(function(item) {
         items.push({
           item_id: item.sku || item.variant_id,
           item_name: item.product_title,
@@ -158,9 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
 
-      window.rybbit.event('begin_checkout', {
-        currency: rybbitCart.currency,
-        value: parseFloat(rybbitCart.total_price) / 100,
+      window.hygo.event('begin_checkout', {
+        currency: hygoCart.currency,
+        value: parseFloat(hygoCart.total_price) / 100,
         items: items
       });
     });
@@ -184,10 +184,10 @@ Track completed purchases on the Shopify "Order status" page (also known as the 
 ```liquid
 {% raw %}{% if first_time_accessed %}
 <script type="text/javascript">
-  if (typeof window.rybbit !== 'undefined' && {{ checkout | json }}) {
-    const rybbitCheckout = {{ checkout | json }};
+  if (typeof window.hygo !== 'undefined' && {{ checkout | json }}) {
+    const hygoCheckout = {{ checkout | json }};
     let items = [];
-    rybbitCheckout.line_items.forEach(function(item) {
+    hygoCheckout.line_items.forEach(function(item) {
       items.push({
         item_id: item.sku || item.variant_id,
         item_name: item.product.title, // Access product title via item.product
@@ -197,12 +197,12 @@ Track completed purchases on the Shopify "Order status" page (also known as the 
       });
     });
 
-    window.rybbit.event('purchase', {
-      transaction_id: rybbitCheckout.order_number,
-      value: parseFloat(rybbitCheckout.total_price),
-      tax: parseFloat(rybbitCheckout.tax_price),
-      shipping: parseFloat(rybbitCheckout.shipping_price),
-      currency: rybbitCheckout.currency,
+    window.hygo.event('purchase', {
+      transaction_id: hygoCheckout.order_number,
+      value: parseFloat(hygoCheckout.total_price),
+      tax: parseFloat(hygoCheckout.tax_price),
+      shipping: parseFloat(hygoCheckout.shipping_price),
+      currency: hygoCheckout.currency,
       items: items
     });
   }
@@ -215,7 +215,7 @@ Track completed purchases on the Shopify "Order status" page (also known as the 
 
 ## Important Considerations
 *   **Theme Differences**: Shopify themes can vary significantly. You may need to adjust Liquid object paths (e.g., `product.selected_or_first_available_variant` vs. `current_variant`) and JavaScript selectors based on your specific theme's structure.
-*   **Currency Conversion**: Prices in Shopify Liquid objects are often in cents. Ensure you divide by 100 to get the decimal value for Rybbit.
+*   **Currency Conversion**: Prices in Shopify Liquid objects are often in cents. Ensure you divide by 100 to get the decimal value for Hygo.
 *   **AJAX Carts**: If your theme uses an AJAX cart (drawer or pop-up cart that updates without page reload), tracking `add_to_cart` accurately requires hooking into your theme's specific JavaScript events or using MutationObserver to detect cart changes. The provided `add_to_cart` example is a basic starting point.
-*   **Shopify Customer Events**: For more robust server-side or client-side event tracking, especially for `add_to_cart` and `begin_checkout` without relying on DOM manipulation, explore [Shopify Customer Events](https://shopify.dev/docs/api/customer-events). This allows you to subscribe to events like "product added to cart" or "checkout started" and send data to Rybbit via a custom pixel or by triggering client-side JavaScript. This is a more advanced but often more reliable method.
-*   **Testing**: Thoroughly test each event in your Rybbit dashboard after implementation. Use your browser's developer console to check for JavaScript errors.
+*   **Shopify Customer Events**: For more robust server-side or client-side event tracking, especially for `add_to_cart` and `begin_checkout` without relying on DOM manipulation, explore [Shopify Customer Events](https://shopify.dev/docs/api/customer-events). This allows you to subscribe to events like "product added to cart" or "checkout started" and send data to Hygo via a custom pixel or by triggering client-side JavaScript. This is a more advanced but often more reliable method.
+*   **Testing**: Thoroughly test each event in your Hygo dashboard after implementation. Use your browser's developer console to check for JavaScript errors.

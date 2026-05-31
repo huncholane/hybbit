@@ -4,25 +4,25 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Rybbit vs Google Analytics: Best Privacy-First Alternative",
+  title: "Hygo vs Google Analytics: Best Privacy-First Alternative",
   description:
-    "Compare Rybbit and Google Analytics. Discover why privacy-conscious businesses are switching from GA4 to Rybbit's open-source, cookie-free analytics.",
+    "Compare Hygo and Google Analytics. Discover why privacy-conscious businesses are switching from GA4 to Hygo's open-source, cookie-free analytics.",
   openGraph: {
-    title: "Rybbit vs Google Analytics: The Privacy-First Alternative",
+    title: "Hygo vs Google Analytics: The Privacy-First Alternative",
     description:
-      "Why thousands are switching from Google Analytics to Rybbit. Open-source, cookie-free, GDPR compliant.",
+      "Why thousands are switching from Google Analytics to Hygo. Open-source, cookie-free, GDPR compliant.",
     type: "website",
-    url: "https://rybbit.com/compare/google-analytics",
-    images: [createOGImageUrl("Rybbit vs Google Analytics: The Privacy-First Alternative", "Why thousands are switching from Google Analytics to Rybbit. Open-source, cookie-free, GDPR compliant.", "Compare")],
+    url: "https://hygo.ai/compare/google-analytics",
+    images: [createOGImageUrl("Hygo vs Google Analytics: The Privacy-First Alternative", "Why thousands are switching from Google Analytics to Hygo. Open-source, cookie-free, GDPR compliant.", "Compare")],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rybbit vs Google Analytics",
+    title: "Hygo vs Google Analytics",
     description: "The privacy-first Google Analytics alternative. Compare features side-by-side.",
-    images: [createOGImageUrl("Rybbit vs Google Analytics", "The privacy-first Google Analytics alternative. Compare features side-by-side.", "Compare")],
+    images: [createOGImageUrl("Hygo vs Google Analytics", "The privacy-first Google Analytics alternative. Compare features side-by-side.", "Compare")],
   },
   alternates: {
-    canonical: "https://rybbit.com/compare/google-analytics",
+    canonical: "https://hygo.ai/compare/google-analytics",
   },
 };
 
@@ -31,14 +31,14 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://rybbit.com/compare/google-analytics",
-      name: "Rybbit vs Google Analytics Comparison",
-      description: "Compare Rybbit and Google Analytics platforms",
-      url: "https://rybbit.com/compare/google-analytics",
+      "@id": "https://hygo.ai/compare/google-analytics",
+      name: "Hygo vs Google Analytics Comparison",
+      description: "Compare Hygo and Google Analytics platforms",
+      url: "https://hygo.ai/compare/google-analytics",
       isPartOf: {
         "@type": "WebSite",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -46,42 +46,42 @@ const structuredData = {
       mainEntity: [
         {
           "@type": "Question",
-          name: "Why switch from Google Analytics to Rybbit?",
+          name: "Why switch from Google Analytics to Hygo?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Rybbit offers privacy-first analytics without cookies, no consent banners needed, GDPR compliance by default, and a simpler interface. Unlike GA4's complex 150+ report system, Rybbit shows all essential metrics on a single dashboard.",
+            text: "Hygo offers privacy-first analytics without cookies, no consent banners needed, GDPR compliance by default, and a simpler interface. Unlike GA4's complex 150+ report system, Hygo shows all essential metrics on a single dashboard.",
           },
         },
         {
           "@type": "Question",
-          name: "Is Rybbit GDPR compliant unlike Google Analytics?",
+          name: "Is Hygo GDPR compliant unlike Google Analytics?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Rybbit is GDPR compliant by default with no cookies, no personal data collection, and EU data storage. Google Analytics has faced GDPR issues in multiple EU countries due to data transfers to the US.",
+            text: "Yes. Hygo is GDPR compliant by default with no cookies, no personal data collection, and EU data storage. Google Analytics has faced GDPR issues in multiple EU countries due to data transfers to the US.",
           },
         },
         {
           "@type": "Question",
-          name: "Does Rybbit offer the same features as GA4?",
+          name: "Does Hygo offer the same features as GA4?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Rybbit offers all essential analytics features plus session replay, funnels, user journeys, and real-time data. While GA4 has more advanced enterprise features, Rybbit provides what most businesses actually need without the complexity.",
+            text: "Hygo offers all essential analytics features plus session replay, funnels, user journeys, and real-time data. While GA4 has more advanced enterprise features, Hygo provides what most businesses actually need without the complexity.",
           },
         },
         {
           "@type": "Question",
-          name: "Can Rybbit track conversions and goals like GA4?",
+          name: "Can Hygo track conversions and goals like GA4?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Rybbit supports conversion goals, funnels, and custom events with attributes. While the setup is simpler than GA4's event configuration, you get the same core conversion tracking capabilities.",
+            text: "Yes. Hygo supports conversion goals, funnels, and custom events with attributes. While the setup is simpler than GA4's event configuration, you get the same core conversion tracking capabilities.",
           },
         },
         {
           "@type": "Question",
-          name: "Does Rybbit offer real-time analytics?",
+          name: "Does Hygo offer real-time analytics?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes, Rybbit provides real-time data out of the box with no sampling. Unlike GA4 which may sample data on high-traffic properties, Rybbit shows every event as it happens.",
+            text: "Yes, Hygo provides real-time data out of the box with no sampling. Unlike GA4 which may sample data on high-traffic properties, Hygo shows every event as it happens.",
           },
         },
       ],
@@ -99,9 +99,9 @@ export default function GoogleAnalytics() {
         subtitle={googleAnalyticsExtendedData.subtitle}
         introHeading={googleAnalyticsExtendedData.introHeading}
         introParagraphs={googleAnalyticsExtendedData.introParagraphs}
-        chooseRybbit={googleAnalyticsExtendedData.chooseRybbit}
+        chooseHygo={googleAnalyticsExtendedData.chooseHygo}
         chooseCompetitor={googleAnalyticsExtendedData.chooseCompetitor}
-        rybbitPricing={googleAnalyticsExtendedData.rybbitPricing}
+        hygoPricing={googleAnalyticsExtendedData.hygoPricing}
         competitorPricing={googleAnalyticsExtendedData.competitorPricing}
         faqItems={googleAnalyticsExtendedData.faqItems}
         relatedResources={googleAnalyticsExtendedData.relatedResources}

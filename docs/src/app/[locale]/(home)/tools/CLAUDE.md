@@ -1,4 +1,4 @@
-# Adding Tools to Rybbit Docs (AI Agent Guide)
+# Adding Tools to Hygo Docs (AI Agent Guide)
 
 ## Structure
 
@@ -44,7 +44,7 @@ All tools use `ToolPageLayout` with 6 sections: Header, Tool, Educational Conten
 2. Tool slug MUST match directory name
 3. Educational content: h2 for sections, no h1
 4. Keep metadata title <60 chars, description 150-160 chars
-5. Include Rybbit integration in FAQs when relevant
+5. Include Hygo integration in FAQs when relevant
 
 ## Common Patterns
 

@@ -1,17 +1,17 @@
 ---
 title: React (Vite / CRA)
-description: Integrate Rybbit with your client-side React application
+description: Integrate Hygo with your client-side React application
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps'
 import { Callout } from 'fumadocs-ui/components/callout'
 
 
-This guide explains how to integrate Rybbit with your client-side React application, such as those created with Create React App (CRA) or Vite.
+This guide explains how to integrate Hygo with your client-side React application, such as those created with Create React App (CRA) or Vite.
 
-## How to Add Rybbit to Your React App
+## How to Add Hygo to Your React App
 
-The recommended and simplest method to add the Rybbit tracking script is directly in your `index.html` file. This ensures the script is loaded early and reliably.
+The recommended and simplest method to add the Hygo tracking script is directly in your `index.html` file. This ensures the script is loaded early and reliably.
 
 ### Adding to `public/index.html` (or `index.html` for Vite)
 
@@ -21,11 +21,11 @@ This is the most straightforward method and ensures the script is loaded early.
 <Step>
 ### Retrieve Your Tracking Script
 
-Navigate to your Rybbit dashboard to obtain your code snippet. It will look like this:
+Navigate to your Hygo dashboard to obtain your code snippet. It will look like this:
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   data-site-id="YOUR_SITE_ID"
   defer
 ></script>
@@ -43,7 +43,7 @@ Remember to replace `YOUR_SITE_ID` with your actual Site ID.
 <Step>
 ### Add the Snippet to `index.html`
 
-Open your `index.html` file and paste the Rybbit tracking snippet just before the closing `</head>` tag or `</body>` tag. Placing it in the `<head>` allows it to load sooner.
+Open your `index.html` file and paste the Hygo tracking snippet just before the closing `</head>` tag or `</body>` tag. Placing it in the `<head>` allows it to load sooner.
 
 ```html filename="public/index.html (CRA) or index.html (Vite)"
 <!DOCTYPE html>
@@ -53,9 +53,9 @@ Open your `index.html` file and paste the Rybbit tracking snippet just before th
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> <!-- Example for CRA -->
     <!-- Other meta tags and links -->
     <title>My React App</title>
-    <!-- Rybbit Tracking Snippet -->
+    <!-- Hygo Tracking Snippet -->
     <script
-      src="https://app.rybbit.io/api/script.js"
+      src="https://app.hygo.ai/api/script.js"
       data-site-id="YOUR_SITE_ID"
       defer
     ></script>
@@ -73,12 +73,12 @@ Make sure to replace `YOUR_SITE_ID` with your actual Site ID.
 <Step>
 ### Verify Installation
 
-After deploying your application, open your Rybbit dashboard to see if data is being received. You can also check your browser's network tab to ensure `script.js` is loaded.
+After deploying your application, open your Hygo dashboard to see if data is being received. You can also check your browser's network tab to ensure `script.js` is loaded.
 </Step>
 </Steps>
 
 <Callout type="info">
-  **SPA Page View Tracking**: Rybbit's tracking script is designed to automatically detect route changes in most modern SPAs (including those using React Router or similar libraries) and track them as page views. If you find that page views are not being tracked correctly after navigation, you might need to manually trigger page views using `window.rybbit.pageview()` after each route change. However, try the standard installation first.
+  **SPA Page View Tracking**: Hygo's tracking script is designed to automatically detect route changes in most modern SPAs (including those using React Router or similar libraries) and track them as page views. If you find that page views are not being tracked correctly after navigation, you might need to manually trigger page views using `window.hygo.pageview()` after each route change. However, try the standard installation first.
 </Callout>
 
 ## Custom Event Tracking
@@ -88,8 +88,8 @@ Once the script is installed, you can track custom events from any of your React
 ```jsx
 function MyComponent() {
   const handleButtonClick = () => {
-    if (window.rybbit) {
-      window.rybbit.event('button_click', { category: 'CTA', label: 'Learn More' });
+    if (window.hygo) {
+      window.hygo.event('button_click', { category: 'CTA', label: 'Learn More' });
     }
   };
 
@@ -97,4 +97,4 @@ function MyComponent() {
 }
 ```
 
-Ensure `window.rybbit` is available before calling its methods, especially if you load the script dynamically or have strict Content Security Policies.
+Ensure `window.hygo` is available before calling its methods, especially if you load the script dynamically or have strict Content Security Policies.

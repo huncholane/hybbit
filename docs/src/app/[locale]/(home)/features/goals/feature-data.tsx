@@ -67,7 +67,7 @@ export const howItWorks: HowItWorksStep[] = [
   },
   {
     step: 2,
-    title: "Rybbit tracks completions",
+    title: "Hygo tracks completions",
     description:
       "Every matching pageview or event is counted as a goal completion. Data updates in real time with no sampling.",
   },

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     try {
       const response = await fetch(validatedData.url, {
         headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; RybbitBot/1.0; +https://rybbit.com)",
+          "User-Agent": "Mozilla/5.0 (compatible; HygoBot/1.0; +https://hygo.ai)",
         },
         signal: AbortSignal.timeout(10000), // 10 second timeout
       });
@@ -62,7 +62,7 @@ HTML Scripts (first 20):
 ${scripts}
 
 Identify:
-1. All analytics platforms (Google Analytics, Mixpanel, Amplitude, Plausible, Rybbit, etc.)
+1. All analytics platforms (Google Analytics, Mixpanel, Amplitude, Plausible, Hygo, etc.)
 2. Tag managers (Google Tag Manager, Segment, etc.)
 3. Heatmap tools (Hotjar, Crazy Egg, etc.)
 4. Session replay tools

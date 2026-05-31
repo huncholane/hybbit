@@ -1,4 +1,4 @@
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 import { DateTime, Duration, DurationLikeObject, Settings } from "luxon";
 import { getTimezone } from "./store";
 

@@ -105,7 +105,7 @@ class TelemetryService {
   // Send telemetry to cloud instance
   private async sendTelemetry(data: any) {
     try {
-      const response = await fetch("https://demo.rybbit.com/api/admin/telemetry", {
+      const response = await fetch("https://demo.hygo.ai/api/admin/telemetry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

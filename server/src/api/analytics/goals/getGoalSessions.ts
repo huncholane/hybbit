@@ -4,7 +4,7 @@ import { db } from "../../../db/postgres/postgres.js";
 import { goals } from "../../../db/postgres/schema.js";
 import { eq } from "drizzle-orm";
 import { getTimeStatement, processResults, patternToRegex } from "../utils/utils.js";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { GetSessionsResponse } from "../sessions/getSessions.js";
 import SqlString from "sqlstring";
 

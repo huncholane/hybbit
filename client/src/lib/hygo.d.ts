@@ -1,4 +1,4 @@
-interface Rybbit {
+interface Hygo {
   /**
    * Tracks a page view
    */
@@ -72,14 +72,14 @@ interface Rybbit {
   /**
    * Runs a callback once the tracking script and feature flags are ready.
    * Use this before reading flags during page initialization.
-   * @param callback Receives the ready rybbit instance
+   * @param callback Receives the ready hygo instance
    */
-  onReady: (callback: (rybbit: Rybbit) => void) => void;
+  onReady: (callback: (hygo: Hygo) => void) => void;
 }
 
 declare global {
   interface Window {
-    rybbit: Rybbit;
+    hygo: Hygo;
   }
 }
 

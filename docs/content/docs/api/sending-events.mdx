@@ -28,7 +28,7 @@ The `/api/track` endpoint accepts tracking requests for pageviews, custom events
 
 API keys are recommended for server-side tracking to bypass bot detection.
 
-1. Navigate to **Settings → Account** in your Rybbit dashboard
+1. Navigate to **Settings → Account** in your Hygo dashboard
 2. Scroll to the **API Keys** section
 3. Enter a name for your API key
 4. Click **Create**
@@ -45,7 +45,7 @@ API keys are user-scoped and grant access to all sites in your organization(s).
 <Tabs items={['Pageview', 'Custom Event']}>
 <Tab value="Pageview">
 ```bash
-curl -X POST 'https://app.rybbit.io/api/track' \
+curl -X POST 'https://app.hygo.ai/api/track' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer rb_your_api_key_here' \
   -d '{
@@ -61,7 +61,7 @@ curl -X POST 'https://app.rybbit.io/api/track' \
 </Tab>
 <Tab value="Custom Event">
 ```bash
-curl -X POST 'https://app.rybbit.io/api/track' \
+curl -X POST 'https://app.hygo.ai/api/track' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer rb_your_api_key_here' \
   -d '{
@@ -341,14 +341,14 @@ Track JavaScript errors. Set `type: "error"`.
 <Tab value="Node.js">
 ```javascript
 const trackEvent = async (eventData) => {
-  const response = await fetch('https://app.rybbit.io/api/track', {
+  const response = await fetch('https://app.hygo.ai/api/track', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.RYBBIT_API_KEY}`,
+      'Authorization': `Bearer ${process.env.HYGO_API_KEY}`,
     },
     body: JSON.stringify({
-      site_id: process.env.RYBBIT_SITE_ID,
+      site_id: process.env.HYGO_SITE_ID,
       ...eventData
     })
   });
@@ -381,13 +381,13 @@ import os
 
 def track_event(event_data):
     response = requests.post(
-        'https://app.rybbit.io/api/track',
+        'https://app.hygo.ai/api/track',
         headers={
             'Content-Type': 'application/json',
-            'Authorization': f"Bearer {os.getenv('RYBBIT_API_KEY')}"
+            'Authorization': f"Bearer {os.getenv('HYGO_API_KEY')}"
         },
         json={
-            'site_id': os.getenv('RYBBIT_SITE_ID'),
+            'site_id': os.getenv('HYGO_SITE_ID'),
             **event_data
         }
     )
@@ -431,7 +431,7 @@ type TrackingEvent struct {
 }
 
 func trackEvent(event TrackingEvent) error {
-    event.SiteID = os.Getenv("RYBBIT_SITE_ID")
+    event.SiteID = os.Getenv("HYGO_SITE_ID")
 
     jsonData, err := json.Marshal(event)
     if err != nil {
@@ -440,7 +440,7 @@ func trackEvent(event TrackingEvent) error {
 
     req, err := http.NewRequest(
         "POST",
-        "https://app.rybbit.io/api/track",
+        "https://app.hygo.ai/api/track",
         bytes.NewBuffer(jsonData),
     )
     if err != nil {
@@ -448,7 +448,7 @@ func trackEvent(event TrackingEvent) error {
     }
 
     req.Header.Set("Content-Type", "application/json")
-    req.Header.Set("Authorization", "Bearer "+os.Getenv("RYBBIT_API_KEY"))
+    req.Header.Set("Authorization", "Bearer "+os.Getenv("HYGO_API_KEY"))
 
     client := &http.Client{}
     resp, err := client.Do(req)
@@ -489,10 +489,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.HashMap;
 
-public class RybbitTracker {
-    private static final String API_URL = "https://app.rybbit.io/api/track";
-    private static final String API_KEY = System.getenv("RYBBIT_API_KEY");
-    private static final String SITE_ID = System.getenv("RYBBIT_SITE_ID");
+public class HygoTracker {
+    private static final String API_URL = "https://app.hygo.ai/api/track";
+    private static final String API_KEY = System.getenv("HYGO_API_KEY");
+    private static final String SITE_ID = System.getenv("HYGO_SITE_ID");
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -518,7 +518,7 @@ public class RybbitTracker {
     }
 
     public static void main(String[] args) throws Exception {
-        RybbitTracker tracker = new RybbitTracker();
+        HygoTracker tracker = new HygoTracker();
 
         // Track a pageview
         Map<String, Object> pageview = new HashMap<>();
@@ -543,14 +543,14 @@ public class RybbitTracker {
 ```php
 <?php
 
-class RybbitTracker {
-    private $apiUrl = 'https://app.rybbit.io/api/track';
+class HygoTracker {
+    private $apiUrl = 'https://app.hygo.ai/api/track';
     private $apiKey;
     private $siteId;
 
     public function __construct() {
-        $this->apiKey = getenv('RYBBIT_API_KEY');
-        $this->siteId = getenv('RYBBIT_SITE_ID');
+        $this->apiKey = getenv('HYGO_API_KEY');
+        $this->siteId = getenv('HYGO_SITE_ID');
     }
 
     public function trackEvent($eventData) {
@@ -578,7 +578,7 @@ class RybbitTracker {
 }
 
 // Usage
-$tracker = new RybbitTracker();
+$tracker = new HygoTracker();
 
 // Track a pageview
 $tracker->trackEvent([
@@ -603,12 +603,12 @@ require 'net/http'
 require 'json'
 require 'uri'
 
-class RybbitTracker
-  API_URL = 'https://app.rybbit.io/api/track'
+class HygoTracker
+  API_URL = 'https://app.hygo.ai/api/track'
 
   def initialize
-    @api_key = ENV['RYBBIT_API_KEY']
-    @site_id = ENV['RYBBIT_SITE_ID']
+    @api_key = ENV['HYGO_API_KEY']
+    @site_id = ENV['HYGO_SITE_ID']
   end
 
   def track_event(event_data)
@@ -634,7 +634,7 @@ class RybbitTracker
 end
 
 # Usage
-tracker = RybbitTracker.new
+tracker = HygoTracker.new
 
 # Track a pageview
 tracker.track_event({
@@ -663,18 +663,18 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-public class RybbitTracker
+public class HygoTracker
 {
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
     private readonly string _siteId;
-    private const string ApiUrl = "https://app.rybbit.io/api/track";
+    private const string ApiUrl = "https://app.hygo.ai/api/track";
 
-    public RybbitTracker()
+    public HygoTracker()
     {
         _httpClient = new HttpClient();
-        _apiKey = Environment.GetEnvironmentVariable("RYBBIT_API_KEY");
-        _siteId = Environment.GetEnvironmentVariable("RYBBIT_SITE_ID");
+        _apiKey = Environment.GetEnvironmentVariable("HYGO_API_KEY");
+        _siteId = Environment.GetEnvironmentVariable("HYGO_SITE_ID");
         _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", _apiKey);
     }
@@ -697,7 +697,7 @@ public class RybbitTracker
 
     static async Task Main(string[] args)
     {
-        var tracker = new RybbitTracker();
+        var tracker = new HygoTracker();
 
         // Track a pageview
         await tracker.TrackEventAsync(new Dictionary<string, object>
@@ -728,20 +728,20 @@ use serde_json::{json, Value};
 use std::env;
 
 #[derive(Clone)]
-struct RybbitTracker {
+struct HygoTracker {
     client: reqwest::Client,
     api_key: String,
     site_id: String,
     api_url: String,
 }
 
-impl RybbitTracker {
+impl HygoTracker {
     fn new() -> Self {
         Self {
             client: reqwest::Client::new(),
-            api_key: env::var("RYBBIT_API_KEY").expect("RYBBIT_API_KEY not set"),
-            site_id: env::var("RYBBIT_SITE_ID").expect("RYBBIT_SITE_ID not set"),
-            api_url: "https://app.rybbit.io/api/track".to_string(),
+            api_key: env::var("HYGO_API_KEY").expect("HYGO_API_KEY not set"),
+            site_id: env::var("HYGO_SITE_ID").expect("HYGO_SITE_ID not set"),
+            api_url: "https://app.hygo.ai/api/track".to_string(),
         }
     }
 
@@ -773,7 +773,7 @@ impl RybbitTracker {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let tracker = RybbitTracker::new();
+    let tracker = HygoTracker::new();
 
     // Track a pageview
     tracker.track_event(json!({
@@ -800,20 +800,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 import Foundation
 import UIKit
 
-class RybbitTracker {
-    static let shared = RybbitTracker()
+class HygoTracker {
+    static let shared = HygoTracker()
 
-    private let apiUrl = "https://app.rybbit.io/api/track"
+    private let apiUrl = "https://app.hygo.ai/api/track"
     private let apiKey: String
     private let siteId: String
 
     init() {
         // Ensure API key and site ID are available
-        guard let apiKey = ProcessInfo.processInfo.environment["RYBBIT_API_KEY"],
+        guard let apiKey = ProcessInfo.processInfo.environment["HYGO_API_KEY"],
               !apiKey.isEmpty,
-              let siteId = ProcessInfo.processInfo.environment["RYBBIT_SITE_ID"],
+              let siteId = ProcessInfo.processInfo.environment["HYGO_SITE_ID"],
               !siteId.isEmpty else {
-            fatalError("RYBBIT_API_KEY and RYBBIT_SITE_ID environment variables must be set")
+            fatalError("HYGO_API_KEY and HYGO_SITE_ID environment variables must be set")
         }
         self.apiKey = apiKey
         self.siteId = siteId
@@ -850,7 +850,7 @@ class RybbitTracker {
 
         guard let httpResponse = response as? HTTPURLResponse,
               httpResponse.statusCode == 200 else {
-            throw NSError(domain: "RybbitTracker", code: 1, userInfo: [NSLocalizedDescriptionKey: "Tracking failed"])
+            throw NSError(domain: "HygoTracker", code: 1, userInfo: [NSLocalizedDescriptionKey: "Tracking failed"])
         }
     }
 
@@ -865,7 +865,7 @@ class RybbitTracker {
 // Usage
 Task {
     // Track a pageview
-    try await RybbitTracker.shared.trackEvent([
+    try await HygoTracker.shared.trackEvent([
         "type": "pageview",
         "pathname": "/api/users",
         "hostname": "api.example.com",
@@ -873,7 +873,7 @@ Task {
     ])
 
     // Track a custom event
-    try await RybbitTracker.shared.trackEvent([
+    try await HygoTracker.shared.trackEvent([
         "type": "custom_event",
         "pathname": "/checkout",
         "event_name": "purchase",
@@ -894,15 +894,15 @@ import android.content.Context
 import android.os.Build
 import java.util.Locale
 
-class RybbitTracker(private val context: Context) {
+class HygoTracker(private val context: Context) {
     companion object {
-        private const val API_URL = "https://app.rybbit.io/api/track"
+        private const val API_URL = "https://app.hygo.ai/api/track"
         private val JSON = "application/json; charset=utf-8".toMediaType()
     }
 
     private val client = OkHttpClient()
-    private val apiKey = BuildConfig.RYBBIT_API_KEY // Set in build.gradle
-    private val siteId = BuildConfig.RYBBIT_SITE_ID
+    private val apiKey = BuildConfig.HYGO_API_KEY // Set in build.gradle
+    private val siteId = BuildConfig.HYGO_SITE_ID
 
     suspend fun trackEvent(eventData: Map<String, Any>) = withContext(Dispatchers.IO) {
         val data = eventData.toMutableMap().apply {
@@ -941,7 +941,7 @@ class RybbitTracker(private val context: Context) {
 
 // Usage
 class MainActivity : AppCompatActivity() {
-    private val tracker = RybbitTracker(this)
+    private val tracker = HygoTracker(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -976,14 +976,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-class RybbitTracker {
-  static final RybbitTracker _instance = RybbitTracker._internal();
-  factory RybbitTracker() => _instance;
-  RybbitTracker._internal();
+class HygoTracker {
+  static final HygoTracker _instance = HygoTracker._internal();
+  factory HygoTracker() => _instance;
+  HygoTracker._internal();
 
-  static const String _apiUrl = 'https://app.rybbit.io/api/track';
-  static const String _apiKey = String.fromEnvironment('RYBBIT_API_KEY');
-  static const String _siteId = String.fromEnvironment('RYBBIT_SITE_ID');
+  static const String _apiUrl = 'https://app.hygo.ai/api/track';
+  static const String _apiKey = String.fromEnvironment('HYGO_API_KEY');
+  static const String _siteId = String.fromEnvironment('HYGO_SITE_ID');
 
   final _deviceInfoPlugin = DeviceInfoPlugin();
 
@@ -1040,7 +1040,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final tracker = RybbitTracker();
+  final tracker = HygoTracker();
 
   @override
   void initState() {
@@ -1125,7 +1125,7 @@ API keys have built-in rate limiting:
 </Callout>
 
 <Callout type="info">
-**Browser Tracking**: For standard browser-based tracking, use the [Rybbit Web SDK](/docs/sdks/web) instead. The HTTP API is designed for server-side applications, mobile apps, and custom integrations.
+**Browser Tracking**: For standard browser-based tracking, use the [Hygo Web SDK](/docs/sdks/web) instead. The HTTP API is designed for server-side applications, mobile apps, and custom integrations.
 </Callout>
 
 <Callout type="info">

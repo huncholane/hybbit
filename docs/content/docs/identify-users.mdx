@@ -1,30 +1,30 @@
 ---
 title: Identify Users
-description: How to identify and track logged-in users with Rybbit
+description: How to identify and track logged-in users with Hygo
 ---
 
 <Callout type="warn" title="GDPR & Privacy Compliance">
 User identification involves processing personal data. Before using these features, ensure you have a lawful basis for processing (typically user consent), have disclosed tracking in your privacy policy, and provide users the ability to access and delete their data. Only collect traits you have explicit consent to process.
 </Callout>
 
-Rybbit allows you to identify logged-in users and associate their activity with a persistent identity across devices and sessions. This enables powerful user-level analytics, including tracking user journeys, understanding retention, and personalizing experiences.
+Hygo allows you to identify logged-in users and associate their activity with a persistent identity across devices and sessions. This enables powerful user-level analytics, including tracking user journeys, understanding retention, and personalizing experiences.
 
 ![identify users](/docs/users.png)
 
 ## How It Works
 
-By default, Rybbit assigns an anonymous ID to each visitor based on their device fingerprint. When you call `identify()`, you link this anonymous visitor to a known user ID, allowing you to:
+By default, Hygo assigns an anonymous ID to each visitor based on their device fingerprint. When you call `identify()`, you link this anonymous visitor to a known user ID, allowing you to:
 
 - Track the same user across multiple devices
 - Associate pre-login activity with the logged-in user
 - Store user metadata (traits) like email, name, and custom fields
 - View identified users in your dashboard with their real names
 
-When a new alias is created (i.e., the first time `identify()` is called for a given device), Rybbit retroactively updates all past anonymous events from that device to include the identified user ID. This means pre-login pageviews and events are attributed to the user once they identify themselves.
+When a new alias is created (i.e., the first time `identify()` is called for a given device), Hygo retroactively updates all past anonymous events from that device to include the identified user ID. This means pre-login pageviews and events are attributed to the user once they identify themselves.
 
 ## Special Trait Fields
 
-When identifying users, certain trait fields are treated specially by Rybbit:
+When identifying users, certain trait fields are treated specially by Hygo:
 
 | Field | Description |
 |-------|-------------|
@@ -41,19 +41,19 @@ You can also include any custom fields you need for segmentation and analysis.
 
 ## API Reference
 
-### `window.rybbit.identify(userId, traits?)`
+### `window.hygo.identify(userId, traits?)`
 
 Sets a custom user ID for tracking logged-in users across devices and sessions, with optional user traits (metadata).
 
 - `userId` (String): The unique identifier for the user. This will be stored in localStorage and persist across browser sessions. **Note: Custom user IDs are stored exactly as provided without any hashing or modification.**
-- `traits` (Object, Optional): An object containing user metadata like email, name, username, or any custom fields. This data is stored in Rybbit and can be used to identify users in the dashboard. Setting a trait to `null` removes it from the user's profile.
+- `traits` (Object, Optional): An object containing user metadata like email, name, username, or any custom fields. This data is stored in Hygo and can be used to identify users in the dashboard. Setting a trait to `null` removes it from the user's profile.
 
 ```javascript
 // Identify a user when they log in (without traits)
-window.rybbit.identify("user_12345");
+window.hygo.identify("user_12345");
 
 // Identify a user with traits (recommended)
-window.rybbit.identify("user_12345", {
+window.hygo.identify("user_12345", {
   username: "johndoe",           // Primary display name
   name: "John Doe",              // Fallback display name
   email: "john@example.com",
@@ -64,7 +64,7 @@ window.rybbit.identify("user_12345", {
 // All subsequent events and pageviews will be associated with this user ID
 ```
 
-### `window.rybbit.setTraits(traits)`
+### `window.hygo.setTraits(traits)`
 
 Updates the traits for the currently identified user without re-identifying them. Useful for updating user properties after initial identification.
 
@@ -72,35 +72,35 @@ Updates the traits for the currently identified user without re-identifying them
 
 ```javascript
 // Update user traits after they upgrade their plan
-window.rybbit.setTraits({
+window.hygo.setTraits({
   plan: "enterprise",
   upgraded_at: "2024-01-15"
 });
 
 // Remove a trait by setting it to null
-window.rybbit.setTraits({
+window.hygo.setTraits({
   temporary_flag: null  // This trait will be removed
 });
 ```
 
 **Note:** You must call `identify()` before using `setTraits()`. If no user is identified, this will log a warning.
 
-### `window.rybbit.clearUserId()`
+### `window.hygo.clearUserId()`
 
 Clears the stored user ID. Useful when a user logs out.
 
 ```javascript
 // Clear user identification when user logs out
-window.rybbit.clearUserId();
+window.hygo.clearUserId();
 ```
 
-### `window.rybbit.getUserId()`
+### `window.hygo.getUserId()`
 
 Returns the currently set user ID, or `null` if none is set.
 
 ```javascript
 // Check if a user is identified
-const currentUserId = window.rybbit.getUserId();
+const currentUserId = window.hygo.getUserId();
 if (currentUserId) {
   console.log('Current user:', currentUserId);
 } else {
@@ -123,7 +123,7 @@ Here's a typical workflow for user identification:
 // When user logs in
 function handleLogin(userData) {
   // Set user identification with traits
-  window.rybbit.identify(userData.id, {
+  window.hygo.identify(userData.id, {
     username: userData.username,
     name: userData.fullName,
     email: userData.email,
@@ -131,7 +131,7 @@ function handleLogin(userData) {
   });
 
   // Track login event
-  window.rybbit.event("User Login", {
+  window.hygo.event("User Login", {
     method: "email"
   });
 }
@@ -139,13 +139,13 @@ function handleLogin(userData) {
 // When user upgrades their plan
 function handlePlanUpgrade(newPlan) {
   // Update traits without re-identifying
-  window.rybbit.setTraits({
+  window.hygo.setTraits({
     plan: newPlan,
     upgraded_at: new Date().toISOString()
   });
 
   // Track upgrade event
-  window.rybbit.event("Plan Upgraded", {
+  window.hygo.event("Plan Upgraded", {
     new_plan: newPlan
   });
 }
@@ -153,15 +153,15 @@ function handlePlanUpgrade(newPlan) {
 // When user logs out
 function handleLogout() {
   // Track logout event
-  window.rybbit.event("User Logout");
+  window.hygo.event("User Logout");
 
   // Clear user identification
-  window.rybbit.clearUserId();
+  window.hygo.clearUserId();
 }
 
 // Check identification status
 function checkUserStatus() {
-  const userId = window.rybbit.getUserId();
+  const userId = window.hygo.getUserId();
   if (userId) {
     console.log("User is identified:", userId);
   } else {

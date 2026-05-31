@@ -1,4 +1,4 @@
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { clickhouse } from "../../../db/clickhouse/clickhouse.js";
 import { getOverview } from "../getOverview.js";

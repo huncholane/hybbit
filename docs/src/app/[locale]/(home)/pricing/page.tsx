@@ -4,12 +4,12 @@ import { PricingPageClient } from "./components/PricingPageClient";
 
 export const metadata: Metadata = createMetadata({
   title: "Pricing",
-  description: "Rybbit pricing plans and features",
+  description: "Hygo pricing plans and features",
   openGraph: {
-    images: [createOGImageUrl("Pricing", "Rybbit pricing plans and features")],
+    images: [createOGImageUrl("Pricing", "Hygo pricing plans and features")],
   },
   twitter: {
-    images: [createOGImageUrl("Pricing", "Rybbit pricing plans and features")],
+    images: [createOGImageUrl("Pricing", "Hygo pricing plans and features")],
   },
 });
 

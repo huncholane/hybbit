@@ -1,24 +1,24 @@
 ---
 title: "Wix"
-description: "Integrate Rybbit Analytics with your Wix website using custom code snippets."
+description: "Integrate Hygo Analytics with your Wix website using custom code snippets."
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from "fumadocs-ui/components/callout";
 
-Integrating Rybbit Analytics with your Wix website involves adding a custom code snippet to your site's tracking tools.
+Integrating Hygo Analytics with your Wix website involves adding a custom code snippet to your site's tracking tools.
 
 <Steps>
 <Step>
 ### Get Your Tracking Script
 
-First, you'll need your Rybbit tracking script. You can find this in your Rybbit dashboard under **Site Settings > Tracking Code**. It will look something like this:
+First, you'll need your Hygo tracking script. You can find this in your Hygo dashboard under **Site Settings > Tracking Code**. It will look something like this:
 
 ```html
-<script defer src="https://app.rybbit.io/api/script.js" data-site-id="YOUR_SITE_ID"></script>
+<script defer src="https://app.hygo.ai/api/script.js" data-site-id="YOUR_SITE_ID"></script>
 ```
 
-Replace `YOUR_SITE_ID` with your actual Site ID from your Rybbit dashboard.
+Replace `YOUR_SITE_ID` with your actual Site ID from your Hygo dashboard.
 </Step>
 
 <Step>
@@ -58,8 +58,8 @@ Once in the Tracking Tools or Custom Code section:
 
 You'll be presented with a form to add your code:
 
-- **Paste your Rybbit tracking script** into the main code snippet box.
-- **Name your code:** Give it a recognizable name, like "Rybbit Analytics".
+- **Paste your Hygo tracking script** into the main code snippet box.
+- **Name your code:** Give it a recognizable name, like "Hygo Analytics".
 - **Add Code to Pages:** Select **All pages** to track your entire site.
   - You might have an option to **Load code once** or **Load code on each new page**. Choose the option that best reflects loading the script on every page view.
 - **Place Code in:** Choose **Body - end**. This is generally recommended for analytics scripts to avoid impacting perceived page load speed. Some Wix versions might offer "Head" or "Body - start" as well. "Body - end" is usually the best choice.
@@ -74,12 +74,12 @@ Click **Apply** or **Save** to add the custom code to your site.
 <Step>
 ### Verify Integration
 
-After applying the changes, Rybbit Analytics should start tracking visitors on your Wix site.
+After applying the changes, Hygo Analytics should start tracking visitors on your Wix site.
 
 - Open your Wix website in a new browser tab or incognito window.
 - Navigate through a few pages.
-- Check your Rybbit dashboard for incoming data. It might take a few minutes for the first events to appear.
+- Check your Hygo dashboard for incoming data. It might take a few minutes for the first events to appear.
 </Step>
 </Steps>
 
-That's it! Rybbit Analytics is now integrated with your Wix website.
+That's it! Hygo Analytics is now integrated with your Wix website.

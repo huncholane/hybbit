@@ -64,13 +64,13 @@ export const howItWorks: HowItWorksStep[] = [
     step: 1,
     title: "Enable error tracking",
     description:
-      "Add trackErrors: true to your Rybbit configuration. Rybbit will automatically listen for unhandled JavaScript errors and promise rejections.",
+      "Add trackErrors: true to your Hygo configuration. Hygo will automatically listen for unhandled JavaScript errors and promise rejections.",
   },
   {
     step: 2,
     title: "Errors are captured automatically",
     description:
-      "When a JavaScript error occurs on your site, Rybbit captures the error name, message, and page context. No try/catch wrappers needed.",
+      "When a JavaScript error occurs on your site, Hygo captures the error name, message, and page context. No try/catch wrappers needed.",
   },
   {
     step: 3,
@@ -129,17 +129,17 @@ export const faqItems: FAQItem[] = [
   {
     question: "Is error tracking enabled by default?",
     answer:
-      "No. Error tracking is opt-in. Add trackErrors: true to your Rybbit configuration to start capturing JavaScript errors automatically.",
+      "No. Error tracking is opt-in. Add trackErrors: true to your Hygo configuration to start capturing JavaScript errors automatically.",
   },
   {
     question: "What types of errors are captured?",
     answer:
-      "Rybbit captures unhandled JavaScript errors (window.onerror) and unhandled promise rejections (unhandledrejection). These cover the vast majority of client-side errors.",
+      "Hygo captures unhandled JavaScript errors (window.onerror) and unhandled promise rejections (unhandledrejection). These cover the vast majority of client-side errors.",
   },
   {
     question: "How is this different from Sentry or Bugsnag?",
     answer:
-      "Rybbit error tracking is lightweight and integrated into your analytics platform — no separate tool, no extra SDK, no additional billing. It's designed for monitoring and triage, not as a full error management platform. For most teams, it provides enough signal to catch and prioritize issues.",
+      "Hygo error tracking is lightweight and integrated into your analytics platform — no separate tool, no extra SDK, no additional billing. It's designed for monitoring and triage, not as a full error management platform. For most teams, it provides enough signal to catch and prioritize issues.",
   },
   {
     question: "Can I pair errors with session replay?",

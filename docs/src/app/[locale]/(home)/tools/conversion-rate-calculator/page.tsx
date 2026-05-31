@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     description:
       "Calculate and optimize your conversion rates with industry benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/conversion-rate-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/conversion-rate-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: "Calculate your conversion rate and compare against industry benchmarks",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/conversion-rate-calculator",
+    canonical: "https://hygo.ai/tools/conversion-rate-calculator",
   },
 };
 
@@ -33,7 +33,7 @@ const structuredData = {
       name: "Conversion Rate Calculator",
       description:
         "Free conversion rate calculator to measure marketing effectiveness and compare against industry benchmarks",
-      url: "https://rybbit.com/tools/conversion-rate-calculator",
+      url: "https://hygo.ai/tools/conversion-rate-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -307,8 +307,8 @@ export default function ConversionRatePage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track conversion rates with Rybbit"
-      ctaDescription="Monitor conversion rates across pages, campaigns, and channels in real-time with Rybbit's analytics platform."
+      ctaTitle="Track conversion rates with Hygo"
+      ctaDescription="Monitor conversion rates across pages, campaigns, and channels in real-time with Hygo's analytics platform."
       ctaEventLocation="conversion_rate_calculator_cta"
       structuredData={structuredData}
     />

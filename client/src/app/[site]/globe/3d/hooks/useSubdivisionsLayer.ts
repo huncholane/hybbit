@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { useMetric } from "../../../../../api/analytics/hooks/useGetMetric";

@@ -150,7 +150,7 @@ export function CreateOrganizationDialog({ open, onOpenChange, onSuccess, trigge
                 required
               />
               <p className="text-xs text-muted-foreground">
-                This will be used in your URL: rybbit.io/{slug}
+                This will be used in your URL: hygo.ai/{slug}
               </p>
             </div> */}
 

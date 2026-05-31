@@ -24,7 +24,7 @@ interface ReengagementEmailProps {
   unsubscribeUrl: string;
 }
 
-const DOCS_URL = "https://www.rybbit.io/docs";
+const DOCS_URL = "https://www.hygo.ai/docs";
 
 export const ReengagementEmail = ({
   userName,
@@ -37,7 +37,7 @@ export const ReengagementEmail = ({
   unsubscribeUrl,
 }: ReengagementEmailProps) => {
   const greeting = userName ? `Hi ${userName}` : "Hi there";
-  const dashboardUrl = `https://app.rybbit.io/${siteId}`;
+  const dashboardUrl = `https://app.hygo.ai/${siteId}`;
   const messageWithDomain = message.replace("{domain}", domain);
 
   // Split message into paragraphs
@@ -65,8 +65,8 @@ export const ReengagementEmail = ({
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-8 px-6 max-w-[600px]">
             <Img
-              src="https://app.rybbit.io/rybbit/horizontal_black.svg"
-              alt="Rybbit"
+              src="https://app.hygo.ai/hygo/horizontal_black.svg"
+              alt="Hygo"
               width="120"
               height="28"
               className="mb-8"
@@ -96,7 +96,7 @@ export const ReengagementEmail = ({
             <Text className="text-darkText text-base leading-relaxed mt-8">
               You can reply to this email,
               <br />
-              Bill – Founder of Rybbit
+              Bill – Founder of Hygo
             </Text>
 
             <Hr className="border-borderColor my-8" />

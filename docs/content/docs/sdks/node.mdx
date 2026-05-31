@@ -8,11 +8,11 @@ import { Callout } from "fumadocs-ui/components/callout";
 ## Installation
 
 ```bash filename="npm"
-npm install @rybbit/node
+npm install @hygo/node
 ```
 
 ```bash filename="yarn"
-yarn add @rybbit/node
+yarn add @hygo/node
 ```
 
 ## Initialization
@@ -20,33 +20,33 @@ yarn add @rybbit/node
 ### Syntax
 
 ```typescript
-import { Rybbit } from "@rybbit/node";
+import { Hygo } from "@hygo/node";
 
-const rybbit = new Rybbit(config: RybbitConfig);
+const hygo = new Hygo(config: HygoConfig);
 ```
 
 ### Example
 
 ```javascript
-import { Rybbit } from "@rybbit/node";
+import { Hygo } from "@hygo/node";
 
-const rybbit = new Rybbit({
-  analyticsHost: "https://app.rybbit.io/api",
+const hygo = new Hygo({
+  analyticsHost: "https://app.hygo.ai/api",
   siteId: "1",
   apiKey: "your-secret-api-key",
 });
 ```
 
 <Callout type="warning">
-The `Rybbit` constructor will throw an error if required configuration options (`analyticsHost`, `siteId`, `apiKey`) are missing or invalid.
+The `Hygo` constructor will throw an error if required configuration options (`analyticsHost`, `siteId`, `apiKey`) are missing or invalid.
 </Callout>
 
 ### Configuration Options
 
 | Option          | Type               | Default | Description                                                                                      |
 | :-------------- | :----------------- | :------ | :----------------------------------------------------------------------------------------------- |
-| `analyticsHost` | `string`           | -       | **Required.** URL of your Rybbit analytics instance (e.g., `https://rybbit.yourdomain.com/api`). |
-| `siteId`        | `string \| number` | -       | **Required.** The Site ID for your website obtained from your Rybbit instance.                   |
+| `analyticsHost` | `string`           | -       | **Required.** URL of your Hygo analytics instance (e.g., `https://hygo.yourdomain.com/api`). |
+| `siteId`        | `string \| number` | -       | **Required.** The Site ID for your website obtained from your Hygo instance.                   |
 | `apiKey`        | `string`           | -       | **Required.** Your secret API key for the site                                                   |
 | `debug`         | `boolean`          | `false` | Enable detailed logging to the console.                                                          |
 
@@ -57,7 +57,7 @@ While pageviews are traditionally a browser concept, the Node.js SDK provides a 
 ### Syntax
 
 ```typescript
-await rybbit.pageview(payload?: Payload);
+await hygo.pageview(payload?: Payload);
 ```
 
 ### Parameters
@@ -86,7 +86,7 @@ The fields `screenWidth`, `screenHeight`, `language`, `page_title`, and `referre
 async function handleProductPageRequest(req, res) {
   // ... server logic to render product page ...
 
-  await rybbit.pageview({
+  await hygo.pageview({
     hostname: req.hostname,
     pathname: `/products/${req.params.productId}`,
     page_title: `Product - ${product.name}`,
@@ -98,7 +98,7 @@ async function handleProductPageRequest(req, res) {
 
 // Track an API resource view
 async function serveApiResource(req) {
-  await rybbit.pageview({
+  await hygo.pageview({
     hostname: "api.myservice.com",
     pathname: `/v1/items/${req.params.itemId}`,
     user_id: req.user.id,
@@ -115,7 +115,7 @@ Use custom events to track specific actions or milestones occurring in your back
 ### Syntax
 
 ```typescript
-await rybbit.event(eventName: string, payload?: Payload, properties?: TrackProperties);
+await hygo.event(eventName: string, payload?: Payload, properties?: TrackProperties);
 ```
 
 ### Parameters
@@ -146,7 +146,7 @@ The `payload` fields (`hostname`, `pathname`, etc.) provide general context for 
 async function registerUser(userData, req) {
   // ... process user registration ...
 
-  await rybbit.event("user_registered",
+  await hygo.event("user_registered",
     {
       hostname: "auth.myservice.com",
       pathname: "/register",
@@ -163,7 +163,7 @@ async function registerUser(userData, req) {
 async function processDailyReport(reportId) {
   // ... generate report ...
 
-  await rybbit.event("report_generated",
+  await hygo.event("report_generated",
     {},
     {
       reportId: reportId,
@@ -176,7 +176,7 @@ async function processDailyReport(reportId) {
 // Track an API endpoint usage with specific data
 async function handleApiRequest(req) {
     // ... handle request ...
-    await rybbit.event(
+    await hygo.event(
         "api_v1_item_lookup",
         {
           hostname: req.hostname,

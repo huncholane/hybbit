@@ -68,7 +68,7 @@ export const oneClickUnsubscribeMarketing = async (
       if (isGetRequest) {
         return reply.status(400).type("text/html").send(`
           <!DOCTYPE html>
-          <html><head><title>Unsubscribe - Rybbit</title></head>
+          <html><head><title>Unsubscribe - Hygo</title></head>
           <body style="font-family: sans-serif; max-width: 600px; margin: 50px auto; text-align: center;">
             <h1>Invalid Request</h1>
             <p>Email address is required to unsubscribe.</p>
@@ -109,10 +109,10 @@ export const oneClickUnsubscribeMarketing = async (
     if (isGetRequest) {
       return reply.status(200).type("text/html").send(`
         <!DOCTYPE html>
-        <html><head><title>Unsubscribed - Rybbit</title></head>
+        <html><head><title>Unsubscribed - Hygo</title></head>
         <body style="font-family: sans-serif; max-width: 600px; margin: 50px auto; text-align: center;">
           <h1>Unsubscribed</h1>
-          <p>You have been successfully unsubscribed from Rybbit marketing emails.</p>
+          <p>You have been successfully unsubscribed from Hygo marketing emails.</p>
           <p style="color: #666; margin-top: 20px;">You can close this page.</p>
         </body></html>
       `);

@@ -45,14 +45,14 @@ import type { Metadata } from "next";
 import { createMetadata, createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
-  title: "Features - Rybbit Analytics",
+  title: "Features - Hygo Analytics",
   description:
     "Powerful, privacy-friendly analytics features to help you understand your audience and grow your business. Real-time data, session replay, web vitals, and more.",
   openGraph: {
-    images: [createOGImageUrl("Features - Rybbit Analytics", "Powerful, privacy-friendly analytics features to help you understand your audience and grow your business.", "Features")],
+    images: [createOGImageUrl("Features - Hygo Analytics", "Powerful, privacy-friendly analytics features to help you understand your audience and grow your business.", "Features")],
   },
   twitter: {
-    images: [createOGImageUrl("Features - Rybbit Analytics", "Powerful, privacy-friendly analytics features to help you understand your audience and grow your business.", "Features")],
+    images: [createOGImageUrl("Features - Hygo Analytics", "Powerful, privacy-friendly analytics features to help you understand your audience and grow your business.", "Features")],
   },
 });
 
@@ -337,7 +337,7 @@ export default function FeaturesPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-base md:text-lg">
               <TrackedButton
-                href="https://app.rybbit.io/signup"
+                href="https://app.hygo.ai/signup"
                 eventName="signup"
                 eventProps={{ location: "features_hero", button_text: "Get started for free" }}
                 className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-3 rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 cursor-pointer"
@@ -345,7 +345,7 @@ export default function FeaturesPage() {
                 {t("Start for $0")}
               </TrackedButton>
               <TrackedButton
-                href="https://demo.rybbit.com/81"
+                href="https://demo.hygo.ai/81"
                 eventName="demo"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -395,7 +395,7 @@ export default function FeaturesPage() {
 
       <CTASection
         title={t("Ready to get started?")}
-        description={t("Join thousands of companies using Rybbit to understand their audience")}
+        description={t("Join thousands of companies using Hygo to understand their audience")}
         eventLocation="features_bottom_cta"
       />
     </div>

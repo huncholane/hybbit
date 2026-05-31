@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
 import {

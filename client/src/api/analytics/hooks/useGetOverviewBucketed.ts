@@ -1,4 +1,4 @@
-import { Filter, TimeBucket } from "@rybbit/shared";
+import { Filter, TimeBucket } from "@hygo/shared";
 import { UseQueryOptions, UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Time } from "../../../components/DateSelector/types";
 import { useStore } from "../../../lib/store";

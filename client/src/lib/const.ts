@@ -12,7 +12,7 @@ export const LITE_DASHBOARD = process.env.NEXT_PUBLIC_LITE_DASHBOARD === "true";
 // Time constants
 export const MINUTES_IN_24_HOURS = 24 * 60; // 1440 minutes
 
-export const DEMO_HOSTNAME = "demo.rybbit.com";
+export const DEMO_HOSTNAME = "demo.hygo.ai";
 
 export const FREE_SITE_LIMIT = 1;
 export const STANDARD_SITE_LIMIT = 5;

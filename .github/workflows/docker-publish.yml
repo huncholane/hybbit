@@ -51,7 +51,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.REPO_OWNER }}/rybbit-client
+          images: ghcr.io/${{ env.REPO_OWNER }}/hygo-client
       - name: Build (no push on purpose)
         id: build
         uses: docker/build-push-action@v6
@@ -60,7 +60,7 @@ jobs:
           file: ./client/Dockerfile
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,"name=ghcr.io/${{ env.REPO_OWNER }}/rybbit-client",push-by-digest=true,name-canonical=true
+          outputs: type=image,"name=ghcr.io/${{ env.REPO_OWNER }}/hygo-client",push-by-digest=true,name-canonical=true
           push: "${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}"
       - name: Export digests
         run: |
@@ -114,7 +114,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.REPO_OWNER }}/rybbit-backend
+          images: ghcr.io/${{ env.REPO_OWNER }}/hygo-backend
       - name: Build (no push on purpose)
         id: build
         uses: docker/build-push-action@v6
@@ -123,7 +123,7 @@ jobs:
           file: ./server/Dockerfile
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,"name=ghcr.io/${{ env.REPO_OWNER }}/rybbit-backend",push-by-digest=true,name-canonical=true
+          outputs: type=image,"name=ghcr.io/${{ env.REPO_OWNER }}/hygo-backend",push-by-digest=true,name-canonical=true
           push: "${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}"
       - name: Export digests
         run: |
@@ -170,7 +170,7 @@ jobs:
         id: meta-client
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.REPO_OWNER }}/rybbit-client
+          images: ghcr.io/${{ env.REPO_OWNER }}/hygo-client
           tags: |
             # Add 'latest' tag only if this is a version tag (e.g., v1.2.3)
             ${{ startsWith(github.ref, 'refs/tags/v') && 'type=raw,value=latest,priority=901' || '' }}
@@ -196,7 +196,7 @@ jobs:
           # Collect all the digests for the client component
           for file in client-*; do
             digest=$(cat "$file")
-            digests+="ghcr.io/${{ env.REPO_OWNER }}/rybbit-client@${digest} "
+            digests+="ghcr.io/${{ env.REPO_OWNER }}/hygo-client@${digest} "
           done
 
           # Create a manifest list and push to GHCR
@@ -207,7 +207,7 @@ jobs:
         id: meta-backend
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ env.REPO_OWNER }}/rybbit-backend
+          images: ghcr.io/${{ env.REPO_OWNER }}/hygo-backend
           tags: |
             # Add 'latest' tag only if this is a version tag (e.g., v1.2.3)
             ${{ startsWith(github.ref, 'refs/tags/v') && 'type=raw,value=latest,priority=901' || '' }}
@@ -233,7 +233,7 @@ jobs:
           # Collect all the digests for the backend component
           for file in backend-*; do
             digest=$(cat "$file")
-            digests+="ghcr.io/${{ env.REPO_OWNER }}/rybbit-backend@${digest} "
+            digests+="ghcr.io/${{ env.REPO_OWNER }}/hygo-backend@${digest} "
           done
 
           # Create a manifest list and push to GHCR
@@ -244,9 +244,9 @@ jobs:
         run: |
           # Inspect the client image to verify the push
           echo "Inspecting client..."
-          docker buildx imagetools inspect ghcr.io/${{ env.REPO_OWNER }}/rybbit-client:${{ steps.meta-client.outputs.version }}
+          docker buildx imagetools inspect ghcr.io/${{ env.REPO_OWNER }}/hygo-client:${{ steps.meta-client.outputs.version }}
       - name: Inspect backend images
         run: |-
           # Inspect the backend image to verify the push
           echo "Inspecting backend..."
-          docker buildx imagetools inspect ghcr.io/${{ env.REPO_OWNER }}/rybbit-backend:${{ steps.meta-backend.outputs.version }}
+          docker buildx imagetools inspect ghcr.io/${{ env.REPO_OWNER }}/hygo-backend:${{ steps.meta-backend.outputs.version }}

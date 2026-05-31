@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "Free CPM Calculator (Cost Per Mille)",
     description: "Calculate and optimize your CPM with platform-specific benchmarks",
     type: "website",
-    url: "https://rybbit.com/tools/cost-per-mille-calculator",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/cost-per-mille-calculator",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Calculate your CPM and compare against platform benchmarks",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/cost-per-mille-calculator",
+    canonical: "https://hygo.ai/tools/cost-per-mille-calculator",
   },
 };
 
@@ -32,7 +32,7 @@ const structuredData = {
       name: "CPM Calculator",
       description:
         "Free CPM calculator to measure cost per thousand impressions and compare against platform benchmarks",
-      url: "https://rybbit.com/tools/cost-per-mille-calculator",
+      url: "https://hygo.ai/tools/cost-per-mille-calculator",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Any",
       offers: {
@@ -259,8 +259,8 @@ export default function CostPerMillePage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track CPM and ad performance with Rybbit"
-      ctaDescription="Monitor CPM, impressions, and campaign metrics across all platforms in real-time with Rybbit's analytics."
+      ctaTitle="Track CPM and ad performance with Hygo"
+      ctaDescription="Monitor CPM, impressions, and campaign metrics across all platforms in real-time with Hygo's analytics."
       ctaEventLocation="cost_per_mille_calculator_cta"
       structuredData={structuredData}
     />

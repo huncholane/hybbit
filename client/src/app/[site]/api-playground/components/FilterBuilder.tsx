@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FilterParameter, FilterType } from "@rybbit/shared";
+import { FilterParameter, FilterType } from "@hygo/shared";
 import { Plus, X } from "lucide-react";
 import { useExtracted } from "next-intl";
 import { filterOperators, filterParameters, usePlaygroundStore } from "../hooks/usePlaygroundStore";

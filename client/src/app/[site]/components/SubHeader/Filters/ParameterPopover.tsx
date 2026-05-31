@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, FilterParameter, FilterType } from "@rybbit/shared";
+import { Filter, FilterParameter, FilterType } from "@hygo/shared";
 import { useExtracted } from "next-intl";
 import { useState } from "react";
 import {

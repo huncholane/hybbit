@@ -44,7 +44,7 @@ export async function generatePdfReport(
 
     const formattedStart = DateTime.fromISO(start_date).toFormat("yyyy-MM-dd");
     const formattedEnd = DateTime.fromISO(end_date).toFormat("yyyy-MM-dd");
-    const filename = `rybbit-report-${siteId}-${formattedStart}-to-${formattedEnd}.pdf`;
+    const filename = `hygo-report-${siteId}-${formattedStart}-to-${formattedEnd}.pdf`;
 
     return reply
       .header("Content-Type", "application/pdf")

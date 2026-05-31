@@ -1,4 +1,4 @@
-import { Filter, FilterParameter } from "@rybbit/shared";
+import { Filter, FilterParameter } from "@hygo/shared";
 import {
   InfiniteData,
   useInfiniteQuery,

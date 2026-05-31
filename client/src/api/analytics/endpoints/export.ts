@@ -22,7 +22,7 @@ export async function exportPdfReport(site: string | number, params: ExportPdfPa
   // Generate filename with date range
   const startDate = params.startDate || "all";
   const endDate = params.endDate || "time";
-  link.download = `rybbit-report-${site}-${startDate}-to-${endDate}.pdf`;
+  link.download = `hygo-report-${site}-${startDate}-to-${endDate}.pdf`;
 
   document.body.appendChild(link);
   link.click();

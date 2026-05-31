@@ -18,7 +18,7 @@ import { DateTime } from "luxon";
 import { useExtracted } from "next-intl";
 import { CustomDateRangePicker } from "./CustomDateRangePicker";
 import { Time } from "./types";
-import { TimeBucket } from "@rybbit/shared";
+import { TimeBucket } from "@hygo/shared";
 
 const stepDateTimeBucket = (dt: DateTime, bucket: TimeBucket, direction: 1 | -1): DateTime => {
   const n = direction;

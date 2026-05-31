@@ -5,7 +5,7 @@ description: Configure your site settings including privacy options, analytics f
 
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Access your site settings by clicking the settings icon in your site's Rybbit dashboard.
+Access your site settings by clicking the settings icon in your site's Hygo dashboard.
 
 ![site settings](/docs/site-settings.png)
 
@@ -21,9 +21,9 @@ Make your analytics publicly accessible by enabling the "Public Analytics" toggl
 
 ### User ID Salting
 
-Rybbit stores user IDs as a hashed combination of IP + user agent. This allows identifying users across sessions, but may be considered storing personally identifiable data under GDPR.
+Hygo stores user IDs as a hashed combination of IP + user agent. This allows identifying users across sessions, but may be considered storing personally identifiable data under GDPR.
 
-Enable "User ID Salting" to have Rybbit forget about unique users every day. If a user visits 10 times in one day, they count as one user with 10 sessions. But if they visit once a day for 10 days, they appear as a new user each day.
+Enable "User ID Salting" to have Hygo forget about unique users every day. If a user visits 10 times in one day, they count as one user with 10 sessions. But if they visit once a day for 10 days, they appear as a new user each day.
 
 **Downsides of enabling user ID salting:**
 - User session history beyond 24 hours is not available
@@ -32,7 +32,7 @@ Enable "User ID Salting" to have Rybbit forget about unique users every day. If 
 
 ### Block Bot Traffic
 
-Enable "Block Bot Traffic" to prevent detected bot traffic from being tracked in your normal analytics. See [Bot detection](/docs/bot-detection) for how Rybbit identifies and stores bot traffic.
+Enable "Block Bot Traffic" to prevent detected bot traffic from being tracked in your normal analytics. See [Bot detection](/docs/bot-detection) for how Hygo identifies and stores bot traffic.
 
 ### Track IP Address
 
@@ -94,7 +94,7 @@ Both filtering methods work at the server level, ensuring blocked traffic never 
 
 ## Embeds
 
-Show Rybbit data on another site with an embeddable iframe.
+Show Hygo data on another site with an embeddable iframe.
 
 - **Widget Embeds** show a compact live visitor widget. Enable them from the **Widget Embeds** tab. This is independent of Public Analytics and only exposes the data the widget displays. See the [Widget Embeds guide](/docs/embeds/widget) for details.
 - **Dashboard Embed** shows the analytics dashboard in an iframe. Configure it from the **Dashboard Embed** tab. It uses a generated private link, not Public Analytics. See the [Dashboard Embed guide](/docs/embeds/dashboard) for details.

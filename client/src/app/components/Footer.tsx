@@ -27,8 +27,8 @@ export function Footer({ disabled = false }: FooterProps) {
           {/* Company Info */}
           <div className="space-y-4">
             <Image
-              src="/rybbit/horizontal_white.svg"
-              alt="Rybbit"
+              src="/hygo/horizontal_white.svg"
+              alt="Hygo"
               width={140}
               height={28}
               style={{ width: 140, height: 28, objectFit: "contain" }}
@@ -37,7 +37,7 @@ export function Footer({ disabled = false }: FooterProps) {
             {!IS_CLOUD && (
               <div className="space-y-3">
                 <div className="text-sm text-neutral-600 dark:text-neutral-200">
-                  {t("Liking Rybbit? Consider sponsoring the project!")}
+                  {t("Liking Hygo? Consider sponsoring the project!")}
                 </div>
                 <a href="https://github.com/sponsors/goldflag" target="_blank" rel="noopener noreferrer">
                   <Button>
@@ -50,7 +50,7 @@ export function Footer({ disabled = false }: FooterProps) {
             {/* Social Media Links */}
             <div className="flex gap-4">
               <a
-                href="https://github.com/rybbit-io/rybbit"
+                href="https://github.com/hygo-ai/hygo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
@@ -91,7 +91,7 @@ export function Footer({ disabled = false }: FooterProps) {
             <ul className="space-y-2 text-sm">
               <li>
                 <a
-                  href="https://rybbit.com/docs"
+                  href="https://hygo.ai/docs"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("Documentation")}
@@ -99,7 +99,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://rybbit.com/features"
+                  href="https://hygo.ai/features"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("Features")}
@@ -107,7 +107,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://github.com/rybbit-io/rybbit"
+                  href="https://github.com/hygo-ai/hygo"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
@@ -127,7 +127,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://rybbit.com/docs/api/getting-started"
+                  href="https://hygo.ai/docs/api/getting-started"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("API Reference")}
@@ -135,7 +135,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://rybbit.com/affiliate"
+                  href="https://hygo.ai/affiliate"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("50% Affiliate Program")}
@@ -150,7 +150,7 @@ export function Footer({ disabled = false }: FooterProps) {
             <ul className="space-y-2 text-sm">
               <li>
                 <a
-                  href="https://rybbit.com/privacy"
+                  href="https://hygo.ai/privacy"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("Privacy Policy")}
@@ -158,7 +158,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://rybbit.com/terms-and-conditions"
+                  href="https://hygo.ai/terms-and-conditions"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("Terms and Conditions")}
@@ -166,7 +166,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://rybbit.com/security"
+                  href="https://hygo.ai/security"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   {t("Security")}
@@ -174,7 +174,7 @@ export function Footer({ disabled = false }: FooterProps) {
               </li>
               <li>
                 <a
-                  href="https://rybbit.com/dpa"
+                  href="https://hygo.ai/dpa"
                   className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   DPA
@@ -183,7 +183,7 @@ export function Footer({ disabled = false }: FooterProps) {
               {IS_CLOUD && (
                 <li>
                   <a
-                    href="mailto:hello@rybbit.com"
+                    href="mailto:hello@hygo.ai"
                     className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                   >
                     {t("Support")}
@@ -198,9 +198,9 @@ export function Footer({ disabled = false }: FooterProps) {
         <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400">
-              <span>{t("© {year} Rybbit. All rights reserved.", { year: String(new Date().getFullYear()) })}</span>
+              <span>{t("© {year} Hygo. All rights reserved.", { year: String(new Date().getFullYear()) })}</span>
               <Link
-                href={`https://github.com/rybbit-io/rybbit/releases/tag/v${APP_VERSION}`}
+                href={`https://github.com/hygo-ai/hygo/releases/tag/v${APP_VERSION}`}
                 className="hover:text-neutral-700 dark:hover:text-neutral-300"
               >
                 v{APP_VERSION}

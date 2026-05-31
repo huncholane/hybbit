@@ -1,4 +1,4 @@
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 
 const BASE_FILTERS: FilterParameter[] = [
   "hostname",

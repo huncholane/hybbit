@@ -1,4 +1,4 @@
-import { FilterParameter, FilterParams } from "@rybbit/shared";
+import { FilterParameter, FilterParams } from "@hygo/shared";
 import { z } from "zod";
 
 // =============================================================================

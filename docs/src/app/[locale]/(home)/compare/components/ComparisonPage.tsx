@@ -23,7 +23,7 @@ const tilt_wrap = Tilt_Warp({
 
 export interface ComparisonFeature {
   name: string;
-  rybbitValue: string | boolean;
+  hygoValue: string | boolean;
   competitorValue: string | boolean;
 }
 
@@ -57,9 +57,9 @@ export interface ComparisonPageProps {
   subtitle?: string;
   introHeading?: string;
   introParagraphs?: string[];
-  chooseRybbit?: string[];
+  chooseHygo?: string[];
   chooseCompetitor?: string[];
-  rybbitPricing?: PricingInfo;
+  hygoPricing?: PricingInfo;
   competitorPricing?: PricingInfo;
   faqItems?: FAQItem[];
   relatedResources?: RelatedResource[];
@@ -72,16 +72,16 @@ export function ComparisonPage({
   subtitle,
   introHeading,
   introParagraphs,
-  chooseRybbit,
+  chooseHygo,
   chooseCompetitor,
-  rybbitPricing,
+  hygoPricing,
   competitorPricing,
   faqItems,
   relatedResources,
 }: ComparisonPageProps) {
   const t = useExtracted();
 
-  const hasNewSections = !!chooseRybbit;
+  const hasNewSections = !!chooseHygo;
 
   const renderFeatureValue = (value: string | boolean) => {
     if (typeof value === "boolean") {
@@ -106,18 +106,18 @@ export function ComparisonPage({
             tilt_wrap.className
           )}
         >
-          {t("Rybbit vs {competitor}", { competitor: competitorName })}
+          {t("Hygo vs {competitor}", { competitor: competitorName })}
         </h1>
         <h2 className="relative z-10 text-base md:text-xl pt-4 md:pt-6 px-4 tracking-tight max-w-4xl text-center text-neutral-600 dark:text-neutral-300 font-light">
           {subtitle
             ? subtitle
-            : t("Compare the key features of Rybbit and {competitor}.", { competitor: competitorName })}
+            : t("Compare the key features of Hygo and {competitor}.", { competitor: competitorName })}
         </h2>
 
         <div className="relative z-10 flex flex-col items-center my-8 md:my-10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 text-base md:text-lg px-4">
             <TrackedButton
-              href="https://app.rybbit.io/signup"
+              href="https://app.hygo.ai/signup"
               eventName="signup"
               eventProps={{ location: "hero", button_text: "Track your site" }}
               className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-5 py-3 rounded-lg shadow-lg shadow-emerald-900/20 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 cursor-pointer"
@@ -125,7 +125,7 @@ export function ComparisonPage({
               {t("Track your site")}
             </TrackedButton>
             <TrackedButton
-              href="https://demo.rybbit.com/81"
+              href="https://demo.hygo.ai/81"
               eventName="demo"
               target="_blank"
               rel="noopener noreferrer"
@@ -159,7 +159,7 @@ export function ComparisonPage({
       )}
 
       {/* Which is right for you? */}
-      {chooseRybbit && chooseCompetitor && (
+      {chooseHygo && chooseCompetitor && (
         <section className="py-12 w-full max-w-5xl mx-auto px-4 z-10">
           <div className="mb-8">
             <SectionBadge>{t("Comparison")}</SectionBadge>
@@ -168,14 +168,14 @@ export function ComparisonPage({
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Choose Rybbit */}
+            {/* Choose Hygo */}
             <div className="bg-neutral-200/40 dark:bg-neutral-900/40 p-2 rounded-3xl border border-emerald-500/30 dark:border-emerald-500/20">
               <div className="bg-neutral-50 dark:bg-neutral-900 backdrop-blur-sm rounded-2xl border border-emerald-500/20 dark:border-emerald-500/10 p-6 h-full">
                 <h3 className="text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-4">
-                  {t("Choose Rybbit if...")}
+                  {t("Choose Hygo if...")}
                 </h3>
                 <ul className="space-y-3">
-                  {chooseRybbit.map((item, index) => (
+                  {chooseHygo.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
                       <span className="text-neutral-700 dark:text-neutral-300 text-sm">{item}</span>
@@ -206,7 +206,7 @@ export function ComparisonPage({
 
       <div className="w-full max-w-5xl mx-auto mt-12 px-4 z-10">
         <h2 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-6 text-left">
-          {t("Why choose Rybbit over {competitor}?", { competitor: competitorName })}
+          {t("Why choose Hygo over {competitor}?", { competitor: competitorName })}
         </h2>
       </div>
       {/* Comparison Table */}
@@ -221,8 +221,8 @@ export function ComparisonPage({
                     <div className="flex flex-col items-center gap-2">
                       <span className="font-semibold">
                         <Image
-                          src="/rybbit/horizontal_white.svg"
-                          alt="Rybbit"
+                          src="/hygo/horizontal_white.svg"
+                          alt="Hygo"
                           width={100}
                           height={27}
                           className="dark:invert-0 invert"
@@ -258,7 +258,7 @@ export function ComparisonPage({
                       >
                         <td className="px-6 py-4 text-neutral-700 dark:text-neutral-300 text-sm">{feature.name}</td>
                         <td className="px-6 py-4 text-center text-sm">
-                          <div className="flex justify-center">{renderFeatureValue(feature.rybbitValue)}</div>
+                          <div className="flex justify-center">{renderFeatureValue(feature.hygoValue)}</div>
                         </td>
                         <td className="px-6 py-4 text-center text-sm">
                           <div className="flex justify-center">{renderFeatureValue(feature.competitorValue)}</div>
@@ -274,7 +274,7 @@ export function ComparisonPage({
       </section>
 
       {/* Pricing Comparison */}
-      {rybbitPricing && competitorPricing && (
+      {hygoPricing && competitorPricing && (
         <section className="py-12 w-full max-w-5xl mx-auto px-4 z-10">
           <div className="mb-8">
             <SectionBadge>{t("Pricing")}</SectionBadge>
@@ -283,16 +283,16 @@ export function ComparisonPage({
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Rybbit Pricing */}
+            {/* Hygo Pricing */}
             <div className="bg-neutral-200/40 dark:bg-neutral-900/40 p-2 rounded-3xl border border-emerald-500/30 dark:border-emerald-500/20">
               <div className="bg-neutral-50 dark:bg-neutral-900 backdrop-blur-sm rounded-2xl border border-emerald-500/20 dark:border-emerald-500/10 p-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold">{rybbitPricing.name}</h3>
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">{rybbitPricing.model}</p>
+                  <h3 className="text-lg font-semibold">{hygoPricing.name}</h3>
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">{hygoPricing.model}</p>
                 </div>
-                <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-6">{rybbitPricing.startingPrice}</p>
+                <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-6">{hygoPricing.startingPrice}</p>
                 <ul className="space-y-3">
-                  {rybbitPricing.highlights.map((highlight, index) => (
+                  {hygoPricing.highlights.map((highlight, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
                       <span className="text-neutral-700 dark:text-neutral-300 text-sm">{highlight}</span>

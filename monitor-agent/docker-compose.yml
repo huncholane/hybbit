@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: rybbit-monitor-agent
+    container_name: hygo-monitor-agent
     ports:
       - "${PORT:-3003}:3003"
     environment:
@@ -61,7 +61,7 @@ services:
   # Caddy reverse proxy for HTTPS
   caddy:
     image: caddy:2.10.0
-    container_name: rybbit-monitor-caddy
+    container_name: hygo-monitor-caddy
     ports:
       - "443:443"
       - "80:80"

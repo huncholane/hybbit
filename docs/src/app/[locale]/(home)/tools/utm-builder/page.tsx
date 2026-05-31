@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     description:
       "Generate UTM campaign URLs instantly for accurate marketing tracking in Google Analytics and other analytics platforms.",
     type: "website",
-    url: "https://rybbit.com/tools/utm-builder",
-    siteName: "Rybbit Documentation",
+    url: "https://hygo.ai/tools/utm-builder",
+    siteName: "Hygo Documentation",
   },
   twitter: {
     card: "summary_large_image",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Build trackable campaign URLs with UTM parameters for better marketing analytics.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/utm-builder",
+    canonical: "https://hygo.ai/tools/utm-builder",
   },
 };
 
@@ -31,7 +31,7 @@ const structuredData = {
       "@type": "WebApplication",
       name: "UTM Builder Tool",
       description: "Free tool to generate UTM parameters for campaign URL tracking",
-      url: "https://rybbit.com/tools/utm-builder",
+      url: "https://hygo.ai/tools/utm-builder",
       applicationCategory: "Utility",
       offers: {
         "@type": "Offer",
@@ -40,8 +40,8 @@ const structuredData = {
       },
       author: {
         "@type": "Organization",
-        name: "Rybbit",
-        url: "https://rybbit.com",
+        name: "Hygo",
+        url: "https://hygo.ai",
       },
     },
     {
@@ -52,7 +52,7 @@ const structuredData = {
           name: "What is UTM tracking?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "UTM (Urchin Tracking Module) parameters are tags added to URLs that help you track the effectiveness of your marketing campaigns in analytics tools like Rybbit, Google Analytics, and others. They tell you exactly where your traffic is coming from and how your campaigns perform.",
+            text: "UTM (Urchin Tracking Module) parameters are tags added to URLs that help you track the effectiveness of your marketing campaigns in analytics tools like Hygo, Google Analytics, and others. They tell you exactly where your traffic is coming from and how your campaigns perform.",
           },
         },
         {
@@ -65,10 +65,10 @@ const structuredData = {
         },
         {
           "@type": "Question",
-          name: "How do I track UTM links with Rybbit?",
+          name: "How do I track UTM links with Hygo?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Once you have Rybbit installed on your website, UTM parameters are automatically tracked. You can view your campaign performance in your Rybbit dashboard under the UTM section.",
+            text: "Once you have Hygo installed on your website, UTM parameters are automatically tracked. You can view your campaign performance in your Hygo dashboard under the UTM section.",
           },
         },
         {
@@ -97,7 +97,7 @@ const educationalContent = (
     <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">What are UTM Parameters?</h2>
     <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
       UTM (Urchin Tracking Module) parameters are special tags you add to the end of your URLs to track your marketing
-      campaign performance. When someone clicks a link with UTM parameters, analytics tools like Rybbit, Google
+      campaign performance. When someone clicks a link with UTM parameters, analytics tools like Hygo, Google
       Analytics, and others automatically capture that data and organize it for you.
     </p>
     <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
@@ -251,7 +251,7 @@ const faqs = [
   {
     question: "What is UTM tracking?",
     answer:
-      "UTM (Urchin Tracking Module) parameters are tags added to URLs that help you track the effectiveness of your marketing campaigns in analytics tools like Rybbit, Google Analytics, and others. They tell you exactly where your traffic is coming from and how your campaigns perform.",
+      "UTM (Urchin Tracking Module) parameters are tags added to URLs that help you track the effectiveness of your marketing campaigns in analytics tools like Hygo, Google Analytics, and others. They tell you exactly where your traffic is coming from and how your campaigns perform.",
   },
   {
     question: "What are the required UTM parameters?",
@@ -259,9 +259,9 @@ const faqs = [
       "The three required parameters are: utm_source (identifies the source like google or newsletter), utm_medium (identifies the medium like cpc or email), and utm_campaign (identifies the specific campaign like summer_sale).",
   },
   {
-    question: "How do I track UTM links with Rybbit?",
+    question: "How do I track UTM links with Hygo?",
     answer:
-      "Once you have Rybbit installed on your website, UTM parameters are automatically tracked. You can view your campaign performance in your Rybbit dashboard under the UTM section.",
+      "Once you have Hygo installed on your website, UTM parameters are automatically tracked. You can view your campaign performance in your Hygo dashboard under the UTM section.",
   },
   {
     question: "What are optional UTM parameters?",
@@ -286,7 +286,7 @@ export default function UTMBuilderPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="analytics"
-      ctaTitle="Track your UTM campaigns with Rybbit"
+      ctaTitle="Track your UTM campaigns with Hygo"
       ctaDescription="See exactly which campaigns drive the most traffic and conversions."
       ctaEventLocation="utm_builder_cta"
       structuredData={structuredData}

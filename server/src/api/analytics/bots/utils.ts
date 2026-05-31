@@ -1,4 +1,4 @@
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import SqlString from "sqlstring";
 import { FilterParameter, FilterType, TimeBucket } from "../types.js";
 import { validateFilters, validateTimeStatementFillParams } from "../utils/query-validation.js";

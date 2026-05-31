@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: Docker cleanup and troubleshooting guide for Rybbit
+description: Docker cleanup and troubleshooting guide for Hygo
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
@@ -12,7 +12,7 @@ import { Callout } from 'fumadocs-ui/components/callout';
 If you encounter issues with Docker containers, images, or volumes and need to start fresh, you can perform a complete Docker cleanup. This will remove all containers, images, volumes, and custom networks.
 
 <Callout type="warn">
-**Warning**: This will remove ALL Docker containers, images, and volumes on your system, not just Rybbit-related ones. Make sure you don't have other important Docker containers running.
+**Warning**: This will remove ALL Docker containers, images, and volumes on your system, not just Hygo-related ones. Make sure you don't have other important Docker containers running.
 </Callout>
 
 ### Steps for Complete Docker Cleanup
@@ -61,27 +61,27 @@ docker network rm $(docker network ls | grep -v "bridge\|host\|none" | awk '{pri
 </Step>
 </Steps>
 
-### Alternative: Rybbit-Specific Cleanup
+### Alternative: Hygo-Specific Cleanup
 
-If you only want to clean up Rybbit-related Docker resources without affecting other containers, use these commands instead:
+If you only want to clean up Hygo-related Docker resources without affecting other containers, use these commands instead:
 
 ```bash
-# Stop and remove Rybbit containers
+# Stop and remove Hygo containers
 docker-compose down
 
-# Remove Rybbit images
+# Remove Hygo images
 docker-compose down --rmi all
 
-# Remove Rybbit volumes (this will delete your data!)
+# Remove Hygo volumes (this will delete your data!)
 docker-compose down --volumes
 
-# Complete Rybbit cleanup
+# Complete Hygo cleanup
 docker-compose down --rmi all --volumes --remove-orphans
 ```
 
 ### After Cleanup
 
-Once you've completed the cleanup, you can restart Rybbit by following the setup instructions:
+Once you've completed the cleanup, you can restart Hygo by following the setup instructions:
 
 ```bash
 # Copy environment file
@@ -111,6 +111,6 @@ TRUNCATE TABLE session_replay_metadata;
 
 ### 2. You didn't mount the Clickhouse log suppression configs
 
-In our [docker-compose.yml](https://github.com/rybbit-io/rybbit/blob/master/docker-compose.yml), we have a config for Clickhouse that suppresses logs. Clickhouse stores a ton of logs in the log tables by default. This will quickly fill up your disk space if left unchecked.
+In our [docker-compose.yml](https://github.com/hygo-ai/hygo/blob/master/docker-compose.yml), we have a config for Clickhouse that suppresses logs. Clickhouse stores a ton of logs in the log tables by default. This will quickly fill up your disk space if left unchecked.
 
 If you follow the standard installation process, the configs are already mounted for you. If you rolled your own Docker setup, you need to mount the configs manually.

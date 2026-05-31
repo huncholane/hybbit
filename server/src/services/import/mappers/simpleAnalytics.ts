@@ -1,6 +1,6 @@
 import { clearSelfReferrer, getAllUrlParams } from "../../tracker/utils.js";
 import { getChannel } from "../../tracker/getChannel.js";
-import { RybbitEvent } from "./rybbit.js";
+import { HygoEvent } from "./hygo.js";
 import { z } from "zod";
 import { UAParser } from "ua-parser-js";
 import { DateTime } from "luxon";
@@ -37,8 +37,8 @@ export class SimpleAnalyticsImportMapper {
     SimpleAnalyticsImportMapper.simpleAnalyticsEventSchema
   );
 
-  static transform(events: SimpleAnalyticsEvent[], site: number, importId: string): RybbitEvent[] {
-    return events.reduce<RybbitEvent[]>((acc, event) => {
+  static transform(events: SimpleAnalyticsEvent[], site: number, importId: string): HygoEvent[] {
+    return events.reduce<HygoEvent[]>((acc, event) => {
       const parsed = SimpleAnalyticsImportMapper.simpleAnalyticsEventSchema.safeParse(event);
       if (!parsed.success) {
         return acc;

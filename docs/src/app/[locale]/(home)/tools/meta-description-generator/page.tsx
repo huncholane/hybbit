@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description:
       "Generate compelling meta descriptions in seconds with our free AI tool. Get multiple variations optimized for 150-160 characters. Improve your click-through rates from search results.",
     type: "website",
-    url: "https://rybbit.com/tools/meta-description-generator",
+    url: "https://hygo.ai/tools/meta-description-generator",
   },
   twitter: {
     card: "summary_large_image",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
       "Generate compelling meta descriptions in seconds with our free AI tool. Get multiple variations optimized for 150-160 characters.",
   },
   alternates: {
-    canonical: "https://rybbit.com/tools/meta-description-generator",
+    canonical: "https://hygo.ai/tools/meta-description-generator",
   },
 };
 
@@ -48,7 +48,7 @@ const structuredData = {
         "Real-time optimization feedback",
       ],
       operatingSystem: "Any",
-      url: "https://rybbit.com/tools/meta-description-generator",
+      url: "https://hygo.ai/tools/meta-description-generator",
     },
     {
       "@type": "FAQPage",
@@ -221,8 +221,8 @@ const faqs = [
       <>
         Track your organic click-through rates in Google Search Console and compare pages with different meta
         descriptions. Use{" "}
-        <Link href="https://app.rybbit.io" className="text-emerald-600 dark:text-emerald-400 hover:underline">
-          Rybbit Analytics
+        <Link href="https://app.hygo.ai" className="text-emerald-600 dark:text-emerald-400 hover:underline">
+          Hygo Analytics
         </Link>{" "}
         to see which pages convert best after visitors arrive from search and identify optimization opportunities.
       </>
@@ -261,7 +261,7 @@ export default function MetaDescriptionGeneratorPage() {
       educationalContent={educationalContent}
       faqs={faqs}
       relatedToolsCategory="seo"
-      ctaTitle="Track your SEO performance with Rybbit"
+      ctaTitle="Track your SEO performance with Hygo"
       ctaDescription="Monitor organic traffic, track keyword rankings, and measure the impact of your meta descriptions on click-through rates."
       ctaEventLocation="meta_description_generator_cta"
       structuredData={structuredData}

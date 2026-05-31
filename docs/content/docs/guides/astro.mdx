@@ -1,27 +1,27 @@
 ---
 title: Astro
-description: Integrate Rybbit Analytics with your Astro application for content-rich websites
+description: Integrate Hygo Analytics with your Astro application for content-rich websites
 ---
 
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Callout } from 'fumadocs-ui/components/callout';
 
 
-This guide explains how to integrate Rybbit with your Astro application for analytics tracking. Astro is a web framework for building content-rich websites, delivering minimal JavaScript by default.
+This guide explains how to integrate Hygo with your Astro application for analytics tracking. Astro is a web framework for building content-rich websites, delivering minimal JavaScript by default.
 
-## How to Add Rybbit to Your Astro Site
+## How to Add Hygo to Your Astro Site
 
-The most common way to add a global script like Rybbit's to an Astro site is by including it in a common layout component that is used across your pages, or directly within the `<head>` of your pages if you don't use a shared layout.
+The most common way to add a global script like Hygo's to an Astro site is by including it in a common layout component that is used across your pages, or directly within the `<head>` of your pages if you don't use a shared layout.
 
 <Steps>
 <Step>
 ### Retrieve Your Tracking Script
 
-Navigate to your Rybbit dashboard to obtain your code snippet. It will look like this:
+Navigate to your Hygo dashboard to obtain your code snippet. It will look like this:
 
 ```html
 <script
-  src="https://app.rybbit.io/api/script.js"
+  src="https://app.hygo.ai/api/script.js"
   data-site-id="YOUR_SITE_ID"
   defer
 ></script>
@@ -36,7 +36,7 @@ Remember to replace `YOUR_SITE_ID` with your actual Site ID.
 
 If you have a common layout component (e.g., `src/layouts/Layout.astro` or similar) that wraps your pages, this is the best place to add the script.
 
-Open your layout file and add the Rybbit script tag within the `<head>` section.
+Open your layout file and add the Hygo script tag within the `<head>` section.
 
 ```astro filename="src/layouts/Layout.astro"
 ---
@@ -46,7 +46,7 @@ export interface Props {
 }
 
 const { title } = Astro.props;
-const rybbitSiteId = "YOUR_SITE_ID"; // Replace with your actual Site ID
+const hygoSiteId = "YOUR_SITE_ID"; // Replace with your actual Site ID
 ---
 <!doctype html>
 <html lang="en">
@@ -58,10 +58,10 @@ const rybbitSiteId = "YOUR_SITE_ID"; // Replace with your actual Site ID
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
-    <!-- Rybbit Tracking Snippet -->
+    <!-- Hygo Tracking Snippet -->
     <script
-      src="https://app.rybbit.io/api/script.js"
-      data-site-id={rybbitSiteId}
+      src="https://app.hygo.ai/api/script.js"
+      data-site-id={hygoSiteId}
       defer
     ></script>
 	</head>
@@ -80,19 +80,19 @@ If you don't have a common layout, you can add the script to the `<head>` of eac
 <Step>
 ### Verify Installation
 
-After building and deploying your Astro site, open your Rybbit dashboard to check if data is being received. You can also inspect your browser's network tab to confirm that `script.js` is loaded on your pages.
+After building and deploying your Astro site, open your Hygo dashboard to check if data is being received. You can also inspect your browser's network tab to confirm that `script.js` is loaded on your pages.
 </Step>
 </Steps>
 
 <Callout type="info">
   **Page View Tracking in Astro**:
-  - **MPA (Multi-Page Application) Mode**: By default, Astro builds multi-page applications. When a user navigates between different pages, a full page load occurs, and Rybbit's script will naturally track this as a new page view.
-  - **View Transitions**: If you are using Astro's [View Transitions API](https://docs.astro.build/en/guides/view-transitions/) for client-side navigation effects, Rybbit's script should generally still detect these as page views if the URL changes. However, if you notice issues, you might need to manually trigger page views. You can listen to Astro's `astro:after-swap` event:
+  - **MPA (Multi-Page Application) Mode**: By default, Astro builds multi-page applications. When a user navigates between different pages, a full page load occurs, and Hygo's script will naturally track this as a new page view.
+  - **View Transitions**: If you are using Astro's [View Transitions API](https://docs.astro.build/en/guides/view-transitions/) for client-side navigation effects, Hygo's script should generally still detect these as page views if the URL changes. However, if you notice issues, you might need to manually trigger page views. You can listen to Astro's `astro:after-swap` event:
     ```javascript
     // In a client-side script, perhaps in your common layout or a global script file
     document.addEventListener('astro:after-swap', () => {
-      if (window.rybbit) {
-        window.rybbit.pageview();
+      if (window.hygo) {
+        window.hygo.pageview();
       }
     });
     ```
@@ -112,8 +112,8 @@ You can track custom events from client-side JavaScript within your Astro site. 
 
 <script>
   document.getElementById('my-astro-button')?.addEventListener('click', () => {
-    if (window.rybbit) {
-      window.rybbit.event('astro_button_click', { source: 'MyButton.astro' });
+    if (window.hygo) {
+      window.hygo.event('astro_button_click', { source: 'MyButton.astro' });
     }
   });
 </script>
@@ -129,12 +129,12 @@ import React from 'react';
 
 export default function MyReactIsland() {
   const handleClick = () => {
-    if (window.rybbit) {
-      window.rybbit.event('react_island_click', { island: 'MyReactIsland' });
+    if (window.hygo) {
+      window.hygo.event('react_island_click', { island: 'MyReactIsland' });
     }
   };
   return <button onClick={handleClick}>Click Me (React Island)</button>;
 }
 ```
 
-Always ensure `window.rybbit` is available before calling its methods in client-side scripts.
+Always ensure `window.hygo` is available before calling its methods in client-side scripts.

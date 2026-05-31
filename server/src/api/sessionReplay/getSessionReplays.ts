@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { FilterParams } from "@rybbit/shared";
+import { FilterParams } from "@hygo/shared";
 import { SessionReplayQueryService } from "../../services/replay/sessionReplayQueryService.js";
 import { enrichWithTraits } from "../analytics/utils/utils.js";
 

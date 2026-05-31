@@ -32,7 +32,7 @@ export async function performHttpCheck(config: MonitorConfig): Promise<HttpCheck
     
     // Build headers
     const headers: Record<string, string> = {
-      'User-Agent': config.userAgent || 'Rybbit-Monitor/1.0',
+      'User-Agent': config.userAgent || 'Hygo-Monitor/1.0',
       ...config.headers,
     };
     

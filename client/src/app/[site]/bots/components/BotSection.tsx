@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterParameter } from "@rybbit/shared";
+import { FilterParameter } from "@hygo/shared";
 import NumberFlow from "@number-flow/react";
 import { Info, SquareArrowOutUpRight } from "lucide-react";
 import { ReactNode, useCallback } from "react";
