@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useWhiteLabel } from "../hooks/useIsWhiteLabel";
 import { Skeleton } from "./ui/skeleton";
 
-const HORIZONTAL_LOGO_ASPECT_RATIO = 500 / 100.27;
+const HORIZONTAL_LOGO_ASPECT_RATIO = 10160 / 2963.32;
 
 function getTextLogoHeight(width: number, height?: number) {
   return height && height > 0 ? height : Math.round(width / HORIZONTAL_LOGO_ASPECT_RATIO);
