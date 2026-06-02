@@ -66,7 +66,7 @@ services:
     #   - "5432:5432"
 
   backend:
-    image: ghcr.io/hygo-ai/hygo-backend:${IMAGE_TAG:-latest}
+    image: ghcr.io/huncholane/hygo-backend:${IMAGE_TAG:-latest}
     container_name: backend
     build:
       context: .
@@ -105,7 +105,7 @@ services:
     restart: unless-stopped
 
   client:
-    image: ghcr.io/hygo-ai/hygo-client:${IMAGE_TAG:-latest}
+    image: ghcr.io/huncholane/hygo-client:${IMAGE_TAG:-latest}
     container_name: client
     build:
       context: .
