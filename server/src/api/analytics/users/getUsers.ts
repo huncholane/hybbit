@@ -131,6 +131,7 @@ WITH AggregatedUsers AS (
     WHERE
         site_id = {siteId:Int32}
         ${timeStatement}
+        ${filterStatement}
         ${matchingUserIds ? "AND events.identified_user_id IN ({matchingUserIds:Array(String)})" : ""}
     GROUP BY
         effective_user_id
@@ -138,7 +139,7 @@ WITH AggregatedUsers AS (
 SELECT
     *
 FROM AggregatedUsers
-WHERE 1 = 1 ${filterStatement}
+WHERE 1 = 1
 ${filterIdentified ? "AND identified_user_id != ''" : ""}
 ORDER BY ${actualSortBy} ${actualSortOrder}
 LIMIT {limit:Int32} OFFSET {offset:Int32}
