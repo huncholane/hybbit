@@ -1,10 +1,10 @@
 "use client";
 
-import { BookOpen, Building2, HelpCircle, LogOut, Settings, ShieldUser, User } from "lucide-react";
+import { BookOpen, Building2, HelpCircle, LogOut, PanelLeftClose, PanelLeftOpen, ShieldUser, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useExtracted } from "next-intl";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useEmbedablePage } from "../app/[site]/utils";
 import { useAdminPermission } from "../app/admin/hooks/useAdminPermission";
 import { useSignout } from "../hooks/useSignout";
@@ -42,6 +42,19 @@ function AppSidebarContent() {
 
   const { data: subscription } = useStripeSubscription();
 
+  // Restore the pinned open/closed state on mount (defaults to closed)
+  useEffect(() => {
+    const stored = localStorage.getItem("appSidebarExpanded");
+    if (stored !== null) setIsExpanded(stored === "true");
+  }, []);
+
+  const toggleExpanded = () =>
+    setIsExpanded(prev => {
+      const next = !prev;
+      localStorage.setItem("appSidebarExpanded", String(next));
+      return next;
+    });
+
   if (embed) return null;
 
   return (
@@ -50,13 +63,17 @@ function AppSidebarContent() {
         "flex flex-col items-start justify-between h-dvh p-2 py-3 bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-850 gap-3 transition-all duration-200",
         isExpanded ? "w-44" : "w-[45px]"
       )}
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="flex flex-col items-start gap-2">
         <Link href="/" className="mb-2 mt-1 ml-0.5 flex items-center justify-center">
           <HygoLogo width={24} height={18} />
         </Link>
+        <SidebarLink
+          onClick={toggleExpanded}
+          icon={isExpanded ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
+          label={t("Collapse")}
+          expanded={isExpanded}
+        />
         <SidebarLink
           href="https://hygo.ai/docs"
           icon={<BookOpen className="w-5 h-5" />}
@@ -82,41 +99,26 @@ function AppSidebarContent() {
           <ThemeSwitcher />
         </div>
 
-        {isExpanded ? (
-          <>
-            <SidebarLink
-              href="/settings/account"
-              icon={<User className="w-5 h-5" />}
-              label={t("Account")}
-              active={pathname.startsWith("/settings/account")}
-              expanded={isExpanded}
-            />
-            <SidebarLink
-              href="/settings/organization"
-              icon={<Building2 className="w-5 h-5" />}
-              label={t("Organization")}
-              active={pathname.startsWith("/settings/organization")}
-              expanded={isExpanded}
-            />
-            <SidebarLink
-              onClick={signout}
-              icon={<LogOut className="w-5 h-5" />}
-              label={t("Sign out")}
-              expanded={isExpanded}
-            />
-          </>
-        ) : (
-          <div
-            className={cn(
-              "p-1 rounded-md transition-all duration-200 flex items-center gap-2",
-              "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-150 dark:hover:bg-neutral-800/80"
-            )}
-          >
-            <div className="flex items-center justify-center w-5 h-5 shrink-0">
-              <Settings className="w-5 h-5" />
-            </div>
-          </div>
-        )}
+        <SidebarLink
+          href="/settings/account"
+          icon={<User className="w-5 h-5" />}
+          label={t("Account")}
+          active={pathname.startsWith("/settings/account")}
+          expanded={isExpanded}
+        />
+        <SidebarLink
+          href="/settings/organization"
+          icon={<Building2 className="w-5 h-5" />}
+          label={t("Organization")}
+          active={pathname.startsWith("/settings/organization")}
+          expanded={isExpanded}
+        />
+        <SidebarLink
+          onClick={signout}
+          icon={<LogOut className="w-5 h-5" />}
+          label={t("Sign out")}
+          expanded={isExpanded}
+        />
       </div>
     </div>
   );
