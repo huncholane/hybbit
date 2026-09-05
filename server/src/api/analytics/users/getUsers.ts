@@ -20,6 +20,7 @@ export type GetUsersResponse = {
   pageviews: number;
   events: number;
   sessions: number;
+  avg_session_duration: number; // Average session duration in seconds
   hostname: string;
   last_seen: string;
   first_seen: string;
@@ -92,7 +93,7 @@ export async function getUsers(req: FastifyRequest<GetUsersRequest>, res: Fastif
   const offset = (pageNum - 1) * pageSizeNum;
 
   // Validate sort parameters
-  const validSortFields = ["first_seen", "last_seen", "pageviews", "sessions", "events"];
+  const validSortFields = ["first_seen", "last_seen", "pageviews", "sessions", "events", "avg_session_duration"];
   const actualSortBy = validSortFields.includes(sortBy) ? sortBy : "last_seen";
   const actualSortOrder = sortOrder === "asc" ? "ASC" : "DESC";
 
@@ -135,10 +136,35 @@ WITH AggregatedUsers AS (
         ${matchingUserIds ? "AND events.identified_user_id IN ({matchingUserIds:Array(String)})" : ""}
     GROUP BY
         effective_user_id
+),
+SessionDurations AS (
+    SELECT
+        COALESCE(NULLIF(events.identified_user_id, ''), events.user_id) AS effective_user_id,
+        session_id,
+        dateDiff('second', min(timestamp), max(timestamp)) AS session_duration
+    FROM events
+    WHERE
+        site_id = {siteId:Int32}
+        ${timeStatement}
+        ${filterStatement}
+        ${matchingUserIds ? "AND events.identified_user_id IN ({matchingUserIds:Array(String)})" : ""}
+    GROUP BY
+        effective_user_id,
+        session_id
+),
+UserAvgDuration AS (
+    SELECT
+        effective_user_id,
+        round(avg(session_duration)) AS avg_session_duration
+    FROM SessionDurations
+    GROUP BY
+        effective_user_id
 )
 SELECT
-    *
+    AggregatedUsers.*,
+    coalesce(UserAvgDuration.avg_session_duration, 0) AS avg_session_duration
 FROM AggregatedUsers
+LEFT JOIN UserAvgDuration USING (effective_user_id)
 WHERE 1 = 1
 ${filterIdentified ? "AND identified_user_id != ''" : ""}
 ORDER BY ${actualSortBy} ${actualSortOrder}

@@ -33,6 +33,7 @@ import { Switch } from "../../../../components/ui/switch";
 import { TableSortIndicator } from "../../../../components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../../components/ui/tooltip";
 import { FilterParameter } from "@hygo/shared";
+import { formatDuration } from "../../../../lib/dateTimeUtils";
 import { getCountryName, getUserDisplayName } from "../../../../lib/utils";
 import { Browser } from "../../components/shared/icons/Browser";
 import { CountryFlag } from "../../components/shared/icons/CountryFlag";
@@ -262,6 +263,13 @@ export function UsersTable() {
     columnHelper.accessor("sessions", {
       header: ({ column }) => <SortHeader column={column}>{t("Sessions")}</SortHeader>,
       cell: info => <div className="whitespace-nowrap">{info.getValue().toLocaleString()}</div>,
+    }),
+    columnHelper.accessor("avg_session_duration", {
+      header: ({ column }) => <SortHeader column={column}>{t("Avg. Session")}</SortHeader>,
+      cell: info => {
+        const value = info.getValue();
+        return <div className="whitespace-nowrap">{value ? formatDuration(value) : "—"}</div>;
+      },
     }),
     columnHelper.accessor("last_seen", {
       header: ({ column }) => <SortHeader column={column}>{t("Last Seen")}</SortHeader>,

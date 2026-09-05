@@ -19,6 +19,7 @@ export type UsersResponse = {
   pageviews: number;
   events: number;
   sessions: number;
+  avg_session_duration: number; // Average session duration in seconds
   last_seen: string;
   first_seen: string;
 };
