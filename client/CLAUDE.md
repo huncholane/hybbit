@@ -32,7 +32,6 @@ src/
 │   ├── analytics/          # Analytics endpoints + React Query hooks
 │   ├── admin/              # Admin endpoints + hooks
 │   ├── gsc/                # Google Search Console
-│   ├── uptime/             # Uptime monitoring
 │   ├── types.ts            # Shared types (CommonApiParams, Filter, etc.)
 │   └── utils.ts            # authedFetch, buildApiParams
 ├── app/                    # Next.js App Router pages
@@ -40,7 +39,6 @@ src/
 │   ├── admin/              # Admin panel
 │   ├── auth/               # Auth flows
 │   ├── settings/           # User settings
-│   ├── uptime/             # Uptime dashboard
 │   ├── layout.tsx          # Root layout
 │   └── Providers.tsx       # Provider stack
 ├── components/
@@ -67,7 +65,17 @@ messages/                   # Translation files (en.json, de.json, etc.)
 
 ## API Layer Pattern
 
-Every data domain has two layers:
+**Analytics reads** go through one query module. A hook declares a descriptor — what differs between endpoints — and nothing else:
+
+```ts
+export function useGetEventNames() {
+  return useAnalyticsQuery<EventName[]>({ key: "event-names", path: "events/names" });
+}
+```
+
+`useAnalyticsQuery` / `useAnalyticsInfiniteQuery` (`api/analytics/useAnalyticsQuery.ts`) resolve the store context through selectors, serialise the time window, build the queryKey from the same request object they send (so key and request cannot drift), unwrap the `{ data }` envelope, and own the same-site placeholder policy, `staleTime`, and `enabled: !!site`. Non-React callers (CSV export, `useQueries` fan-outs) use `buildAnalyticsRequest` / `fetchAnalytics` from `api/analytics/analyticsRequest.ts` directly. Never hand-assemble a queryKey listing store inputs, and never call `authedFetch` for an analytics read.
+
+**Everything else** (admin, gsc, stripe — and analytics *writes*) keeps two layers:
 
 **1. Endpoints** (`api/[domain]/endpoints/*.ts`) – pure async functions, no React:
 ```ts
@@ -87,14 +95,14 @@ export function useGetSomething(siteId?: string) {
 }
 ```
 
-**`authedFetch<T>(url, options?)`** (`api/utils.ts`):
+**`authedFetch<T>(url, params?, config?)`** (`api/utils.ts`):
 - Prepends `BACKEND_URL`
 - Sends `credentials: "include"`
-- Adds `x-private-key` header if present
+- Adds `x-private-key` header if present — resolved via `api/requestContext.ts`, so the HTTP layer imports neither the store nor routing
 - Converts array params to JSON strings
 - Extracts and throws backend errors from `response.data.error`
 
-**`buildApiParams(time, timezone, filters?)`** returns `CommonApiParams` with `.toQueryParams()` / `.toBucketedQueryParams()` helpers for converting the time store state into API-ready parameters.
+**`buildApiParams(time, { timeZone, filters? })`** (`api/utils.ts`) is a pure function returning a `CommonApiParams` object; `toQueryParams` (`api/analytics/endpoints/types.ts`) converts it to snake_case wire params. The timezone is injected, never read from the store — use `useTimezone()` in components, `getTimezone()` outside React.
 
 ## State Management
 
@@ -120,7 +128,6 @@ Only `timezone` is persisted; everything else is session-only.
 - `/admin` – admin panel
 - `/login`, `/signup` – auth pages
 - `/settings` – user settings
-- `/uptime` – uptime monitoring
 
 Middleware in `proxy.ts` handles redirects and OAuth callbacks (`/auth/callback/github`, `/auth/callback/google`).
 
@@ -136,3 +143,11 @@ Middleware in `proxy.ts` handles redirects and OAuth callbacks (`/auth/callback/
 - **i18n**: use `useTranslations()` from next-intl; translation files in `messages/`
 - **Error handling**: try/catch with specific error types; let React Query surface API errors
 - **Do not** add unnecessary abstractions, extra error handling for impossible cases, or docstrings to unchanged code
+
+## i18n: the `t` translation function
+
+`t` is the value returned by next-intl's `useTranslations()`. `useTranslations()` is a React hook, so it can **only** be called inside a React component or a custom hook — never at module scope, in a plain utility function, or in a regular (non-hook) callback. Calling it elsewhere violates the Rules of Hooks.
+
+To translate inside a non-component/non-hook helper, **call `useTranslations()` in the component/hook and pass `t` down as a parameter** (typically as an optional `t?: TranslationFunction`, the shared type in `lib/events.ts`). Example: `getEventTypeLabel(type, t)` in `app/[site]/events/components/EventLog/eventLogUtils.tsx`.
+
+Also: only pass real message keys to `t(...)`. Passing an arbitrary string (e.g. a display label like `"Input Change"`) throws `MISSING_MESSAGE: Could not resolve …`. If a value isn't a key in `messages/`, return it as-is instead of running it through `t`.

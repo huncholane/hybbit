@@ -1,11 +1,5 @@
-import { Filter } from "@hygo/shared";
 import { authedFetch } from "../../utils";
-import {
-  BucketedParams,
-  CommonApiParams,
-  toBucketedQueryParams,
-  toQueryParams,
-} from "./types";
+import { BucketedParams, CommonApiParams, toBucketedQueryParams } from "./types";
 
 // Event type
 export type Event = {
@@ -60,11 +54,25 @@ export type EventProperty = {
   count: number;
 };
 
+// Common value of an autocapture event type's primary props (used for suggestions)
+export type AutocaptureValue = {
+  value: string;
+  count: number;
+};
+
 // Outbound link click data
 export type OutboundLink = {
   url: string;
   count: number;
   lastClicked: string;
+};
+
+// Autocapture events (button clicks, form submissions, copies) grouped by
+// their display value
+export type AutocaptureEvent = {
+  value: string;
+  count: number;
+  lastOccurred: string;
 };
 
 // Event counts over time
@@ -97,125 +105,6 @@ export type SiteEventCountParams = BucketedParams;
 
 export interface EventPropertiesParams extends CommonApiParams {
   eventName: string;
-}
-
-/**
- * Poll for events newer than sinceTimestamp (Realtime mode).
- * Only sends filters — no time range.
- */
-export async function fetchNewEvents(
-  site: string | number,
-  params: { sinceTimestamp: string; filters?: Filter[]; timeZone: string }
-): Promise<NewEventsResponse> {
-  const queryParams: Record<string, any> = {
-    since_timestamp: params.sinceTimestamp,
-    time_zone: params.timeZone,
-    start_date: "",
-    end_date: "",
-  };
-  if (params.filters?.length) {
-    queryParams.filters = params.filters;
-  }
-
-  return authedFetch<NewEventsResponse>(
-    `/sites/${site}/events`,
-    queryParams
-  );
-}
-
-/**
- * Cursor-based fetch for historical scrolling / initial load.
- */
-export async function fetchEventsCursor(
-  site: string | number,
-  params: CommonApiParams & {
-    beforeTimestamp?: string;
-    pageSize?: number;
-  }
-): Promise<CursorEventsResponse> {
-  const queryParams: Record<string, any> = {
-    ...toQueryParams(params),
-    page_size: params.pageSize ?? 50,
-  };
-
-  if (params.beforeTimestamp) {
-    queryParams.before_timestamp = params.beforeTimestamp;
-  }
-
-  return authedFetch<CursorEventsResponse>(
-    `/sites/${site}/events`,
-    queryParams
-  );
-}
-
-/**
- * Fetch event names
- * GET /api/events/names/:site
- */
-export async function fetchEventNames(
-  site: string | number,
-  params: CommonApiParams
-): Promise<EventName[]> {
-  const response = await authedFetch<{ data: EventName[] }>(
-    `/sites/${site}/events/names`,
-    toQueryParams(params)
-  );
-  return response.data;
-}
-
-/**
- * Fetch event properties for a specific event name
- * GET /api/events/properties/:site
- */
-export async function fetchEventProperties(
-  site: string | number,
-  params: EventPropertiesParams
-): Promise<EventProperty[]> {
-  const queryParams = {
-    ...toQueryParams(params),
-    event_name: params.eventName,
-  };
-
-  const response = await authedFetch<{ data: EventProperty[] }>(
-    `/sites/${site}/events/properties`,
-    queryParams
-  );
-  return response.data;
-}
-
-/**
- * Fetch outbound link clicks
- * GET /api/events/outbound/:site
- */
-export async function fetchOutboundLinks(
-  site: string | number,
-  params: CommonApiParams
-): Promise<OutboundLink[]> {
-  const response = await authedFetch<{ data: OutboundLink[] }>(
-    `/sites/${site}/events/outbound`,
-    toQueryParams(params)
-  );
-  return response.data;
-}
-
-/**
- * Fetch bucketed event counts for top custom events
- * GET /sites/:site/events/bucketed
- */
-export async function fetchEventBucketed(
-  site: string | number,
-  params: EventBucketedParams
-): Promise<EventBucketedPoint[]> {
-  const queryParams = {
-    ...toBucketedQueryParams(params),
-    limit: params.limit,
-  };
-
-  const response = await authedFetch<{ data: EventBucketedPoint[] }>(
-    `/sites/${site}/events/bucketed`,
-    queryParams
-  );
-  return response.data;
 }
 
 /**

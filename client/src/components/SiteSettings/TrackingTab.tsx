@@ -1,21 +1,26 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useExtracted } from "next-intl";
 import { useState, useCallback, ReactNode } from "react";
 import { toast } from "@/components/ui/sonner";
 
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 import { updateSiteConfig, SiteResponse } from "@/api/admin/endpoints";
 import { useGetSitesFromOrg } from "@/api/admin/hooks/useSites";
+import { planIncludesReplay } from "@/lib/subscription/planUtils";
 import { useStripeSubscription } from "@/lib/subscription/useStripeSubscription";
 import { Badge } from "@/components/ui/badge";
 import { IS_CLOUD } from "@/lib/const";
 
+import { SettingRow, SettingsSection, SettingsSections } from "./SettingsSection";
+
 interface TrackingTabProps {
   siteMetadata: SiteResponse;
   disabled?: boolean;
+  adminSubscription?: { planName: string; eventLimit?: number };
+  adminMode?: boolean;
 }
 
 interface ToggleConfig {
@@ -30,9 +35,15 @@ interface ToggleConfig {
   badge?: ReactNode;
 }
 
-export function TrackingTab({ siteMetadata, disabled = false }: TrackingTabProps) {
+export function TrackingTab({
+  siteMetadata,
+  disabled = false,
+  adminSubscription,
+  adminMode = false,
+}: TrackingTabProps) {
   const t = useExtracted();
-  const { refetch } = useGetSitesFromOrg(siteMetadata?.organizationId ?? "");
+  const queryClient = useQueryClient();
+  const { refetch } = useGetSitesFromOrg(siteMetadata?.organizationId ?? "", { enabled: !adminMode });
   const isMobileSite = siteMetadata.type === "mobile";
 
   const [toggleStates, setToggleStates] = useState({
@@ -66,7 +77,13 @@ export function TrackingTab({ siteMetadata, disabled = false }: TrackingTabProps
             : successMessage.disabled
           : `${key.replace(/([A-Z])/g, " $1").toLowerCase()} ${checked ? "enabled" : "disabled"}`;
         toast.success(message);
-        refetch();
+        if (!adminMode) {
+          refetch();
+        } else {
+          queryClient.invalidateQueries({ queryKey: ["admin-organizations"] });
+        }
+        // Prefix match so both string- and number-keyed useGetSite instances update
+        queryClient.invalidateQueries({ queryKey: ["get-site"] });
       } catch (error) {
         console.error(`Error updating ${key}:`, error);
         toast.error(`Failed to update ${key.replace(/([A-Z])/g, " $1").toLowerCase()}`);
@@ -75,25 +92,27 @@ export function TrackingTab({ siteMetadata, disabled = false }: TrackingTabProps
         setLoadingStates(prev => ({ ...prev, [key]: false }));
       }
     },
-    [siteMetadata.siteId, refetch]
+    [siteMetadata.siteId, refetch, queryClient, adminMode]
   );
 
   const { data: subscription, isLoading: isSubscriptionLoading } = useStripeSubscription();
+  const effectiveSubscription = adminSubscription ?? subscription;
+  const subscriptionLoading = adminMode ? false : isSubscriptionLoading;
 
-  const sessionReplayDisabled =
-    (!subscription?.planName.includes("pro") ||
-      (!!subscription?.isTrial && (subscription?.eventLimit ?? 0) >= 500_000)) &&
-    IS_CLOUD;
+  const sessionReplayDisabled = !planIncludesReplay(effectiveSubscription) && IS_CLOUD;
 
   const standardFeaturesDisabled =
-    !subscription?.planName.includes("custom") &&
-    !subscription?.planName.includes("standard") &&
-    !subscription?.planName.includes("pro") &&
-    !subscription?.planName.includes("appsumo") &&
+    !effectiveSubscription?.planName.includes("custom") &&
+    !effectiveSubscription?.planName.includes("standard") &&
+    !effectiveSubscription?.planName.includes("pro") &&
+    !effectiveSubscription?.planName.includes("appsumo") &&
     IS_CLOUD;
 
   const analyticsToggles: ToggleConfig[] = [
-    ...(!isMobileSite && !subscription?.planName?.startsWith("appsumo") && !isSubscriptionLoading
+    // Hide the replay toggle for AppSumo tiers without replays (1-3); tiers 4-7 include them
+    ...(!isMobileSite &&
+    !subscriptionLoading &&
+    (!effectiveSubscription?.planName?.startsWith("appsumo") || planIncludesReplay(effectiveSubscription))
       ? [
           {
             id: "sessionReplay",
@@ -225,16 +244,15 @@ export function TrackingTab({ siteMetadata, disabled = false }: TrackingTabProps
   ];
 
   const renderToggleSection = (toggles: ToggleConfig[], title: string) => (
-    <div className="space-y-4">
-      <h4 className="text-sm font-semibold text-foreground">{title}</h4>
+    <SettingsSection title={title}>
       {toggles.map(toggle => (
-        <div key={toggle.id} className="flex items-center justify-between">
-          <div>
-            <Label htmlFor={toggle.id} className="text-sm font-medium text-foreground flex items-center gap-2">
-              {toggle.label} {toggle.badge && IS_CLOUD && toggle.badge}
-            </Label>
-            <p className="text-xs text-muted-foreground mt-1">{toggle.description}</p>
-          </div>
+        <SettingRow
+          key={toggle.id}
+          label={toggle.label}
+          htmlFor={toggle.id}
+          description={toggle.description}
+          badge={IS_CLOUD ? toggle.badge : undefined}
+        >
           <Switch
             id={toggle.id}
             checked={toggle.value}
@@ -249,15 +267,15 @@ export function TrackingTab({ siteMetadata, disabled = false }: TrackingTabProps
               )
             }
           />
-        </div>
+        </SettingRow>
       ))}
-    </div>
+    </SettingsSection>
   );
 
   return (
-    <div className="space-y-6">
+    <SettingsSections>
       {renderToggleSection(analyticsToggles, t("Analytics Features"))}
       {renderToggleSection(autoCaptureToggles, t("Auto Capture"))}
-    </div>
+    </SettingsSections>
   );
 }

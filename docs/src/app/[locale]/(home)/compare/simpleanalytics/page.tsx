@@ -4,15 +4,15 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Simple Analytics: Feature-Rich Alternative",
+  title: "Hygo: The Open Source Simple Analytics Alternative",
   description:
-    "Compare Hygo and Simple Analytics. Both are privacy-focused, but Hygo offers more advanced features like session replay, funnels, and user journeys.",
+    "Looking for a Simple Analytics alternative? Hygo is privacy-first too, with session replay, funnels, user journeys, and open-source self-hosting.",
   openGraph: {
-    title: "Hygo vs Simple Analytics: Simple AND Powerful",
-    description: "Simple Analytics keeps it basic. Hygo adds power without complexity. Compare features.",
+    title: "Hygo vs Simple Analytics: Session Replay, Funnels, Self-Hosting",
+    description: "Simple Analytics keeps it basic. Hygo adds session replay, funnels, and self-hosting.",
     type: "website",
     url: "https://hygo.ai/compare/simpleanalytics",
-    images: [createOGImageUrl("Hygo vs Simple Analytics: Simple AND Powerful", "Simple Analytics keeps it basic. Hygo adds power without complexity. Compare features.", "Compare")],
+    images: [createOGImageUrl("Hygo vs Simple Analytics: Session Replay, Funnels, Self-Hosting", "Simple Analytics keeps it basic. Hygo adds session replay, funnels, and self-hosting.", "Compare")],
   },
   twitter: {
     card: "summary_large_image",
@@ -48,7 +48,7 @@ const structuredData = {
           name: "Is Hygo open source while Simple Analytics is not?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Hygo is fully open source under the AGPL v3 license, so you can inspect the code and self-host it. Simple Analytics is proprietary and closed-source with no self-hosting option.",
+            text: "Yes. Hygo is fully open source under the AGPL v3 license: you can inspect the code and self-host it. Simple Analytics is proprietary and closed-source with no self-hosting option.",
           },
         },
         {
@@ -102,6 +102,7 @@ export default function SimpleAnalytics() {
         chooseCompetitor={simpleAnalyticsExtendedData.chooseCompetitor}
         hygoPricing={simpleAnalyticsExtendedData.hygoPricing}
         competitorPricing={simpleAnalyticsExtendedData.competitorPricing}
+        deepDive={simpleAnalyticsExtendedData.deepDive}
         faqItems={simpleAnalyticsExtendedData.faqItems}
         relatedResources={simpleAnalyticsExtendedData.relatedResources}
       />

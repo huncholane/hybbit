@@ -1,6 +1,6 @@
 "use strict";
 
-const SDK_VERSION = "0.1.0";
+const SDK_VERSION = "0.1.1";
 const DEFAULT_CONFIG_TIMEOUT_MS = 3000;
 const DEFAULT_MAX_QUEUE_SIZE = 100;
 
@@ -97,6 +97,29 @@ function getUserAgent(appVersion) {
   } catch {
     return `HygoReactNative/${SDK_VERSION}`;
   }
+}
+
+function normalizeAcceptLanguage(language) {
+  const fallback = "en-US,en;q=0.9";
+  const value = String(language || "").trim();
+  if (!value) return fallback;
+
+  const primaryLanguage = value.replace(/_/g, "-").split(/[;,]/)[0].trim();
+  return primaryLanguage || fallback;
+}
+
+function createRequestHeaders(payload) {
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "Accept-Language": normalizeAcceptLanguage(payload?.language),
+  };
+
+  if (payload?.user_agent) {
+    headers["User-Agent"] = payload.user_agent;
+  }
+
+  return headers;
 }
 
 class HygoReactNative {
@@ -231,9 +254,7 @@ class HygoReactNative {
     try {
       const response = await this.config.fetch(`${this.config.analyticsHost}/track`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createRequestHeaders(payload),
         body: JSON.stringify(payload),
       });
 
@@ -339,19 +360,21 @@ class HygoReactNative {
   }
 
   async sendIdentify(userId, traits, isNewIdentify) {
+    const userAgent = getUserAgent(this.config.appVersion);
     try {
       const response = await this.config.fetch(`${this.config.analyticsHost}/identify`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createRequestHeaders({
+          language: getLanguage(),
+          user_agent: userAgent,
+        }),
         body: JSON.stringify({
           site_id: this.config.siteId,
           anonymous_id: this.anonymousId,
           user_id: userId,
           traits,
           is_new_identify: isNewIdentify,
-          user_agent: getUserAgent(this.config.appVersion),
+          user_agent: userAgent,
         }),
       });
 

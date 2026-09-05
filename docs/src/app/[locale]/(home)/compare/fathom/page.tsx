@@ -4,15 +4,15 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Fathom: Open-Source Privacy Alternative",
+  title: "Hygo vs Fathom: The Open Source Fathom Alternative",
   description:
-    "Compare Hygo and Fathom analytics. Both prioritize privacy, but Hygo offers more features like session replay, funnels, and open-source flexibility.",
+    "Looking for a Fathom alternative? Hygo matches its privacy focus and adds session replay, funnels, error tracking, and open-source self-hosting.",
   openGraph: {
-    title: "Hygo vs Fathom: More Features, Same Privacy Focus",
-    description: "Fathom is simple. Hygo is simple AND powerful. Compare session replay, funnels, and more.",
+    title: "Hygo vs Fathom: More Features, Same Privacy",
+    description: "Fathom keeps it simple. Hygo stays simple and adds session replay, funnels, and error tracking.",
     type: "website",
     url: "https://hygo.ai/compare/fathom",
-    images: [createOGImageUrl("Hygo vs Fathom: More Features, Same Privacy Focus", "Fathom is simple. Hygo is simple AND powerful. Compare session replay, funnels, and more.", "Compare")],
+    images: [createOGImageUrl("Hygo vs Fathom: More Features, Same Privacy", "Fathom keeps it simple. Hygo stays simple and adds session replay, funnels, and error tracking.", "Compare")],
   },
   twitter: {
     card: "summary_large_image",
@@ -102,6 +102,7 @@ export default function Fathom() {
         chooseCompetitor={fathomExtendedData.chooseCompetitor}
         hygoPricing={fathomExtendedData.hygoPricing}
         competitorPricing={fathomExtendedData.competitorPricing}
+        deepDive={fathomExtendedData.deepDive}
         faqItems={fathomExtendedData.faqItems}
         relatedResources={fathomExtendedData.relatedResources}
       />

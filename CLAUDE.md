@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Server: `cd server && npm run dev` (TypeScript backend)
 - Lint: `cd client && npm run lint` or `cd server && npm run build`
 - TypeCheck: `cd client && tsc --noEmit` or `cd server && tsc`
-- Database: `cd server && npm run db:push` (update DB schema)
+- Database: `cd server && npm run db:generate` (generate migration files after schema changes; applied with `npm run db:migrate`)
 
 ## Code Conventions
 
@@ -22,3 +22,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - File organization: Related functionality in same directory
 - Dark mode is default theme
 - Never run any database migration scripts
+
+## Design Context
+
+- `PRODUCT.md` (repo root) — strategic design context: register (`product`), users, purpose, brand personality, anti-references, and design principles. Read it before frontend/design work.
+- `DESIGN.md` (repo root) — visual system: color tokens, typography, components, layout. The source of truth for visual decisions.
+- The `/impeccable` skill reads both files before any design task.

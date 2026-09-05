@@ -133,7 +133,7 @@ export function Referrers() {
           {!value.startsWith("utm_") && t("UTM")}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" className="z-[10000]">
         <DropdownMenuItem onClick={() => setValue("utm_source")}>{t("Source")}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setValue("utm_medium")}>{t("Medium")}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setValue("utm_campaign")}>{t("Campaign")}</DropdownMenuItem>

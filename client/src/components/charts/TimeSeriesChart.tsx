@@ -44,6 +44,19 @@ export type TimeSeriesChartMarker = {
   strokeDasharray?: string;
 };
 
+/** Geometry handed to `renderOverlay` so callers can draw on top of the plot. */
+export type TimeSeriesOverlayContext = {
+  xScale: d3.ScaleTime<number, number>;
+  yScale: d3.ScaleLinear<number, number>;
+  plotLeft: number;
+  plotRight: number;
+  plotTop: number;
+  plotBottom: number;
+  /** Nearest primary data point to an instant, if the chart has data. */
+  pointAt: (x: Date) => TimeSeriesChartPoint | undefined;
+  isDark: boolean;
+};
+
 type TimeSeriesTooltipContext<CurrentPoint extends TimeSeriesChartPoint, PreviousPoint extends TimeSeriesChartPoint> = {
   point: CurrentPoint;
   previousPoint?: PreviousPoint;
@@ -73,7 +86,13 @@ type TimeSeriesChartProps<
   previousColor?: string;
   tooltipWidth?: number;
   yTickFormat?: (value: number) => string;
+  /** Disable click-drag range zoom (e.g. for embedded dashboard cards). */
+  disableDragZoom?: boolean;
   renderTooltip: (context: TimeSeriesTooltipContext<CurrentPoint, PreviousPoint>) => ReactNode;
+  /** SVG drawn above the plot's hit area, so its own elements receive pointer events. */
+  renderOverlay?: (context: TimeSeriesOverlayContext) => ReactNode;
+  /** A click (not a drag) on the plot; receives the start of the bucket under the cursor. */
+  onPlotClick?: (date: Date) => void;
 };
 
 const hasDuplicateTickLabels = (ticks: Date[], formatLabel: (tick: Date) => string): boolean => {
@@ -189,7 +208,10 @@ export function TimeSeriesChart<
   previousColor,
   tooltipWidth = 220,
   yTickFormat = formatter,
+  disableDragZoom = false,
   renderTooltip,
+  renderOverlay,
+  onPlotClick,
 }: TimeSeriesChartProps<CurrentPoint, PreviousPoint>) {
   const { time, bucket, setTime, setBucket } = useStore();
   const { resolvedTheme } = useTheme();
@@ -469,7 +491,7 @@ export function TimeSeriesChart<
 
   const handleMouseLeave = () => setHover(null);
 
-  const dragEnabled = canDragSelectBucket(bucket);
+  const dragEnabled = !disableDragZoom && canDragSelectBucket(bucket);
   const [dragRaw, setDragRaw] = useState<{
     startX: number;
     currentX: number;
@@ -553,6 +575,14 @@ export function TimeSeriesChart<
       window.removeEventListener("mouseup", onUp);
       setDragRaw(null);
       if (!moved) return;
+      // The click event that follows mouseup must not create an annotation.
+      // It fires in the same task, so a macrotask later the flag is stale and
+      // must not swallow an unrelated later click (a drag ending off-plot
+      // produces no click at all).
+      suppressClickRef.current = true;
+      setTimeout(() => {
+        suppressClickRef.current = false;
+      }, 0);
       const leftPx = Math.min(startX, currentX);
       const rightPx = Math.max(startX, currentX);
       const startBucket = pxToBucketStart(leftPx);
@@ -588,7 +618,41 @@ export function TimeSeriesChart<
     window.addEventListener("mouseup", onUp);
   };
 
+  const suppressClickRef = useRef(false);
+  const hasDomain = Boolean(W && chartMin && chartMax);
+  // A single click is deferred past the double-click window so dblclick
+  // (zoom restore) can cancel it; otherwise the first click's action would
+  // swallow the second click.
+  const pendingClickRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (pendingClickRef.current) clearTimeout(pendingClickRef.current);
+  }, []);
+  const handleClick = (e: React.MouseEvent<SVGRectElement>) => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
+    if (!onPlotClick || !hasDomain) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = Math.max(plotLeft, Math.min(plotRight, e.clientX - rect.left + plotLeft));
+    const date = pxToBucketStart(px).toUTC().toJSDate();
+    if (pendingClickRef.current) clearTimeout(pendingClickRef.current);
+    pendingClickRef.current = setTimeout(() => {
+      pendingClickRef.current = null;
+      onPlotClick(date);
+    }, 250);
+  };
+
+  const pointAt = useCallback(
+    (x: Date) => (primaryData.length ? primaryData[bisectCurrent(primaryData, x)] : undefined),
+    [bisectCurrent, primaryData]
+  );
+
   const handleDoubleClick = (e: React.MouseEvent<SVGRectElement>) => {
+    if (pendingClickRef.current) {
+      clearTimeout(pendingClickRef.current);
+      pendingClickRef.current = null;
+    }
     const dragZoom = dragZoomRestoreRef.current;
     if (!dragZoom) return;
     if (!isSameTime(time, dragZoom.after) || bucket !== dragZoom.afterBucket) {
@@ -798,11 +862,15 @@ export function TimeSeriesChart<
               fill="transparent"
               style={{ cursor: dragEnabled ? "crosshair" : "default" }}
               onMouseDown={handleMouseDown}
+              onClick={handleClick}
               onDoubleClick={handleDoubleClick}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             />
           )}
+
+          {hasDomain &&
+            renderOverlay?.({ xScale, yScale, plotLeft, plotRight, plotTop, plotBottom, pointAt, isDark })}
         </svg>
       )}
 

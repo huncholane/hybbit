@@ -23,13 +23,13 @@ interface SankeyDiagramProps {
 
 export function SankeyDiagram({ journeys, steps, maxJourneys, domain }: SankeyDiagramProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     if (!journeys || !svgRef.current || !domain) return;
 
     // Define theme-based colors
-    const isDark = theme === "dark";
+    const isDark = resolvedTheme === "dark";
     const linkColor = isDark ? "hsl(var(--neutral-500))" : "hsl(var(--neutral-400))";
     const pathTextColor = isDark ? "white" : "hsl(var(--neutral-900))";
 
@@ -517,7 +517,7 @@ export function SankeyDiagram({ journeys, steps, maxJourneys, domain }: SankeyDi
     return () => {
       dispose();
     };
-  }, [journeys, steps, maxJourneys, domain, theme]);
+  }, [journeys, steps, maxJourneys, domain, resolvedTheme]);
 
   return (
     <div className="overflow-x-auto w-full">

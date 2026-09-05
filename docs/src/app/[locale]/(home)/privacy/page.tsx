@@ -1,3 +1,4 @@
+import { LegalPageShell } from "@/components/LegalPageShell";
 import { createMetadata, createOGImageUrl } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -13,14 +14,7 @@ export const metadata = createMetadata({
 
 export default function PrivacyPolicy() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">Privacy Policy</h1>
-
-      <div className="prose prose-invert max-w-none">
-        <p className="text-lg">
-          Last updated: August 22, 2025
-        </p>
-
+    <LegalPageShell title="Privacy Policy" lastUpdated="June 25, 2026">
         <h2 className="text-2xl font-semibold mt-8 mb-4">Overview</h2>
         <p>
           Hygo is an open-source, privacy-friendly web analytics alternative to Google Analytics. This privacy policy
@@ -55,12 +49,9 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold mt-8 mb-4">How We Process IPs</h2>
         <p>
           When processing visitor data, IP addresses are only used temporarily to determine geographic location (country
-          and region) using{" "}
-          <a href="https://www.maxmind.com/" className="text-emerald-400 hover:text-emerald-300" target="_blank">
-            Maxmind
-          </a>
-          . The actual IP addresses are never stored in our database, preserving visitor anonymity while still providing
-          geographic insights to website owners.
+          and region) using a locally hosted MaxMind GeoLite2 database. IP addresses are not sent to MaxMind. The actual
+          IP addresses are never stored in our database, preserving visitor anonymity while still providing geographic
+          insights to website owners.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">User and Session IDs</h2>
@@ -94,8 +85,10 @@ export default function PrivacyPolicy() {
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">Data Retention</h2>
         <p>
-          For self-hosted instances, data retention is configurable by the administrator. For our cloud service, we
-          retain analytics data for 12 months by default, after which it is automatically deleted.
+          For self-hosted instances, data retention is configurable by the administrator. For our cloud service,
+          retention depends on your plan: Standard plans retain analytics data for 3 years and Pro plans retain it for 5
+          years, while Enterprise plans retain data indefinitely. Once the applicable retention period is reached, data
+          is automatically deleted.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">GDPR and Privacy Regulations Compliance</h2>
@@ -124,7 +117,7 @@ export default function PrivacyPolicy() {
         <p>
           As an open-source project, our code is publicly available for review. This includes our data collection
           mechanisms, which you can audit to verify our privacy claims.
-          <a href="https://github.com/hygo-ai/hygo" className="text-emerald-400 hover:text-emerald-300 ml-1">
+          <a href="https://github.com/hygo-ai/hygo" className="ml-1">
             View our GitHub repository
           </a>
           .
@@ -133,11 +126,10 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold mt-8 mb-4">Contact Us</h2>
         <p>
           If you have questions about this privacy policy or Hygo&apos;s data practices, please contact us at:
-          <a href="https://www.hygo.ai/contact" className="text-emerald-400 hover:text-emerald-300 ml-1">
+          <a href="https://www.hygo.ai/contact" className="ml-1">
             hello@hygo.ai
           </a>
         </p>
-      </div>
-    </div>
+    </LegalPageShell>
   );
 }

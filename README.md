@@ -135,4 +135,4 @@ See how Hygo compares to other analytics solutions:
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=hygo-ai/hygo&type=Date)](https://www.star-history.com/#hygo-ai/hygo&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=hygo-ai/hygo&type=Date)](https://star-history.dera.page/#hygo-ai/hygo&Date)

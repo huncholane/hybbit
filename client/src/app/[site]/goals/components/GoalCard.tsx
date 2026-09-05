@@ -7,7 +7,8 @@ import { useMemo, useState } from "react";
 import { useDeleteGoal } from "../../../../api/analytics/hooks/goals/useDeleteGoal";
 import { Goal, GoalTimeSeriesPoint } from "../../../../api/analytics/endpoints";
 import { useGetGoalSessions } from "../../../../api/analytics/hooks/goals/useGetGoalSessions";
-import { EventIcon, PageviewIcon } from "../../../../components/EventIcons";
+import { EventTypeIcon } from "../../../../components/EventIcons";
+import { resolvePropertyFilters, targetTypeToEventType } from "../../../../lib/events";
 import { SessionsList } from "../../../../components/Sessions/SessionsList";
 import {
   AlertDialog,
@@ -117,7 +118,7 @@ function GoalMetricBarChart({
   const metricLabel = metric === "conversions" ? t("Conversions") : t("Conversion Rate");
 
   return (
-    <div className="hidden md:flex h-8 w-48 shrink-0 items-end gap-px">
+    <div className="hidden lg:flex h-8 w-32 xl:w-44 shrink-0 items-end gap-px">
       {bars.map((bar, index) => {
         const height = max > 0 ? Math.max(10, (bar.value / max) * 100) : 10;
 
@@ -182,7 +183,9 @@ export default function GoalCard({ goal, siteId, timeSeries, isLoadingTimeSeries
     }
   };
 
-  const allSessions = sessionsData?.data || [];
+  const propertyFilters = resolvePropertyFilters(goal.config);
+
+  const allSessions = sessionsData || [];
   const hasNextPage = allSessions.length > LIMIT;
   const sessions = allSessions.slice(0, LIMIT);
   const hasPrevPage = page > 1;
@@ -202,49 +205,35 @@ export default function GoalCard({ goal, siteId, timeSeries, isLoadingTimeSeries
           onClick={toggleExpansion}
         >
           {/* Left section - Title and type */}
-          <div className="w-full min-w-0 md:flex-1 md:pr-4">
+          <div className=" min-w-0 md:flex-1 md:pr-4">
             <h3 className="font-medium text-base flex items-center gap-2 min-w-0">
-              {goal.goalType === "path" ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <PageviewIcon />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("Page Goal")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <EventIcon />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("Event Goal")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+              <EventTypeIcon type={targetTypeToEventType(goal.goalType)} />
               <span className="truncate">{goal.name || t("Goal #{goalId}", { goalId: String(goal.goalId) })}</span>
             </h3>
 
             <div className="mt-1 min-w-0">
               <span className="text-xs text-neutral-500 dark:text-neutral-400 mr-2">{t("Pattern")}:</span>
               <code className="inline-block max-w-full truncate align-bottom text-xs bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 rounded">
-                {goal.goalType === "path" ? goal.config.pathPattern : goal.config.eventName}
+                {goal.goalType === "path"
+                  ? goal.config.pathPattern
+                  : goal.goalType === "event"
+                    ? goal.config.eventName
+                    : goal.config.valuePattern || t("Any")}
               </code>
 
-              {goal.goalType === "event" && goal.config.eventPropertyKey && (
+              {propertyFilters.length > 0 && (
                 <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   {t("Property")}:{" "}
                   <code className="text-xs bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 rounded text-neutral-900 dark:text-neutral-100">
-                    {goal.config.eventPropertyKey}: {String(goal.config.eventPropertyValue)}
+                    {propertyFilters.map(f => `${f.key}: ${f.value}`).join(", ")}
                   </code>
                 </div>
               )}
             </div>
           </div>
           {/* Center section - Stats */}
-          <div className="w-full md:flex-1 flex justify-start md:justify-center">
-            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 md:w-auto md:gap-4">
+          <div className="w-full min-w-0 md:flex-1 flex justify-start md:justify-center">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4 md:gap-6">
               <div className="flex items-center gap-3">
                 <GoalMetricBarChart data={timeSeries} metric="conversions" isLoading={isLoadingTimeSeries} />
                 <div className="min-w-[86px] text-left">
@@ -265,7 +254,7 @@ export default function GoalCard({ goal, siteId, timeSeries, isLoadingTimeSeries
           <div className="flex shrink-0 justify-end gap-1 md:pl-4">
             <div onClick={e => e.stopPropagation()}>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild variant="ghost" size="smIcon" aria-label={t("Goal actions")}>
+                <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="smIcon" aria-label={t("Goal actions")}>
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>

@@ -1,17 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { FastifyRequest } from "fastify";
 import { detectBot } from "./headerHeuristics.js";
-
-function requestWithHeaders(headers: Record<string, string | string[]>): FastifyRequest {
-  return { headers } as unknown as FastifyRequest;
-}
 
 const browserUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
 describe("header heuristic bot detection", () => {
   it("detects scripting framework user agents", () => {
-    const result = detectBot(requestWithHeaders({}), "python-requests/2.31.0");
+    const result = detectBot({}, "python-requests/2.31.0");
 
     expect(result).toEqual({
       isBot: true,
@@ -20,8 +15,34 @@ describe("header heuristic bot detection", () => {
     });
   });
 
+  it("detects default OkHttp React Native requests as scripting framework traffic", () => {
+    const result = detectBot({}, "okhttp/4.12.0");
+
+    expect(result).toEqual({
+      isBot: true,
+      score: 5,
+      reason: "bot_framework:okhttp",
+    });
+  });
+
+  it("does not block React Native SDK requests that send SDK HTTP headers", () => {
+    const result = detectBot(
+      {
+        accept: "application/json",
+        "accept-language": "en-US,en;q=0.9",
+      },
+      "Mozilla/5.0 (Linux; Android 36) AppleWebKit/537.36 (KHTML, like Gecko) HygoReactNative/0.1.1"
+    );
+
+    expect(result).toEqual({
+      isBot: false,
+      score: 2,
+      reason: "missing_accept_encoding",
+    });
+  });
+
   it("scores missing browser headers", () => {
-    const result = detectBot(requestWithHeaders({}), browserUserAgent);
+    const result = detectBot({}, browserUserAgent);
 
     expect(result).toMatchObject({
       isBot: true,
@@ -34,14 +55,14 @@ describe("header heuristic bot detection", () => {
   });
 
   it("does not score complete browser fetch headers", () => {
-    const request = requestWithHeaders({
+    const browserHeaders = {
       accept: "*/*",
       "accept-encoding": "gzip, br",
       "accept-language": "en-US,en;q=0.9",
       "sec-fetch-site": "cross-site",
-    });
+    };
 
-    expect(detectBot(request, browserUserAgent)).toEqual({
+    expect(detectBot(browserHeaders, browserUserAgent)).toEqual({
       isBot: false,
       score: 0,
       reason: undefined,

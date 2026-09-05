@@ -1,9 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { stripe } from "../../lib/stripe.js";
 import { db } from "../../db/postgres/postgres.js";
-import { organization, member } from "../../db/postgres/schema.js";
-import { eq, and } from "drizzle-orm";
+import { organization } from "../../db/postgres/schema.js";
+import { eq } from "drizzle-orm";
+import { getOrgMembership, isOrgOwner } from "../../lib/access.js";
 import Stripe from "stripe";
+import { invalidateStripeSubscriptionCache } from "../../lib/subscriptionUtils.js";
 
 interface UpdateSubscriptionBody {
   organizationId: string;
@@ -29,15 +31,9 @@ export async function updateSubscription(
 
   try {
     // 1. Verify user has permission to manage billing for this organization
-    const memberResult = await db
-      .select({
-        role: member.role,
-      })
-      .from(member)
-      .where(and(eq(member.userId, userId), eq(member.organizationId, organizationId)))
-      .limit(1);
+    const membership = await getOrgMembership(userId, organizationId);
 
-    if (!memberResult.length || memberResult[0].role !== "owner") {
+    if (!isOrgOwner(membership)) {
       return reply.status(403).send({
         error: "Only organization owners can manage billing",
       });
@@ -71,11 +67,16 @@ export async function updateSubscription(
     }
     const subscriptionItem = subscription.items.data[0];
 
-    // 4. Validate the new price exists
+    // 4. Validate the new price exists. Only Stripe's missing-resource error means the
+    // price ID is invalid; anything else (outage, rate limit, network) falls through to
+    // the 500 path below without mutating the subscription.
     try {
       await (stripe as Stripe).prices.retrieve(newPriceId);
     } catch (error) {
-      return reply.status(400).send({ error: "Invalid price ID" });
+      if (error instanceof Stripe.errors.StripeInvalidRequestError && error.code === "resource_missing") {
+        return reply.status(400).send({ error: "Invalid price ID" });
+      }
+      throw error;
     }
 
     // 5. Update the subscription with the new price
@@ -92,6 +93,10 @@ export async function updateSubscription(
       ...(isTrialing && subscription.trial_end && { trial_end: subscription.trial_end }),
     });
 
+    // The plan changed, so drop the cached subscription for this customer (also clears the
+    // account-wide snapshot used by the admin endpoints and usage cron).
+    invalidateStripeSubscriptionCache(org.stripeCustomerId);
+
     // Get the updated subscription details
     const updatedSubscriptionDetails = await (stripe as Stripe).subscriptions.retrieve(updatedSubscription.id);
     const updatedItem = updatedSubscriptionDetails.items.data[0];
@@ -106,7 +111,7 @@ export async function updateSubscription(
       },
     });
   } catch (error: any) {
-    console.error("Subscription Update Error:", error);
+    request.log.error({ err: error }, "Subscription Update Error");
     return reply.status(500).send({
       error: "Failed to update subscription",
       details: error.message,

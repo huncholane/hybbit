@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Cloudflare Analytics: Full-Featured Alternative",
+  title: "Hygo: The Full-Featured Cloudflare Analytics Alternative",
   description:
-    "Compare Hygo and Cloudflare Web Analytics. While Cloudflare is free and basic, Hygo offers advanced features like session replay, funnels, and custom events.",
+    "Looking for a Cloudflare Web Analytics alternative? Hygo adds session replay, funnels, custom events, and real referrer data, with a free tier included.",
   openGraph: {
     title: "Hygo vs Cloudflare Analytics: Basic vs Full-Featured",
     description: "Cloudflare is free but limited. Hygo offers the full analytics experience. Compare features.",
@@ -102,6 +102,7 @@ export default function CloudflareAnalytics() {
         chooseCompetitor={cloudflareAnalyticsExtendedData.chooseCompetitor}
         hygoPricing={cloudflareAnalyticsExtendedData.hygoPricing}
         competitorPricing={cloudflareAnalyticsExtendedData.competitorPricing}
+        deepDive={cloudflareAnalyticsExtendedData.deepDive}
         faqItems={cloudflareAnalyticsExtendedData.faqItems}
         relatedResources={cloudflareAnalyticsExtendedData.relatedResources}
       />

@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Matomo: Modern Analytics Alternative",
+  title: "Hygo vs Matomo: The Modern Matomo Alternative",
   description:
-    "Compare Hygo and Matomo analytics. See how Hygo offers simpler setup, modern UI, privacy by default, and zero maintenance vs Matomo's complex PHP-based system.",
+    "Looking for a Matomo alternative? Hygo offers simpler setup, a modern UI, and privacy by default, with no PHP maintenance. See the full feature comparison.",
   openGraph: {
     title: "Hygo vs Matomo: Which Analytics Platform is Right for You?",
     description: "Side-by-side comparison of Hygo and Matomo. Modern, privacy-first analytics vs legacy PHP system.",
@@ -48,7 +48,7 @@ const structuredData = {
           name: "Is Hygo really simpler than Matomo?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Matomo has 70+ reports across 12 sections, inheriting Google Analytics-style complexity. Hygo shows all essential metrics on a single intuitive dashboard. Your team can start using Hygo immediately without training.",
+            text: "Yes. Matomo has 70+ reports across 12 sections, inheriting Google Analytics-style complexity. Hygo shows all essential metrics on a single dashboard. Your team can start using Hygo immediately without training.",
           },
         },
         {
@@ -102,6 +102,7 @@ export default function Matomo() {
         chooseCompetitor={matomoExtendedData.chooseCompetitor}
         hygoPricing={matomoExtendedData.hygoPricing}
         competitorPricing={matomoExtendedData.competitorPricing}
+        deepDive={matomoExtendedData.deepDive}
         faqItems={matomoExtendedData.faqItems}
         relatedResources={matomoExtendedData.relatedResources}
       />

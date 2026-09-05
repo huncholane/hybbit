@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Umami: Open-Source Analytics Alternative",
+  title: "Hygo vs Umami: The Full-Featured Umami Alternative",
   description:
-    "Compare Hygo and Umami analytics. Both are open-source and privacy-focused, but Hygo offers advanced features like session replay, funnels, and a managed cloud option.",
+    "Looking for an Umami alternative? Both are open-source and privacy-focused, but Hygo adds session replay, funnels, and a managed cloud option.",
   openGraph: {
     title: "Hygo vs Umami: Open-Source Analytics Head-to-Head",
     description: "Two open-source analytics platforms compared. See which offers more features and flexibility.",
@@ -102,6 +102,7 @@ export default function Umami() {
         chooseCompetitor={umamiExtendedData.chooseCompetitor}
         hygoPricing={umamiExtendedData.hygoPricing}
         competitorPricing={umamiExtendedData.competitorPricing}
+        deepDive={umamiExtendedData.deepDive}
         faqItems={umamiExtendedData.faqItems}
         relatedResources={umamiExtendedData.relatedResources}
       />

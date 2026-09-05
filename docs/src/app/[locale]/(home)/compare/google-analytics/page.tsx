@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Google Analytics: Best Privacy-First Alternative",
+  title: "Hygo vs GA4: The Open Source Google Analytics Alternative",
   description:
-    "Compare Hygo and Google Analytics. Discover why privacy-conscious businesses are switching from GA4 to Hygo's open-source, cookie-free analytics.",
+    "Looking for a Google Analytics alternative? Compare Hygo and GA4: open-source, cookieless, GDPR-compliant analytics with session replay and funnels.",
   openGraph: {
     title: "Hygo vs Google Analytics: The Privacy-First Alternative",
     description:
@@ -81,7 +81,7 @@ const structuredData = {
           name: "Does Hygo offer real-time analytics?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes, Hygo provides real-time data out of the box with no sampling. Unlike GA4 which may sample data on high-traffic properties, Hygo shows every event as it happens.",
+            text: "Yes, Hygo provides real-time data with no sampling. Unlike GA4 which may sample data on high-traffic properties, Hygo shows every event as it happens.",
           },
         },
       ],
@@ -103,6 +103,7 @@ export default function GoogleAnalytics() {
         chooseCompetitor={googleAnalyticsExtendedData.chooseCompetitor}
         hygoPricing={googleAnalyticsExtendedData.hygoPricing}
         competitorPricing={googleAnalyticsExtendedData.competitorPricing}
+        deepDive={googleAnalyticsExtendedData.deepDive}
         faqItems={googleAnalyticsExtendedData.faqItems}
         relatedResources={googleAnalyticsExtendedData.relatedResources}
       />

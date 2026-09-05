@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { createOGImageUrl } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Hygo vs Plausible: More Features, Same Privacy",
+  title: "Hygo vs Plausible: The Open Source Plausible Alternative",
   description:
-    "Compare Hygo and Plausible analytics. Both are privacy-first, but Hygo offers more features like session replay, funnels, and user journeys at competitive pricing.",
+    "Looking for a Plausible alternative? Hygo is open-source and privacy-first too, plus session replay, funnels, user journeys, and error tracking.",
   openGraph: {
     title: "Hygo vs Plausible: Which Privacy-First Analytics Wins?",
     description: "Both respect privacy, but Hygo offers more power. Compare session replay, funnels, and pricing.",
@@ -102,6 +102,7 @@ export default function Plausible() {
         chooseCompetitor={plausibleExtendedData.chooseCompetitor}
         hygoPricing={plausibleExtendedData.hygoPricing}
         competitorPricing={plausibleExtendedData.competitorPricing}
+        deepDive={plausibleExtendedData.deepDive}
         faqItems={plausibleExtendedData.faqItems}
         relatedResources={plausibleExtendedData.relatedResources}
       />

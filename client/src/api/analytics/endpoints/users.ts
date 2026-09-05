@@ -1,6 +1,6 @@
+import { Filter } from "@hygo/shared";
 import { authedFetch } from "../../utils";
 import { CommonApiParams, PaginationParams, SortParams, toQueryParams } from "./types";
-import type { GetSessionsResponse } from "./sessions";
 
 // User response type
 export type UsersResponse = {
@@ -30,6 +30,39 @@ export type LinkedDevice = {
   created_at: string;
 };
 
+// p75 Web Vitals across the user's performance events
+export type UserVitals = {
+  lcp_p75: number | null;
+  cls_p75: number | null;
+  inp_p75: number | null;
+  fcp_p75: number | null;
+  ttfb_p75: number | null;
+  performance_events: number;
+};
+
+// One location the user was seen in, with session share
+export type UserLocationBreakdown = {
+  country: string;
+  region: string;
+  city: string;
+  sessions: number;
+  last_seen: string;
+};
+
+// One device the user was seen on (grouped without versions; versions and
+// screen reflect the latest sighting)
+export type UserDeviceBreakdown = {
+  device_type: string;
+  browser: string;
+  browser_version: string;
+  operating_system: string;
+  operating_system_version: string;
+  screen_width: number;
+  screen_height: number;
+  sessions: number;
+  last_seen: string;
+};
+
 // User info type
 export type UserInfo = {
   duration: number;
@@ -54,8 +87,20 @@ export type UserInfo = {
   pageviews: number;
   events: number;
   ip?: string;
+  first_referrer: string;
+  first_channel: string;
+  first_entry_page: string;
+  first_utm_source: string;
+  first_utm_medium: string;
+  first_utm_campaign: string;
+  last_referrer: string;
+  last_channel: string;
+  timezone: string;
   traits: Record<string, unknown> | null;
   linked_devices: LinkedDevice[];
+  vitals: UserVitals | null;
+  locations: UserLocationBreakdown[];
+  devices: UserDeviceBreakdown[];
 };
 
 // User session count response type
@@ -78,6 +123,7 @@ export interface UserSessionsParams extends CommonApiParams {
 export interface UserSessionCountParams {
   userId: string;
   timeZone: string;
+  filters?: Filter[];
 }
 
 export interface UsersListResponse {
@@ -107,26 +153,48 @@ export async function fetchUsers(site: string | number, params: UsersParams): Pr
   return response;
 }
 
-/**
- * Fetch session count per day for a user
- * GET /api/users/session-count/:site
- */
-export async function fetchUserSessionCount(
-  site: string | number,
-  params: UserSessionCountParams
-): Promise<{ data: UserSessionCountResponse[] }> {
-  const response = await authedFetch<{ data: UserSessionCountResponse[] }>(`/sites/${site}/users/session-count`, {
-    user_id: params.userId,
-    time_zone: params.timeZone,
-  });
-  return response;
+export interface IdentifyUserPayload {
+  anonymousId: string;
+  userId: string;
+  traits?: Record<string, unknown>;
 }
 
 /**
- * Fetch detailed user information
- * GET /api/users/:userId/:site
+ * Manually identify an anonymous visitor from the dashboard
+ * POST /sites/:site/users/identify
  */
-export async function fetchUserInfo(site: string | number, userId: string): Promise<UserInfo> {
-  const response = await authedFetch<{ data: UserInfo }>(`/sites/${site}/users/${encodeURIComponent(userId)}`);
-  return response.data;
+export async function identifyUser(site: string | number, payload: IdentifyUserPayload): Promise<{ success: boolean }> {
+  return authedFetch<{ success: boolean }>(`/sites/${site}/users/identify`, undefined, {
+    method: "POST",
+    data: {
+      anonymous_id: payload.anonymousId,
+      user_id: payload.userId,
+      traits: payload.traits,
+    },
+  });
+}
+
+/**
+ * Replace an identified user's traits
+ * PUT /sites/:site/users/:userId/traits
+ */
+export async function updateUserTraits(
+  site: string | number,
+  userId: string,
+  traits: Record<string, unknown>
+): Promise<{ success: boolean }> {
+  return authedFetch<{ success: boolean }>(`/sites/${site}/users/${encodeURIComponent(userId)}/traits`, undefined, {
+    method: "PUT",
+    data: { traits },
+  });
+}
+
+/**
+ * Permanently delete all analytics data for a user (GDPR erasure)
+ * DELETE /sites/:site/users/:userId
+ */
+export async function deleteUser(site: string | number, userId: string): Promise<{ success: boolean }> {
+  return authedFetch<{ success: boolean }>(`/sites/${site}/users/${encodeURIComponent(userId)}`, undefined, {
+    method: "DELETE",
+  });
 }

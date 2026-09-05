@@ -1,21 +1,22 @@
-/* eslint-disable @next/next/no-img-element */
 import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 import { enrichTweet, type TweetProps } from "react-tweet";
 import { getTweet, type Tweet } from "react-tweet/api";
-import { TweetBody, TweetHeader, TweetMedia } from "./TweetClient";
+import { TweetBody, TweetHeader } from "./TweetClient";
 
-type TweetEntityBuckets = Partial<Record<keyof Tweet["entities"], unknown>>;
+type TweetEntities = NonNullable<Tweet["entities"]>;
 
-const getEntityBucket = <Key extends keyof Tweet["entities"]>(
+type TweetEntityBuckets = Partial<Record<keyof TweetEntities, unknown>>;
+
+const getEntityBucket = <Key extends keyof TweetEntities>(
   entities: TweetEntityBuckets | null | undefined,
   key: Key
-): NonNullable<Tweet["entities"][Key]> => {
+): NonNullable<TweetEntities[Key]> => {
   const bucket = entities?.[key];
-  return (Array.isArray(bucket) ? bucket : []) as NonNullable<Tweet["entities"][Key]>;
+  return (Array.isArray(bucket) ? bucket : []) as NonNullable<TweetEntities[Key]>;
 };
 
-const normalizeTweetEntities = (entities: TweetEntityBuckets | null | undefined): Tweet["entities"] => {
+const normalizeTweetEntities = (entities: TweetEntityBuckets | null | undefined): TweetEntities => {
   const media = getEntityBucket(entities, "media");
 
   return {
@@ -45,7 +46,7 @@ const Skeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
 };
 
 export const TweetSkeleton = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
-  <div className={cn("flex size-full max-h-max min-w-72 flex-col gap-2 rounded-lg border p-4", className)} {...props}>
+  <div className={cn("flex size-full max-h-max min-w-72 flex-col gap-2 rounded-md border p-4", className)} {...props}>
     <div className="flex flex-row gap-2">
       <Skeleton className="size-10 shrink-0 rounded-full" />
       <Skeleton className="h-10 w-full" />
@@ -56,7 +57,7 @@ export const TweetSkeleton = ({ className, ...props }: { className?: string; [ke
 
 export const TweetNotFound = ({ className, ...props }: { className?: string; [key: string]: unknown }) => (
   <div
-    className={cn("flex size-full flex-col items-center justify-center gap-2 rounded-lg border p-4", className)}
+    className={cn("flex size-full flex-col items-center justify-center gap-2 rounded-md border p-4", className)}
     {...props}
   >
     <h3>Tweet not found</h3>
@@ -68,7 +69,7 @@ export const MagicTweet = ({ tweet, className, ...props }: { tweet: Tweet; class
   return (
     <div
       className={cn(
-        "relative flex w-full max-w-lg flex-col gap-2 rounded-lg p-4 backdrop-blur-md bg-neutral-100/50 dark:bg-neutral-800/20 border border-neutral-300/50 dark:border-neutral-800/50",
+        "relative flex w-full max-w-lg flex-col gap-2 rounded-md border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-900",
         className
       )}
       {...props}

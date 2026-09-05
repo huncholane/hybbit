@@ -1,0 +1,40 @@
+---
+title: GitBook
+description: Options for using Hygo Analytics with GitBook documentation
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+GitBook is a popular platform for creating documentation and knowledge bases.
+
+<Callout type="warn">
+GitBook no longer supports adding arbitrary custom scripts (JS/HTML) to published sites. The old **Custom scripts → Head** setting this guide previously described has been removed, so the standard Hygo `<script>` snippet cannot be pasted into a GitBook-hosted site. Analytics on GitBook now works through its built-in integrations, and Hygo does not currently have a prebuilt GitBook integration.
+</Callout>
+
+## Current options
+
+### Build a custom GitBook integration
+
+GitBook's [developer platform](https://gitbook.com/docs/integrations) lets you build and install your own integration, and integrations can inject scripts into published content — this is how GitBook's own analytics integrations (Google Analytics, Fathom, etc.) work. A minimal custom integration that injects the Hygo snippet:
+
+```html
+<script
+  src="https://app.hygo.ai/api/script.js"
+  data-site-id="YOUR_SITE_ID"
+  defer
+></script>
+```
+
+Refer to GitBook's integration documentation for the current manifest format and publishing flow, and note that script injection only applies to published spaces (typically on a custom domain).
+
+### Host your docs on a platform with custom-code support
+
+If building an integration isn't worth it for your use case, platforms like [Docusaurus](/docs/guides/docusaurus), [VitePress](/docs/guides/vitepress), [Mintlify](/docs/guides/mintlify), or [Hugo](/docs/guides/hugo) support adding the Hygo script directly — see their guides.
+
+## Verifying installation
+
+If you do get the script injected via an integration:
+
+1. Visit your published documentation through its public URL
+2. Open the browser Network tab and confirm `script.js` loads and `POST` requests go to `/api/track`
+3. Check your Hygo dashboard for incoming pageviews
