@@ -35,38 +35,58 @@ const FIELD_LABELS: Record<ExclusionField, string> = {
 };
 
 /**
+ * Validate the :siteId param and read the Site Configuration for a settings
+ * screen. Sends the 400 or 404 itself and returns null in that case; a Postgres
+ * failure propagates so the caller can answer 500.
+ */
+export async function loadSiteConfigForSettings(
+  request: FastifyRequest,
+  reply: FastifyReply
+): Promise<SiteConfigData | null> {
+  const validationResult = siteParamsSchema.safeParse(request.params);
+
+  if (!validationResult.success) {
+    reply.status(400).send({
+      success: false,
+      error: "Invalid site ID",
+      details: validationResult.error.flatten(),
+    });
+    return null;
+  }
+
+  const numericSiteId = Number(validationResult.data.siteId);
+  if (!Number.isInteger(numericSiteId) || numericSiteId <= 0) {
+    reply.status(400).send({
+      success: false,
+      error: "Invalid site ID: must be a positive integer",
+    });
+    return null;
+  }
+
+  // Settings screens read back the write they just made, so this must not be
+  // served from another worker's pre-write cache entry.
+  const config = await siteConfig.reload(numericSiteId);
+
+  if (!config) {
+    reply.status(404).send({
+      success: false,
+      error: "Site not found",
+    });
+    return null;
+  }
+
+  return config;
+}
+
+/**
  * Read one exclusion list for a Site and return it under its own field name.
  * Shared by all seven exclusion GET endpoints.
  */
 async function getExclusionField(request: FastifyRequest, reply: FastifyReply, field: ExclusionField) {
   try {
-    const validationResult = siteParamsSchema.safeParse(request.params);
-
-    if (!validationResult.success) {
-      return reply.status(400).send({
-        success: false,
-        error: "Invalid site ID",
-        details: validationResult.error.flatten(),
-      });
-    }
-
-    const numericSiteId = Number(validationResult.data.siteId);
-    if (!Number.isInteger(numericSiteId) || numericSiteId <= 0) {
-      return reply.status(400).send({
-        success: false,
-        error: "Invalid site ID: must be a positive integer",
-      });
-    }
-
-    // Settings screens read back the write they just made, so this must not be
-    // served from another worker's pre-write cache entry.
-    const config = await siteConfig.reload(numericSiteId);
-
+    const config = await loadSiteConfigForSettings(request, reply);
     if (!config) {
-      return reply.status(404).send({
-        success: false,
-        error: "Site not found",
-      });
+      return reply;
     }
 
     return reply.send({

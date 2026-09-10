@@ -12,6 +12,7 @@ const updateSiteConfigSchema = z.object({
   firstPartyProxy: z.boolean().optional(),
   domain: z.string().min(1).max(253).optional(),
   excludedIPs: z.array(z.string().trim().min(1)).max(100).optional(),
+  useOrganizationExcludedIPs: z.boolean().optional(),
   excludedCountries: z
     .array(
       z

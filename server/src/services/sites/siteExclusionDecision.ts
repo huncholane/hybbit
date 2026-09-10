@@ -13,7 +13,9 @@ type SiteExclusionConfiguration = Pick<
   | "excludedUserAgents"
   | "excludedASNs"
   | "excludedQueryParams"
->;
+> &
+  // Optional so a caller holding only a Site's own lists still type-checks
+  Partial<Pick<SiteConfigData, "useOrganizationExcludedIPs" | "organizationExcludedIPs">>;
 
 export type SiteExclusionRequest = {
   ipAddress: string;
@@ -153,6 +155,9 @@ function matchesQueryParams(querystring: string, patterns: string[]): string | n
  * Returns the first Site Configuration exclusion matched in this fixed order:
  * IP, ASN, country, path, query param, hostname, then user agent.
  *
+ * IP exclusions are the Site's own list plus its Organization's, unless the Site
+ * turned the Organization's list off.
+ *
  * Like IP exclusions, ASN exclusions match against ALL candidate IPs —
  * over-matching is the safe failure mode here. Geolocation is resolved only
  * when country exclusions exist and no earlier exclusion matched. Lookup
@@ -163,7 +168,11 @@ export async function decideSiteExclusion(
   request: SiteExclusionRequest
 ): Promise<SiteExclusionDecision> {
   const ipsToCheck = [...new Set([request.ipAddress, ...(request.candidateIps ?? [])])];
-  const matchedIp = ipsToCheck.find(ip => configuration.excludedIPs.some(pattern => matchesIPPattern(ip, pattern)));
+  const excludedIPs =
+    configuration.useOrganizationExcludedIPs === false
+      ? configuration.excludedIPs
+      : [...configuration.excludedIPs, ...(configuration.organizationExcludedIPs ?? [])];
+  const matchedIp = ipsToCheck.find(ip => excludedIPs.some(pattern => matchesIPPattern(ip, pattern)));
   if (matchedIp) {
     return excluded("ip", "IP", matchedIp);
   }

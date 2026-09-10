@@ -1855,5 +1855,10 @@
   "Mv2uax": "Heartbeat enabled",
   "zFWbyj": "Heartbeat disabled",
   "3gsHR1": "Heartbeat interval set to {seconds} seconds",
-  "t9eRAZ": "Failed to update heartbeat interval"
+  "t9eRAZ": "Failed to update heartbeat interval",
+  "PCi7E7": "Exclude traffic from these IP addresses or ranges on every site in this organization. A site can turn this off in its Exclusions settings. Supports single IPs (192.168.1.1), CIDR notation (192.168.1.0/24), and ranges (192.168.1.1-192.168.1.10).",
+  "DsGdZP": "Organization IP exclusions",
+  "r8AYOi": "Also exclude the IPs set for your whole organization. Edit the list in",
+  "8Jjasl": "Organization settings",
+  "p1Z2Ux": "Your organization has no IP exclusions yet."
 }

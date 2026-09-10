@@ -60,6 +60,12 @@ export type {
 // Excluded IPs endpoints
 export { fetchExcludedIPs, updateExcludedIPs } from "./excludedIPs";
 export type { ExcludedIPsResponse, UpdateExcludedIPsRequest, UpdateExcludedIPsResponse } from "./excludedIPs";
+export {
+  fetchOrganizationExcludedIPs,
+  fetchSiteOrganizationExcludedIPs,
+  updateOrganizationExcludedIPs,
+} from "./organizationExclusions";
+export type { OrganizationExcludedIPsResponse, SiteOrganizationExcludedIPsResponse } from "./organizationExclusions";
 
 // Excluded Countries endpoints
 export { fetchExcludedCountries, updateExcludedCountries } from "./excludedCountries";

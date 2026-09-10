@@ -21,6 +21,7 @@ import { IPExclusionManager } from "./IPExclusionManager";
 import { CountryExclusionManager } from "./CountryExclusionManager";
 import { PatternExclusionManager } from "./PatternExclusionManager";
 import { SettingsSection, SettingsSections } from "./SettingsSection";
+import { SiteOrganizationIPExclusions } from "./SiteOrganizationIPExclusions";
 
 interface ExclusionsTabProps {
   siteId: number;
@@ -52,6 +53,7 @@ export function ExclusionsTab({ siteId, disabled = false }: ExclusionsTabProps) 
         )}
       >
         <IPExclusionManager siteId={siteId} disabled={disabled} />
+        <SiteOrganizationIPExclusions siteId={siteId} disabled={disabled} />
       </SettingsSection>
 
       <SettingsSection

@@ -26,6 +26,8 @@ type SiteRow = {
   trackButtonClicks: boolean | null;
   trackCopy: boolean | null;
   trackFormInteractions: boolean | null;
+  organizationId?: string | null;
+  useOrganizationExcludedIPs?: boolean | null;
   tags: unknown;
 };
 
@@ -257,6 +259,36 @@ describe("siteConfig.getConfig", () => {
     expect(queriesAfterRewarming).toBeGreaterThan(queriesBeforeInvalidation);
     expect((await siteConfig.getConfig(456))?.domain).toBe("other.example");
     expect(dbMock.queries).toHaveLength(queriesAfterRewarming);
+  });
+});
+
+describe("organization-wide IP exclusions", () => {
+  it("carries the Organization's list and applies it by default", async () => {
+    dbMock.rows.push(
+      createSiteRow({ id: "abcdef123456", siteId: 123, organizationId: "org_1" }),
+      // The organization lookup goes through the same mocked select, matched by id
+      createSiteRow({ id: "org_1", siteId: -1, excludedIPs: ["203.0.113.0/24"] })
+    );
+
+    const config = await siteConfig.getConfig(123);
+
+    expect(config?.organizationId).toBe("org_1");
+    expect(config?.organizationExcludedIPs).toEqual(["203.0.113.0/24"]);
+    expect(config?.useOrganizationExcludedIPs).toBe(true);
+  });
+
+  it("invalidates every cached Site of one Organization and nothing else", async () => {
+    dbMock.rows.push(
+      createSiteRow({ id: "abcdef123456", siteId: 123, organizationId: "org_1" }),
+      createSiteRow({ id: "fedcba654321", siteId: 456, organizationId: "org_2" })
+    );
+    await siteConfig.getConfig(123);
+    await siteConfig.getConfig(456);
+
+    siteConfig.invalidateOrganization("org_1");
+
+    expect(getCache().has("number:123")).toBe(false);
+    expect(getCache().has("number:456")).toBe(true);
   });
 });
 

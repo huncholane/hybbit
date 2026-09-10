@@ -47,6 +47,21 @@ beforeEach(() => {
 });
 
 describe("decideSiteExclusion", () => {
+  it("matches an organization-wide IP exclusion the site applies", async () => {
+    await expect(
+      decideSiteExclusion(configuration({ organizationExcludedIPs: ["198.51.100.0/24"] }), request)
+    ).resolves.toMatchObject({ excluded: true, reason: "ip", value: "198.51.100.10" });
+  });
+
+  it("ignores the organization's IP exclusions when the site turned them off", async () => {
+    await expect(
+      decideSiteExclusion(
+        configuration({ organizationExcludedIPs: ["198.51.100.10"], useOrganizationExcludedIPs: false }),
+        request
+      )
+    ).resolves.toEqual({ excluded: false });
+  });
+
   it("accepts a request when no exclusion matches without resolving geolocation", async () => {
     await expect(decideSiteExclusion(configuration(), request)).resolves.toEqual({ excluded: false });
     expect(mocks.getLocation).not.toHaveBeenCalled();

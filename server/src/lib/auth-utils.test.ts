@@ -119,6 +119,7 @@ CREATE TABLE "sites" (
   "blockBots" boolean DEFAULT true NOT NULL,
   "first_party_proxy" boolean DEFAULT false,
   "excluded_ips" jsonb DEFAULT '[]',
+  "use_organization_excluded_ips" boolean DEFAULT true,
   "excluded_countries" jsonb DEFAULT '[]',
   "excluded_paths" jsonb DEFAULT '[]',
   "excluded_hostnames" jsonb DEFAULT '[]',

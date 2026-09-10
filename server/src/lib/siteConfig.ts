@@ -1,12 +1,13 @@
 import { eq, type SQL } from "drizzle-orm";
 import { db } from "../db/postgres/postgres.js";
-import { sites } from "../db/postgres/schema.js";
+import { organization, sites } from "../db/postgres/schema.js";
 import { logger } from "./logger/logger.js";
 
 // Site configuration interface
 export interface SiteConfigData {
   id: string | null;
   siteId: number;
+  organizationId: string | null;
   type: "web" | "mobile";
   public: boolean;
   embedEnabled: boolean;
@@ -15,6 +16,9 @@ export interface SiteConfigData {
   blockBots: boolean;
   firstPartyProxy: boolean;
   excludedIPs: string[];
+  // Organization-wide IP exclusions, applied on top of excludedIPs unless the Site opts out
+  useOrganizationExcludedIPs: boolean;
+  organizationExcludedIPs: string[];
   excludedCountries: string[];
   excludedPaths: string[];
   excludedHostnames: string[];
@@ -102,9 +106,14 @@ class SiteConfig {
       return undefined;
     }
 
+    const organizationExcludedIPs = site.organizationId
+      ? await this.loadOrganizationExcludedIPs(site.organizationId)
+      : [];
+
     return {
       id: site.id,
       siteId: site.siteId,
+      organizationId: site.organizationId ?? null,
       type: site.type || "web",
       public: site.public || false,
       embedEnabled: site.embedEnabled || false,
@@ -113,6 +122,8 @@ class SiteConfig {
       blockBots: site.blockBots === undefined ? true : site.blockBots,
       firstPartyProxy: site.firstPartyProxy || false,
       excludedIPs: Array.isArray(site.excludedIPs) ? site.excludedIPs : [],
+      useOrganizationExcludedIPs: site.useOrganizationExcludedIPs ?? true,
+      organizationExcludedIPs,
       excludedCountries: Array.isArray(site.excludedCountries) ? site.excludedCountries : [],
       excludedPaths: Array.isArray(site.excludedPaths) ? site.excludedPaths : [],
       excludedHostnames: Array.isArray(site.excludedHostnames) ? site.excludedHostnames : [],
@@ -135,6 +146,16 @@ class SiteConfig {
       heartbeatInterval: site.heartbeatInterval ?? 15,
       tags: Array.isArray(site.tags) ? site.tags : [],
     };
+  }
+
+  private async loadOrganizationExcludedIPs(organizationId: string): Promise<string[]> {
+    const [org] = await db
+      .select({ excludedIPs: organization.excludedIPs })
+      .from(organization)
+      .where(eq(organization.id, organizationId))
+      .limit(1);
+
+    return Array.isArray(org?.excludedIPs) ? org.excludedIPs : [];
   }
 
   private cacheConfig(siteIdOrId: string | number, configData: SiteConfigData): void {
@@ -263,6 +284,19 @@ class SiteConfig {
   invalidate(site: Pick<SiteConfigData, "id" | "siteId">): void {
     for (const [key, entry] of this.cache) {
       if (entry.data.siteId === site.siteId || (site.id !== null && entry.data.id === site.id)) {
+        this.cache.delete(key);
+      }
+    }
+  }
+
+  /**
+   * Drop every cached Site of one Organization, for writes to settings all of its
+   * Sites read (the organization-wide IP exclusions). Like `invalidate`, this only
+   * reaches the worker that served the write; siblings catch up within the TTL.
+   */
+  invalidateOrganization(organizationId: string): void {
+    for (const [key, entry] of this.cache) {
+      if (entry.data.organizationId === organizationId) {
         this.cache.delete(key);
       }
     }

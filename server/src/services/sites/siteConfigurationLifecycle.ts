@@ -48,6 +48,7 @@ export type UpdateSiteConfigurationInput = {
   firstPartyProxy?: boolean;
   domain?: string;
   excludedIPs?: string[];
+  useOrganizationExcludedIPs?: boolean;
   excludedCountries?: string[];
   excludedPaths?: string[];
   excludedHostnames?: string[];
@@ -113,6 +114,7 @@ const DIRECT_UPDATE_FIELDS = [
   "blockBots",
   "firstPartyProxy",
   "excludedIPs",
+  "useOrganizationExcludedIPs",
   "excludedCountries",
   "excludedPaths",
   "excludedHostnames",

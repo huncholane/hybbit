@@ -151,6 +151,7 @@ export function updateSiteConfig(
     blockBots?: boolean;
     firstPartyProxy?: boolean;
     excludedIPs?: string[];
+    useOrganizationExcludedIPs?: boolean;
     excludedCountries?: string[];
     excludedPaths?: string[];
     excludedHostnames?: string[];

@@ -119,6 +119,11 @@ import {
   selectGSCProperty,
 } from "./api/gsc/index.js";
 import { updateMemberSiteAccess } from "./api/memberAccess/index.js";
+import {
+  getOrganizationExcludedIPs,
+  getSiteOrganizationExcludedIPs,
+  updateOrganizationExcludedIPs,
+} from "./api/organizationExclusions/index.js";
 import { listTeams, createTeam, updateTeam, deleteTeam } from "./api/teams/index.js";
 import {
   deleteSessionReplay,
@@ -547,6 +552,7 @@ async function sitesRoutes(fastify: FastifyInstance) {
   fastify.get("/sites/:siteId/excluded-user-agents", authSitesRead, getSiteExcludedUserAgents);
   fastify.get("/sites/:siteId/excluded-asns", authSitesRead, getSiteExcludedASNs);
   fastify.get("/sites/:siteId/excluded-query-params", authSitesRead, getSiteExcludedQueryParams);
+  fastify.get("/sites/:siteId/organization-excluded-ips", authSitesRead, getSiteOrganizationExcludedIPs);
 
   // Site Usage
   fastify.get("/sites/:siteId/usage", authSitesRead, getSiteUsage);
@@ -573,6 +579,10 @@ async function organizationsRoutes(fastify: FastifyInstance) {
 
   // Member site access management (admin/owner only)
   fastify.put("/organizations/:organizationId/members/:memberId/sites", orgAdminOrgWrite, updateMemberSiteAccess);
+
+  // Organization-wide IP exclusions (every Site applies them unless it opts out)
+  fastify.get("/organizations/:organizationId/excluded-ips", orgOrgRead, getOrganizationExcludedIPs);
+  fastify.put("/organizations/:organizationId/excluded-ips", orgAdminOrgWrite, updateOrganizationExcludedIPs);
 }
 
 async function teamsRoutes(fastify: FastifyInstance) {

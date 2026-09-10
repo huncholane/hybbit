@@ -3,6 +3,7 @@
 import { Minus, Plus } from "lucide-react";
 import { useExtracted } from "next-intl";
 import React, { useState } from "react";
+import { toast } from "@/components/ui/sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,11 @@ interface PatternExclusionManagerProps {
   onSave: (values: string[]) => Promise<unknown>;
   disabled?: boolean;
   max?: number;
+  /** Rejects invalid entries on save and outlines them while editing */
+  validation?: {
+    validate: (value: string) => { valid: boolean; error?: string };
+    invalidLabel: string;
+  };
 }
 
 /**
@@ -36,6 +42,7 @@ export function PatternExclusionManager({
   onSave,
   disabled = false,
   max = 100,
+  validation,
 }: PatternExclusionManagerProps) {
   const t = useExtracted();
   const [list, setList] = useState<string[]>([]);
@@ -71,6 +78,16 @@ export function PatternExclusionManager({
 
   const handleSave = async () => {
     const filtered = list.map(v => v.trim()).filter(v => v !== "");
+    if (validation) {
+      const errors = filtered.flatMap(value => {
+        const result = validation.validate(value);
+        return result.valid ? [] : [result.error ? `${value}: ${result.error}` : value];
+      });
+      if (errors.length > 0) {
+        toast.error(`${validation.invalidLabel}\n${errors.join("\n")}`);
+        return;
+      }
+    }
     try {
       await onSave(filtered);
       setHasUnsavedChanges(false);
@@ -98,6 +115,11 @@ export function PatternExclusionManager({
               onChange={e => updateField(index, e.target.value)}
               placeholder={placeholder}
               disabled={disabled}
+              className={
+                validation && value.trim() !== "" && !validation.validate(value).valid
+                  ? "border-red-500 dark:border-red-400"
+                  : ""
+              }
             />
             {list.length > 1 && (
               <Button

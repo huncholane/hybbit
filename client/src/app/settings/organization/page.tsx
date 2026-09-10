@@ -14,6 +14,7 @@ import { ApiKeyManager } from "../account/components/ApiKeyManager";
 import { DeleteOrganizationDialog } from "./components/DeleteOrganizationDialog";
 import { Invitations } from "./components/Invitations";
 import { MembersTable } from "./components/MembersTable";
+import { OrganizationIPExclusions } from "./components/OrganizationIPExclusions";
 
 // Types for our component
 export type Organization = {
@@ -128,6 +129,8 @@ function Organization({
           </CardContent>
         </Card>
       )}
+
+      <OrganizationIPExclusions organizationId={org.id} canEdit={isAdmin} />
 
       <MembersTable
         org={org}

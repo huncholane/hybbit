@@ -83,6 +83,7 @@ export const sites = pgTable(
     // real visitor IP and must win over the connecting edge IP.
     firstPartyProxy: boolean("first_party_proxy").default(false),
     excludedIPs: jsonb("excluded_ips").default([]), // Array of IP addresses/ranges to exclude
+    useOrganizationExcludedIPs: boolean("use_organization_excluded_ips").default(true), // Also apply the organization's IP exclusions
     excludedCountries: jsonb("excluded_countries").default([]), // Array of ISO country codes to exclude (e.g., ["US", "GB"])
     excludedPaths: jsonb("excluded_paths").default([]).$type<string[]>(), // Array of pathname glob patterns to exclude (e.g., ["/admin/*", "/preview"])
     excludedHostnames: jsonb("excluded_hostnames").default([]).$type<string[]>(), // Array of hostname glob patterns to exclude (e.g., ["localhost", "*.vercel.app"])
@@ -239,6 +240,9 @@ export const organization = pgTable(
       members: number | null; // null = unlimited
       websites: number | null; // null = unlimited
     }>(),
+    // Organization-wide IP exclusions: applied to every Site that keeps
+    // sites.use_organization_excluded_ips on, on top of the Site's own list
+    excludedIPs: jsonb("excluded_ips").default([]).$type<string[]>(),
   },
   table => [unique("organization_slug_unique").on(table.slug)]
 );
