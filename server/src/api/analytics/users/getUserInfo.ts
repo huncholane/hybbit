@@ -17,6 +17,8 @@ interface UserPageviewData {
   country: string;
   region: string;
   city: string;
+  lat: number; // Latest IP-lookup coordinates; 0 when unknown
+  lon: number;
   language: string;
   device_type: string;
   browser: string;
@@ -116,6 +118,9 @@ export const buildUserInfoQueries = (query: FilterParams, siteId: number) => {
             argMax(country, timestamp) AS country,
             argMax(region, timestamp) AS region,
             argMax(city, timestamp) AS city,
+            -- Not aliased lat/lon: those aliases would shadow the columns in each other's conditions
+            argMaxIf(lat, timestamp, lat != 0 OR lon != 0) AS session_lat,
+            argMaxIf(lon, timestamp, lat != 0 OR lon != 0) AS session_lon,
             argMax(language, timestamp) AS language,
             argMax(device_type, timestamp) AS device_type,
             argMax(browser, timestamp) AS browser,
@@ -152,6 +157,9 @@ export const buildUserInfoQueries = (query: FilterParams, siteId: number) => {
         any(country) as country,
         any(region) AS region,
         any(city) AS city,
+        -- Latest session with IP-lookup coordinates; 0,0 when none had any
+        argMaxIf(session_lat, session_end, session_lat != 0 OR session_lon != 0) AS lat,
+        argMaxIf(session_lon, session_end, session_lat != 0 OR session_lon != 0) AS lon,
         any(language) AS language,
         any(device_type) AS device_type,
         any(browser) AS browser,

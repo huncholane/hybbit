@@ -72,6 +72,8 @@ export type UserInfo = {
   country: string;
   region: string;
   city: string;
+  lat: number; // Latest IP-lookup coordinates; 0 when unknown
+  lon: number;
   language: string;
   device_type: string;
   browser: string;

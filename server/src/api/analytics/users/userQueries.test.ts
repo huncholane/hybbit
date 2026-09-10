@@ -65,6 +65,14 @@ describe("user queries with session-scoped filters", () => {
     expect(queries.vitalsQuery).toContain("WHERE type = 'performance'");
   });
 
+  it("returns the latest stored coordinates for the location map", () => {
+    const { sessionsQuery } = buildUserInfoQueries(baseQuery(JSON.stringify([])), 1);
+
+    expect(sessionsQuery).toContain("argMaxIf(lat, timestamp, lat != 0 OR lon != 0) AS session_lat");
+    expect(sessionsQuery).toContain("argMaxIf(session_lat, session_end, session_lat != 0 OR session_lon != 0) AS lat");
+    expect(sessionsQuery).toContain("argMaxIf(session_lon, session_end, session_lat != 0 OR session_lon != 0) AS lon");
+  });
+
   it("counts compound-filtered sessions by their start date", () => {
     const sql = buildUserSessionCountQuery(
       {

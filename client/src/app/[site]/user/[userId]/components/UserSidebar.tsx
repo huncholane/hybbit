@@ -53,7 +53,8 @@ export function UserSidebar({ data, isLoading, sessionCount, isLoadingCalendar, 
   const vitalsToShow = vitals
     ? VITALS_ORDER.filter(metric => vitals[`${metric}_p75`] != null)
     : [];
-  const showMap = !!configs?.mapboxToken && !!data?.country;
+  // lat/lon are 0 when no session had IP-lookup coordinates
+  const showMap = !!configs?.mapboxToken && !!(data?.lat || data?.lon);
 
   return (
     <div className="w-full lg:w-[300px] lg:shrink-0 space-y-3">
@@ -123,12 +124,7 @@ export function UserSidebar({ data, isLoading, sessionCount, isLoadingCalendar, 
       <SidebarCard>
         <SidebarHeader title={t("Location & Device")} />
         {showMap && data && !isLoading && (
-          <UserLocationMap
-            country={data.country}
-            region={data.region}
-            city={data.city}
-            className="mb-3 h-[132px]"
-          />
+          <UserLocationMap lat={data.lat} lon={data.lon} className="mb-3 h-[132px]" />
         )}
         <LocationDevices data={data} isLoading={isLoading} getRegionName={getRegionName} />
       </SidebarCard>
