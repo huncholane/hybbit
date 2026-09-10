@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   decideSiteExclusion: vi.fn(),
   isSiteOverLimit: vi.fn(),
   updateSession: vi.fn(),
+  refreshSession: vi.fn(),
   generateUserId: vi.fn(),
   generateUserIdFromClientId: vi.fn(),
 }));
@@ -23,7 +24,7 @@ vi.mock("./pageviewQueue.js", () => ({
 }));
 
 vi.mock("../sessions/sessionsService.js", () => ({
-  sessionsService: { updateSession: mocks.updateSession },
+  sessionsService: { updateSession: mocks.updateSession, refreshSession: mocks.refreshSession },
 }));
 
 vi.mock("./botBlocking/index.js", () => ({
@@ -280,6 +281,49 @@ describe("ingestEvent", () => {
       lookupAsn,
       // The event's own instant decides its salt day, not the clock at hash time.
       receivedAt: new Date("2026-08-14T10:38:37.000Z"),
+    });
+  });
+
+  describe("heartbeats", () => {
+    const heartbeat = () =>
+      trackingRequest({
+        payload: { type: "heartbeat", site_id: "site_abc", pathname: "/pricing" } as TrackingRequest["payload"],
+      });
+
+    it("extends the live session without running bot detection or opening a session", async () => {
+      mocks.refreshSession.mockResolvedValue({ sessionId: "session-alice" });
+
+      const outcome = await ingestEvent(heartbeat());
+
+      expect(outcome).toEqual({ status: "tracked", sessionId: "session-alice" });
+      expect(mocks.refreshSession).toHaveBeenCalledWith({
+        userId: "shared-fingerprint",
+        identifiedUserId: "",
+        siteId: 42,
+      });
+      expect(mocks.checkBotBlocking).not.toHaveBeenCalled();
+      expect(mocks.updateSession).not.toHaveBeenCalled();
+      expect(mocks.addPageview).toHaveBeenCalledWith(expect.objectContaining({ sessionId: "session-alice" }));
+    });
+
+    it("is dropped when there is no live session, instead of starting an empty one", async () => {
+      mocks.refreshSession.mockResolvedValue(null);
+
+      const outcome = await ingestEvent(heartbeat());
+
+      expect(outcome).toEqual({ status: "no_session" });
+      expect(mocks.updateSession).not.toHaveBeenCalled();
+      expect(mocks.addPageview).not.toHaveBeenCalled();
+    });
+
+    it("still honours Site exclusions", async () => {
+      mocks.decideSiteExclusion.mockResolvedValue({ excluded: true, reason: "ip", label: "IP", value: "198.51.100.10" });
+
+      const outcome = await ingestEvent(heartbeat());
+
+      expect(outcome.status).toBe("excluded");
+      expect(mocks.refreshSession).not.toHaveBeenCalled();
+      expect(mocks.addPageview).not.toHaveBeenCalled();
     });
   });
 });

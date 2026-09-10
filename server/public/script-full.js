@@ -216,6 +216,8 @@
       trackButtonClicks: false,
       trackCopy: false,
       trackFormInteractions: false,
+      enableHeartbeat: false,
+      heartbeatInterval: 15,
       tag,
       featureFlagsEnabled: false,
       featureFlags: {},
@@ -255,6 +257,8 @@
           trackButtonClicks: apiConfig.trackButtonClicks ?? defaultConfig.trackButtonClicks,
           trackCopy: apiConfig.trackCopy ?? defaultConfig.trackCopy,
           trackFormInteractions: apiConfig.trackFormInteractions ?? defaultConfig.trackFormInteractions,
+          enableHeartbeat: apiConfig.trackHeartbeat ?? defaultConfig.enableHeartbeat,
+          heartbeatInterval: apiConfig.heartbeatInterval ?? defaultConfig.heartbeatInterval,
           featureFlagsEnabled: apiConfig.featureFlagsEnabled === true
         };
       } else {
@@ -909,6 +913,14 @@
     }
     trackOutbound(url, text = "", target = "_self") {
       this.track("outbound", "", { url, text, target });
+    }
+    trackHeartbeat() {
+      const basePayload = this.createBasePayload();
+      if (!basePayload) {
+        return;
+      }
+      delete basePayload.feature_flags;
+      this.sendTrackingData({ ...basePayload, type: "heartbeat" });
     }
     trackWebVitals(vitals) {
       const basePayload = this.createBasePayload();
@@ -1583,6 +1595,66 @@
     }
   };
 
+  // heartbeat.ts
+  var MIN_INTERVAL_SECONDS = 5;
+  var MAX_INTERVAL_SECONDS = 300;
+  var IDLE_TIMEOUT_MS = 6e4;
+  var ACTIVITY_EVENTS = ["scroll", "wheel", "pointerdown", "pointermove", "keydown", "touchstart"];
+  var HeartbeatManager = class {
+    constructor(tracker, intervalSeconds) {
+      this.timer = null;
+      this.lastActivity = Date.now();
+      this.lastSent = 0;
+      this.markActive = () => {
+        this.lastActivity = Date.now();
+      };
+      this.tick = () => {
+        const now = Date.now();
+        if (document.visibilityState === "visible" && this.isActive(now)) {
+          this.send(now);
+        }
+      };
+      this.handleVisibilityChange = () => {
+        const now = Date.now();
+        if (document.visibilityState === "visible") {
+          this.lastActivity = now;
+          return;
+        }
+        if (this.isActive(now) && now - this.lastSent >= 1e3) {
+          this.send(now);
+        }
+      };
+      this.tracker = tracker;
+      const seconds = Math.round(Number(intervalSeconds)) || 15;
+      this.intervalMs = Math.min(MAX_INTERVAL_SECONDS, Math.max(MIN_INTERVAL_SECONDS, seconds)) * 1e3;
+      this.idleTimeoutMs = Math.max(IDLE_TIMEOUT_MS, this.intervalMs);
+    }
+    initialize() {
+      for (const type of ACTIVITY_EVENTS) {
+        window.addEventListener(type, this.markActive, { capture: true, passive: true });
+      }
+      document.addEventListener("visibilitychange", this.handleVisibilityChange);
+      this.timer = setInterval(this.tick, this.intervalMs);
+    }
+    cleanup() {
+      for (const type of ACTIVITY_EVENTS) {
+        window.removeEventListener(type, this.markActive, { capture: true });
+      }
+      document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+      if (this.timer !== null) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    }
+    isActive(now) {
+      return now - this.lastActivity < this.idleTimeoutMs;
+    }
+    send(now) {
+      this.lastSent = now;
+      this.tracker.trackHeartbeat();
+    }
+  };
+
   // index.ts
   (async function() {
     const scriptTag = document.currentScript || document.querySelector('script[src*="/script.js"]');
@@ -1670,6 +1742,9 @@
     if (config.trackFormInteractions) {
       formManager = new FormTrackingManager(tracker, config);
       formManager.initialize();
+    }
+    if (config.enableHeartbeat) {
+      new HeartbeatManager(tracker, config.heartbeatInterval).initialize();
     }
     if (config.trackErrors) {
       window.addEventListener("error", (event) => {

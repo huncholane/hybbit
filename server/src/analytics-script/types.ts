@@ -31,6 +31,8 @@ export interface ScriptConfig {
   trackButtonClicks: boolean;
   trackCopy: boolean;
   trackFormInteractions: boolean;
+  enableHeartbeat: boolean;
+  heartbeatInterval: number; // Seconds between heartbeats while the visitor is on the page
   tag: string;
   featureFlagsEnabled: boolean;
   featureFlags: Record<string, FeatureFlagAssignment>;
@@ -76,7 +78,8 @@ export interface TrackingPayload extends BasePayload {
     | "button_click"
     | "copy"
     | "form_submit"
-    | "input_change";
+    | "input_change"
+    | "heartbeat";
   event_name?: string;
   properties?: string;
   // Web vitals metrics

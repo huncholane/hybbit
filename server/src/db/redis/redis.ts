@@ -69,8 +69,23 @@ sessionRedis.defineCommand("sessionGetOrCreate", {
   `,
 });
 
+// Refresh-only counterpart for heartbeats: extend a live session's TTL and return
+// its id, or return nil without creating anything. A heartbeat from a tab reopened
+// after the session lapsed must not open a session that has no pageview.
+sessionRedis.defineCommand("sessionRefresh", {
+  numberOfKeys: 1,
+  lua: `
+    local existing = redis.call('GET', KEYS[1])
+    if existing then
+      redis.call('PEXPIRE', KEYS[1], ARGV[1])
+    end
+    return existing
+  `,
+});
+
 interface SessionRedis extends Redis {
   sessionGetOrCreate(key: string, candidateId: string, ttlMs: number): Promise<string>;
+  sessionRefresh(key: string, ttlMs: number): Promise<string | null>;
 }
 
 /**
@@ -79,6 +94,14 @@ interface SessionRedis extends Redis {
  */
 export function sessionGetOrCreate(key: string, candidateId: string, ttlMs: number): Promise<string> {
   return (sessionRedis as SessionRedis).sessionGetOrCreate(key, candidateId, ttlMs);
+}
+
+/**
+ * Return the session id for `key` and reset its TTL to `ttlMs` if the session is
+ * still live; return null (creating nothing) if it is not. Atomic across workers.
+ */
+export function sessionRefresh(key: string, ttlMs: number): Promise<string | null> {
+  return (sessionRedis as SessionRedis).sessionRefresh(key, ttlMs);
 }
 
 // Dedicated connection for sticky identity re-attachment, isolated for the same

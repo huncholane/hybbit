@@ -33,6 +33,8 @@ export interface SiteConfigData {
   trackButtonClicks: boolean;
   trackCopy: boolean;
   trackFormInteractions: boolean;
+  trackHeartbeat: boolean;
+  heartbeatInterval: number;
   tags: string[];
 }
 
@@ -129,6 +131,8 @@ class SiteConfig {
       trackButtonClicks: site.trackButtonClicks || false,
       trackCopy: site.trackCopy || false,
       trackFormInteractions: site.trackFormInteractions || false,
+      trackHeartbeat: site.trackHeartbeat || false,
+      heartbeatInterval: site.heartbeatInterval ?? 15,
       tags: Array.isArray(site.tags) ? site.tags : [],
     };
   }

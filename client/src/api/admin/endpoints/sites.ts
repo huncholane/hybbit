@@ -28,6 +28,8 @@ export type SiteResponse = {
   trackButtonClicks?: boolean;
   trackCopy?: boolean;
   trackFormInteractions?: boolean;
+  trackHeartbeat?: boolean;
+  heartbeatInterval?: number;
   tags?: string[];
 };
 
@@ -166,6 +168,8 @@ export function updateSiteConfig(
     trackButtonClicks?: boolean;
     trackCopy?: boolean;
     trackFormInteractions?: boolean;
+    trackHeartbeat?: boolean;
+    heartbeatInterval?: number;
     tags?: string[];
   }
 ) {

@@ -213,6 +213,8 @@ export async function parseScriptConfig(scriptTag: HTMLScriptElement): Promise<S
     trackButtonClicks: false,
     trackCopy: false,
     trackFormInteractions: false,
+    enableHeartbeat: false,
+    heartbeatInterval: 15,
     tag,
     featureFlagsEnabled: false,
     featureFlags: {},
@@ -258,6 +260,8 @@ export async function parseScriptConfig(scriptTag: HTMLScriptElement): Promise<S
         trackButtonClicks: apiConfig.trackButtonClicks ?? defaultConfig.trackButtonClicks,
         trackCopy: apiConfig.trackCopy ?? defaultConfig.trackCopy,
         trackFormInteractions: apiConfig.trackFormInteractions ?? defaultConfig.trackFormInteractions,
+        enableHeartbeat: apiConfig.trackHeartbeat ?? defaultConfig.enableHeartbeat,
+        heartbeatInterval: apiConfig.heartbeatInterval ?? defaultConfig.heartbeatInterval,
         featureFlagsEnabled: apiConfig.featureFlagsEnabled === true,
       };
     } else {

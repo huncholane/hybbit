@@ -28,7 +28,7 @@ scoped_events columns:
 - screen_width UInt16: Client screen width in pixels; 0 when unavailable.
 - screen_height UInt16: Client screen height in pixels; 0 when unavailable.
 - device_type LowCardinality(String): Derived device class. Expected values: Desktop, Mobile, Tablet, TV, Console, Embedded.
-- type LowCardinality(String): Event kind. Valid values: pageview, custom_event, performance, outbound, error, button_click, copy, form_submit, input_change.
+- type LowCardinality(String): Event kind. Valid values: pageview, custom_event, performance, outbound, error, button_click, copy, form_submit, input_change, heartbeat. heartbeat rows are engagement pings sent while a visitor is on the page; they exist only to extend session duration, so exclude them (type != 'heartbeat') when counting events, sessions, or users.
 - event_name String: For custom_event this is the user-defined event name. For performance it is usually web-vitals. For error it is the error name, such as TypeError. Often empty for pageview, outbound, button_click, copy, form_submit, and input_change.
 - props JSON: Event-specific JSON properties. For custom_event, arbitrary user properties. For outbound: url, text, target. For error: message, stack, fileName, lineNumber, columnNumber. For button_click: text plus data-hygo-prop-* attributes. For copy: text, textLength, sourceElement. For form_submit: formId, formName, formAction, method, fieldCount, ariaLabel. For input_change: element, inputType, inputName, formId, formName. Use JSONExtractString(toString(props), 'key') for string properties.
 - lcp Nullable(Float64): Largest Contentful Paint in milliseconds; only set on type = 'performance' web-vitals events.

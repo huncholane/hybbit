@@ -29,3 +29,19 @@ describe("the bot signal bounds on an ingested payload", () => {
     expect(pageview({}).success).toBe(true);
   });
 });
+
+describe("a heartbeat payload", () => {
+  const heartbeat = (fields: Record<string, unknown>) =>
+    trackingPayloadSchema.safeParse({ type: "heartbeat", site_id: "site_abc", ...fields });
+
+  it("accepts the page context the tracking script sends", () => {
+    expect(heartbeat({ pathname: "/pricing", hostname: "example.com", referrer: "https://google.com/" }).success).toBe(
+      true
+    );
+  });
+
+  it("rejects a name or properties, since a heartbeat carries neither", () => {
+    expect(heartbeat({ event_name: "signup" }).success).toBe(false);
+    expect(heartbeat({ properties: "{}" }).success).toBe(false);
+  });
+});

@@ -50,4 +50,19 @@ describe("getTrackingConfig", () => {
     expect(mocks.hasFeatureFlagsForRuntime).toHaveBeenCalledWith(123, "client");
     expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ featureFlagsEnabled: false }));
   });
+
+  it("passes the heartbeat settings to web sites and keeps the heartbeat off for apps", async () => {
+    const request = { params: { siteId: "123" }, log: { error: vi.fn() } } as any;
+    const reply = { send: vi.fn(), status: vi.fn().mockReturnThis() } as any;
+
+    mocks.getConfig.mockResolvedValueOnce({ siteId: 123, type: "web", trackHeartbeat: true, heartbeatInterval: 20 });
+    await getTrackingConfig(request, reply);
+    expect(reply.send).toHaveBeenLastCalledWith(
+      expect.objectContaining({ trackHeartbeat: true, heartbeatInterval: 20 })
+    );
+
+    mocks.getConfig.mockResolvedValueOnce({ siteId: 123, type: "mobile", trackHeartbeat: true, heartbeatInterval: 20 });
+    await getTrackingConfig(request, reply);
+    expect(reply.send).toHaveBeenLastCalledWith(expect.objectContaining({ trackHeartbeat: false }));
+  });
 });

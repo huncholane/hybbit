@@ -297,6 +297,18 @@ export class Tracker {
     this.track("outbound", "", { url, text, target });
   }
 
+  trackHeartbeat(): void {
+    const basePayload = this.createBasePayload();
+    if (!basePayload) {
+      return; // Skip tracking
+    }
+
+    // Flag values ride on real events; repeating them every few seconds would
+    // inflate per-flag event counts
+    delete basePayload.feature_flags;
+    this.sendTrackingData({ ...basePayload, type: "heartbeat" });
+  }
+
   trackWebVitals(vitals: WebVitalsData): void {
     const basePayload = this.createBasePayload();
     if (!basePayload) {

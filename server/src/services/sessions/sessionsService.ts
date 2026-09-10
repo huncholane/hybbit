@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { nanoid } from "nanoid";
 import { createServiceLogger } from "../../lib/logger/logger.js";
-import { sessionRedis, sessionGetOrCreate } from "../../db/redis/redis.js";
+import { sessionRedis, sessionGetOrCreate, sessionRefresh } from "../../db/redis/redis.js";
 
 // Sessions expire after this much inactivity. Redis refreshes the TTL on every
 // event (sliding window) and evicts the key automatically once it lapses — there
@@ -72,6 +72,38 @@ export class SessionsService {
       // mint a fresh id if we've genuinely never seen them on this worker.
       this.logger.error(error as Error, "Redis session lookup failed; using in-process fallback session id");
       return { sessionId: this.fallbackSessionId(key, candidate) };
+    }
+  }
+
+  /**
+   * Get the active session id for a visitor identity and refresh its sliding TTL,
+   * without ever creating a session. Heartbeats go through here so they can keep
+   * a live session open but never start one on their own. Returns null when the
+   * visitor has no live session; on a Redis blip, falls back to the last id this
+   * worker handed out, if it is still inside the window.
+   */
+  async refreshSession({
+    userId,
+    identifiedUserId,
+    siteId,
+  }: {
+    userId: string;
+    identifiedUserId?: string;
+    siteId: number;
+  }): Promise<{ sessionId: string } | null> {
+    const key = this.getSessionKey(userId, siteId, identifiedUserId);
+
+    try {
+      const sessionId = await sessionRefresh(key, SESSION_TTL_MS);
+      if (!sessionId) return null;
+      this.rememberSession(key, sessionId);
+      return { sessionId };
+    } catch (error) {
+      this.logger.error(error as Error, "Redis session refresh failed; using in-process fallback session id");
+      const cached = this.fallbackCache.get(key);
+      if (!cached || cached.expiresAt <= Date.now()) return null;
+      this.rememberSession(key, cached.sessionId);
+      return { sessionId: cached.sessionId };
     }
   }
 

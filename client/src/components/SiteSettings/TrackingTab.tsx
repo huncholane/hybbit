@@ -5,6 +5,7 @@ import { useExtracted } from "next-intl";
 import { useState, useCallback, ReactNode } from "react";
 import { toast } from "@/components/ui/sonner";
 
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
 import { updateSiteConfig, SiteResponse } from "@/api/admin/endpoints";
@@ -35,6 +36,10 @@ interface ToggleConfig {
   badge?: ReactNode;
 }
 
+// Same bounds the server enforces on heartbeatInterval
+const HEARTBEAT_MIN_SECONDS = 5;
+const HEARTBEAT_MAX_SECONDS = 300;
+
 export function TrackingTab({
   siteMetadata,
   disabled = false,
@@ -57,9 +62,20 @@ export function TrackingTab({
     trackButtonClicks: siteMetadata.trackButtonClicks ?? false,
     trackCopy: siteMetadata.trackCopy ?? false,
     trackFormInteractions: siteMetadata.trackFormInteractions ?? false,
+    trackHeartbeat: siteMetadata.trackHeartbeat ?? false,
   });
 
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+
+  const refreshSiteQueries = useCallback(() => {
+    if (!adminMode) {
+      refetch();
+    } else {
+      queryClient.invalidateQueries({ queryKey: ["admin-organizations"] });
+    }
+    // Prefix match so both string- and number-keyed useGetSite instances update
+    queryClient.invalidateQueries({ queryKey: ["get-site"] });
+  }, [adminMode, refetch, queryClient]);
 
   const handleToggle = useCallback(
     async (
@@ -77,13 +93,7 @@ export function TrackingTab({
             : successMessage.disabled
           : `${key.replace(/([A-Z])/g, " $1").toLowerCase()} ${checked ? "enabled" : "disabled"}`;
         toast.success(message);
-        if (!adminMode) {
-          refetch();
-        } else {
-          queryClient.invalidateQueries({ queryKey: ["admin-organizations"] });
-        }
-        // Prefix match so both string- and number-keyed useGetSite instances update
-        queryClient.invalidateQueries({ queryKey: ["get-site"] });
+        refreshSiteQueries();
       } catch (error) {
         console.error(`Error updating ${key}:`, error);
         toast.error(`Failed to update ${key.replace(/([A-Z])/g, " $1").toLowerCase()}`);
@@ -92,8 +102,34 @@ export function TrackingTab({
         setLoadingStates(prev => ({ ...prev, [key]: false }));
       }
     },
-    [siteMetadata.siteId, refetch, queryClient, adminMode]
+    [siteMetadata.siteId, refreshSiteQueries]
   );
+
+  const [heartbeatInterval, setHeartbeatInterval] = useState(siteMetadata.heartbeatInterval ?? 15);
+  const [heartbeatIntervalDraft, setHeartbeatIntervalDraft] = useState(String(siteMetadata.heartbeatInterval ?? 15));
+
+  const saveHeartbeatInterval = async () => {
+    const parsed = heartbeatIntervalDraft.trim() === "" ? NaN : Math.round(Number(heartbeatIntervalDraft));
+    const next = Number.isFinite(parsed)
+      ? Math.min(HEARTBEAT_MAX_SECONDS, Math.max(HEARTBEAT_MIN_SECONDS, parsed))
+      : heartbeatInterval;
+    setHeartbeatIntervalDraft(String(next));
+    if (next === heartbeatInterval) return;
+
+    setLoadingStates(prev => ({ ...prev, heartbeatInterval: true }));
+    try {
+      await updateSiteConfig(siteMetadata.siteId, { heartbeatInterval: next });
+      setHeartbeatInterval(next);
+      toast.success(t("Heartbeat interval set to {seconds} seconds", { seconds: String(next) }));
+      refreshSiteQueries();
+    } catch (error) {
+      console.error("Error updating heartbeatInterval:", error);
+      toast.error(t("Failed to update heartbeat interval"));
+      setHeartbeatIntervalDraft(String(heartbeatInterval));
+    } finally {
+      setLoadingStates(prev => ({ ...prev, heartbeatInterval: false }));
+    }
+  };
 
   const { data: subscription, isLoading: isSubscriptionLoading } = useStripeSubscription();
   const effectiveSubscription = adminSubscription ?? subscription;
@@ -243,7 +279,7 @@ export function TrackingTab({
       : []),
   ];
 
-  const renderToggleSection = (toggles: ToggleConfig[], title: string) => (
+  const renderToggleSection = (toggles: ToggleConfig[], title: string, extra?: ReactNode) => (
     <SettingsSection title={title}>
       {toggles.map(toggle => (
         <SettingRow
@@ -269,12 +305,53 @@ export function TrackingTab({
           />
         </SettingRow>
       ))}
+      {extra}
     </SettingsSection>
+  );
+
+  // Web only: the heartbeat runs in the tracking script, which apps don't load
+  const heartbeatRow = !isMobileSite && (
+    <SettingRow
+      label={t("Heartbeat")}
+      htmlFor="trackHeartbeat"
+      description={t(
+        "Measure time on site while the page is visible and in use. Pauses in background tabs and when the visitor is idle"
+      )}
+    >
+      <Input
+        id="heartbeatInterval"
+        type="number"
+        inputMode="numeric"
+        min={HEARTBEAT_MIN_SECONDS}
+        max={HEARTBEAT_MAX_SECONDS}
+        value={heartbeatIntervalDraft}
+        onChange={e => setHeartbeatIntervalDraft(e.target.value)}
+        onBlur={saveHeartbeatInterval}
+        onKeyDown={e => {
+          if (e.key === "Enter") e.currentTarget.blur();
+        }}
+        disabled={!toggleStates.trackHeartbeat || loadingStates.heartbeatInterval || disabled}
+        aria-label={t("Heartbeat interval in seconds")}
+        className="w-20"
+      />
+      <span className="text-xs text-muted-foreground">{t("seconds")}</span>
+      <Switch
+        id="trackHeartbeat"
+        checked={toggleStates.trackHeartbeat}
+        disabled={loadingStates.trackHeartbeat || disabled}
+        onCheckedChange={checked =>
+          handleToggle("trackHeartbeat", checked, {
+            enabled: t("Heartbeat enabled"),
+            disabled: t("Heartbeat disabled"),
+          })
+        }
+      />
+    </SettingRow>
   );
 
   return (
     <SettingsSections>
-      {renderToggleSection(analyticsToggles, t("Analytics Features"))}
+      {renderToggleSection(analyticsToggles, t("Analytics Features"), heartbeatRow)}
       {renderToggleSection(autoCaptureToggles, t("Auto Capture"))}
     </SettingsSections>
   );

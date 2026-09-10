@@ -62,6 +62,10 @@ const updateSiteConfigSchema = z.object({
   trackButtonClicks: z.boolean().optional(),
   trackCopy: z.boolean().optional(),
   trackFormInteractions: z.boolean().optional(),
+  trackHeartbeat: z.boolean().optional(),
+  // Seconds between heartbeats. Capped at 5 minutes so an active visitor never
+  // drops out of the 5-minute "online" window between pings
+  heartbeatInterval: z.number().int().min(5).max(300).optional(),
 });
 
 type UpdateSiteConfigRequest = z.infer<typeof updateSiteConfigSchema>;

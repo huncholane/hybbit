@@ -236,6 +236,15 @@ export const trackingPayloadSchema = z.discriminatedUnion("type", [
         ),
     })
     .strict(),
+  z
+    .object({
+      // Engagement ping from the tracking script while a visitor is on the page.
+      // Carries no name or properties; it only moves the session's end time.
+      type: z.literal("heartbeat"),
+      ...baseEventFields,
+      event_name: z.literal("").optional(),
+    })
+    .strict(),
 ]);
 
 /** The event body after validation — the only shape ingestion ever sees. */

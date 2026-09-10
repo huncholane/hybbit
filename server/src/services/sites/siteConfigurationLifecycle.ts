@@ -66,6 +66,8 @@ export type UpdateSiteConfigurationInput = {
   trackButtonClicks?: boolean;
   trackCopy?: boolean;
   trackFormInteractions?: boolean;
+  trackHeartbeat?: boolean;
+  heartbeatInterval?: number;
 };
 
 export type SiteLifecycleErrorCode =
@@ -129,6 +131,8 @@ const DIRECT_UPDATE_FIELDS = [
   "trackButtonClicks",
   "trackCopy",
   "trackFormInteractions",
+  "trackHeartbeat",
+  "heartbeatInterval",
 ] as const satisfies ReadonlyArray<keyof UpdateSiteConfigurationInput>;
 
 function normalizeSiteType(type: SiteType | null | undefined): SiteType {

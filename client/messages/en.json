@@ -1847,5 +1847,13 @@
   "QOaR8l": "Submitted form to \"{action}\"",
   "IQ5tZg": "Submitted form",
   "+B+qvw": "Changed {type}input \"{name}\"",
-  "vDpLV2": "Changed {type}input"
+  "vDpLV2": "Changed {type}input",
+  "Ia8BRm": "Heartbeat",
+  "Rn6lS2": "Measure time on site while the page is visible and in use. Pauses in background tabs and when the visitor is idle",
+  "HlVdWd": "Heartbeat interval in seconds",
+  "8TQoLR": "seconds",
+  "Mv2uax": "Heartbeat enabled",
+  "zFWbyj": "Heartbeat disabled",
+  "3gsHR1": "Heartbeat interval set to {seconds} seconds",
+  "t9eRAZ": "Failed to update heartbeat interval"
 }

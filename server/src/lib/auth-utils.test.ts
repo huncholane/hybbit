@@ -136,6 +136,8 @@ CREATE TABLE "sites" (
   "trackButtonClicks" boolean DEFAULT false,
   "trackCopy" boolean DEFAULT false,
   "trackFormInteractions" boolean DEFAULT false,
+  "track_heartbeat" boolean DEFAULT false,
+  "heartbeat_interval" integer DEFAULT 15,
   "api_key" text,
   "private_link_key" text,
   "tags" jsonb DEFAULT '[]',

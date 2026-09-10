@@ -23,6 +23,8 @@ const config: ScriptConfig = {
   trackButtonClicks: false,
   trackCopy: false,
   trackFormInteractions: false,
+  enableHeartbeat: false,
+  heartbeatInterval: 15,
   tag: "",
   featureFlagsEnabled: false,
   featureFlags: {},

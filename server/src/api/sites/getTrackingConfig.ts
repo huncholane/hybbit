@@ -36,6 +36,8 @@ export async function getTrackingConfig(request: FastifyRequest<{ Params: { site
       trackButtonClicks: config.trackButtonClicks,
       trackCopy: config.trackCopy,
       trackFormInteractions: config.trackFormInteractions,
+      trackHeartbeat: config.type === "mobile" ? false : config.trackHeartbeat,
+      heartbeatInterval: config.heartbeatInterval,
     });
   } catch (error) {
     request.log.error({ err: error }, "Error getting tracking config");

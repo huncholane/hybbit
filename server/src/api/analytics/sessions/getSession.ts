@@ -94,7 +94,7 @@ SELECT
     max(timestamp) as session_end,
     dateDiff('second', min(timestamp), max(timestamp)) as session_duration,
     countIf(type = 'pageview') as pageviews,
-    count() as events,
+    countIf(type != 'heartbeat') as events,
     argMinIf(pathname, timestamp_ms, type = 'pageview') as entry_page,
     argMaxIf(pathname, timestamp_ms, type = 'pageview') as exit_page,
     any(ip) AS ip
@@ -115,7 +115,7 @@ FROM events
 WHERE
     site_id = {siteId:Int32}
     AND session_id = {sessionId:String}
-    AND type != 'performance'
+    AND type NOT IN ('performance', 'heartbeat')
     ${timeFilterWithConnector}
     `;
 
@@ -135,7 +135,7 @@ FROM events
 WHERE
     site_id = {siteId:Int32}
     AND session_id = {sessionId:String}
-    AND type != 'performance'
+    AND type NOT IN ('performance', 'heartbeat')
     ${timeFilterWithConnector}
 ORDER BY timestamp_ms ASC
 LIMIT {limit:Int32}

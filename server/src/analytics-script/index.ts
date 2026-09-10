@@ -4,6 +4,7 @@ import { WebVitalsCollector } from "./webVitals.js";
 import { ClickTrackingManager } from "./clickTracking.js";
 import { CopyTrackingManager } from "./copyTracking.js";
 import { FormTrackingManager } from "./formTracking.js";
+import { HeartbeatManager } from "./heartbeat.js";
 import { debounce, isOutboundLink } from "./utils.js";
 import { HygoAPI, WebVitalsData, ErrorProperties } from "./types.js";
 
@@ -120,6 +121,13 @@ declare global {
   if (config.trackFormInteractions) {
     formManager = new FormTrackingManager(tracker, config);
     formManager.initialize();
+  }
+
+  // Initialize the engagement heartbeat if enabled. Deliberately not torn down on
+  // beforeunload: its last heartbeat fires on the visibilitychange that follows,
+  // and a beforeunload prompt can be cancelled.
+  if (config.enableHeartbeat) {
+    new HeartbeatManager(tracker, config.heartbeatInterval).initialize();
   }
 
   // Initialize error tracking if enabled

@@ -21,6 +21,8 @@ export type IngestOutcome =
   | { status: "excluded"; exclusion: MatchedExclusion }
   | { status: "over_limit" }
   | { status: "bot" }
+  // A heartbeat arrived with no live session to extend, so it was dropped
+  | { status: "no_session" }
   | { status: "tracked"; sessionId: string };
 
 /**
@@ -64,6 +66,28 @@ export async function ingestEvent(trackingRequest: TrackingRequest): Promise<Ing
   if (usageService.isSiteOverLimit(site.siteId)) {
     logger.info({ siteId: payload.site_id }, "Skipping event - site over monthly limit");
     return { status: "over_limit" };
+  }
+
+  // Heartbeats leave the pipeline here. They may only extend a session that a
+  // real event opened, and that event already went through bot detection, so
+  // they skip it: a page left open would otherwise feed the anomaly counters
+  // every few seconds (an office of open tabs behind one IP reads as a crawler).
+  // With no live session they are dropped rather than opening an empty one.
+  if (payload.type === "heartbeat") {
+    const eventPayload = await createBasePayload(trackingRequest);
+    const session = await sessionsService.refreshSession({
+      userId: eventPayload.userId,
+      identifiedUserId: eventPayload.identifiedUserId,
+      siteId: site.siteId,
+    });
+
+    if (!session) {
+      logger.debug({ siteId: payload.site_id }, "Dropping heartbeat - no live session to extend");
+      return { status: "no_session" };
+    }
+
+    await pageviewQueue.add({ ...eventPayload, sessionId: session.sessionId });
+    return { status: "tracked", sessionId: session.sessionId };
   }
 
   const botDetectionResult = await checkBotBlocking({

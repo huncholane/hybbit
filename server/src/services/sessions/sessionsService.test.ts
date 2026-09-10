@@ -2,17 +2,65 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   sessionGetOrCreate: vi.fn(),
+  sessionRefresh: vi.fn(),
   quit: vi.fn(),
 }));
 
 vi.mock("../../db/redis/redis.js", () => ({
   sessionRedis: { quit: mocks.quit },
   sessionGetOrCreate: (...args: unknown[]) => mocks.sessionGetOrCreate(...args),
+  sessionRefresh: (...args: unknown[]) => mocks.sessionRefresh(...args),
 }));
 
 import { SessionsService } from "./sessionsService.js";
 
 const SESSION_TTL_MS = 30 * 60 * 1000;
+
+describe("SessionsService.refreshSession", () => {
+  let service: SessionsService;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-01-01T00:00:00.000Z"));
+    mocks.sessionGetOrCreate.mockReset();
+    mocks.sessionRefresh.mockReset();
+    service = new SessionsService();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("extends a live session without creating one", async () => {
+    mocks.sessionRefresh.mockResolvedValue("sess-live");
+
+    const result = await service.refreshSession({ userId: "user-a", siteId: 42 });
+
+    expect(result).toEqual({ sessionId: "sess-live" });
+    expect(mocks.sessionRefresh).toHaveBeenCalledWith("session:42:user-a", SESSION_TTL_MS);
+    expect(mocks.sessionGetOrCreate).not.toHaveBeenCalled();
+  });
+
+  it("returns null when the visitor has no live session", async () => {
+    mocks.sessionRefresh.mockResolvedValue(null);
+
+    await expect(service.refreshSession({ userId: "user-a", siteId: 42 })).resolves.toBeNull();
+  });
+
+  it("falls back to this worker's last id during a Redis blip, but never invents one", async () => {
+    mocks.sessionGetOrCreate.mockResolvedValue("sess-known");
+    await service.updateSession({ userId: "user-a", siteId: 42 });
+    mocks.sessionRefresh.mockRejectedValue(new Error("redis down"));
+
+    await expect(service.refreshSession({ userId: "user-a", siteId: 42 })).resolves.toEqual({
+      sessionId: "sess-known",
+    });
+    await expect(service.refreshSession({ userId: "stranger", siteId: 42 })).resolves.toBeNull();
+
+    vi.advanceTimersByTime(SESSION_TTL_MS + 1);
+    await expect(service.refreshSession({ userId: "user-a", siteId: 42 })).resolves.toBeNull();
+  });
+});
 
 describe("SessionsService (Redis-backed)", () => {
   let service: SessionsService;
