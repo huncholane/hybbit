@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { siteConfig } from "../../lib/siteConfig.js";
 import { FilterParameter } from "./types.js";
 import { getTimeStatement } from "./utils/timeWindow.js";
 import { getSqlParam } from "./utils/getFilterStatement.js";
@@ -31,7 +32,7 @@ type GetMetricResponse = {
   pageviews?: number; // pageviews of this specific page when it was an entry/exit
   pageviews_percentage?: number;
   time_on_page_seconds?: number; // avg time on this page when it was an entry/exit
-  bounce_rate?: number; // percentage of sessions that were bounces (single pageview)
+  bounce_rate?: number; // percentage of sessions shorter than the Site's bounce threshold
 }[];
 
 // This type represents a single item in the array returned *within* the data property
@@ -76,6 +77,20 @@ export const buildMetricQuery = (
   const withFilteredSessions = filteredSessionsCTE ? `WITH ${filteredSessionsCTE}` : "";
 
   const { limitStatement, offsetStatement } = getPaginationStatements(query, 100, isCountQuery);
+
+  // A bounce is a session shorter than {bounceThreshold:UInt32} seconds, whatever
+  // its page count. Every event in the window counts toward the length, so the
+  // heartbeat's time on the last page does too.
+  const sessionDurationsCte = `SessionDurations AS (
+          SELECT
+              session_id,
+              dateDiff('second', min(timestamp), max(timestamp)) as session_duration
+          FROM events
+          WHERE
+              site_id = {siteId:Int32}
+              ${timeStatement}
+          GROUP BY session_id
+      )`;
 
   if (parameter === "event_name") {
     if (isCountQuery) {
@@ -136,26 +151,16 @@ export const buildMetricQuery = (
     }
 
     return `
-      WITH ${filteredSessionsCTE ? `${filteredSessionsCTE},` : ""} SessionPageCounts AS (
-          SELECT
-              session_id,
-              COUNT() as pageviews_in_session
-          FROM events
-          WHERE
-              site_id = {siteId:Int32}
-              AND type = 'pageview'
-              ${timeStatement}
-          GROUP BY session_id
-      ),
+      WITH ${filteredSessionsCTE ? `${filteredSessionsCTE},` : ""} ${sessionDurationsCte},
       TitleStatsWithSessions AS (
           SELECT
               e.page_title as value,
               e.pathname as pathname,
               e.session_id AS session_id,
-              spc.pageviews_in_session
+              sd.session_duration
           FROM events e
           ${aliasedSessionJoin}
-          LEFT JOIN SessionPageCounts spc ON e.session_id = spc.session_id
+          LEFT JOIN SessionDurations sd ON e.session_id = sd.session_id
           WHERE
               e.site_id = {siteId:Int32}
               AND e.page_title IS NOT NULL
@@ -172,7 +177,7 @@ export const buildMetricQuery = (
               2
           ) as percentage,
           ROUND(
-              countIf(DISTINCT session_id, pageviews_in_session = 1) * 100.0 / nullIf(COUNT(DISTINCT session_id), 0),
+              countIf(DISTINCT session_id, session_duration < {bounceThreshold:UInt32}) * 100.0 / nullIf(COUNT(DISTINCT session_id), 0),
               2
           ) as bounce_rate
       FROM TitleStatsWithSessions
@@ -188,27 +193,17 @@ export const buildMetricQuery = (
     const orderDirection = isEntry ? "ASC" : "DESC";
 
     const baseCteQuery = `
-      SessionPageCounts AS (
-          SELECT
-              session_id,
-              COUNT() as pageviews_in_session
-          FROM events
-          WHERE
-              site_id = {siteId:Int32}
-              AND type = 'pageview'
-              ${timeStatement}
-          GROUP BY session_id
-      ),
+      ${sessionDurationsCte},
       RelevantEvents AS (
           SELECT
               e.session_id AS session_id,
               e.pathname AS pathname,
               e.hostname AS hostname,
               e.timestamp_ms AS timestamp_ms,
-              spc.pageviews_in_session
+              sd.session_duration
           FROM events e
           ${aliasedSessionJoin}
-          LEFT JOIN SessionPageCounts spc ON e.session_id = spc.session_id
+          LEFT JOIN SessionDurations sd ON e.session_id = sd.session_id
           WHERE
               e.site_id = {siteId:Int32}
               AND e.type = 'pageview'
@@ -220,7 +215,7 @@ export const buildMetricQuery = (
               pathname,
               hostname,
               timestamp_ms AS timestamp,
-              pageviews_in_session,
+              session_duration,
               leadInFrame(timestamp_ms) OVER (PARTITION BY session_id ORDER BY timestamp_ms ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) as next_timestamp,
               row_number() OVER (PARTITION BY session_id ORDER BY timestamp_ms ${orderDirection}) as row_num
           FROM RelevantEvents
@@ -233,7 +228,7 @@ export const buildMetricQuery = (
               timestamp,
               next_timestamp,
               row_num,
-              pageviews_in_session,
+              session_duration,
               if(isNull(next_timestamp), 0, dateDiff('second', timestamp, next_timestamp)) as time_diff_seconds
           FROM EventTimes
       ),
@@ -249,7 +244,7 @@ export const buildMetricQuery = (
               count(DISTINCT session_id) as unique_sessions,
               count() as visits,
               avg(if(time_diff_seconds < 0, 0, if(time_diff_seconds > 1800, 1800, time_diff_seconds))) as avg_time_on_page_seconds,
-              countIf(DISTINCT session_id, pageviews_in_session = 1) as bounced_sessions
+              countIf(DISTINCT session_id, session_duration < {bounceThreshold:UInt32}) as bounced_sessions
           FROM FilteredDurations
           WHERE pathname IS NOT NULL AND pathname <> ''
           GROUP BY pathname
@@ -282,28 +277,18 @@ export const buildMetricQuery = (
 
   if (parameter === "pathname") {
     const baseCteQuery = `
-      SessionPageCounts AS (
-          SELECT
-              session_id,
-              COUNT() as pageviews_in_session
-          FROM events
-          WHERE
-              site_id = {siteId:Int32}
-              AND type = 'pageview'
-              ${timeStatement}
-          GROUP BY session_id
-      ),
+      ${sessionDurationsCte},
       EventTimes AS (
           SELECT
               e.session_id AS session_id,
               e.pathname,
               e.hostname,
               e.timestamp,
-              spc.pageviews_in_session,
+              sd.session_duration,
               leadInFrame(e.timestamp) OVER (PARTITION BY e.session_id ORDER BY e.timestamp ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) as next_timestamp
           FROM events e
           ${aliasedSessionJoin}
-          LEFT JOIN SessionPageCounts spc ON e.session_id = spc.session_id
+          LEFT JOIN SessionDurations sd ON e.session_id = sd.session_id
           WHERE
             e.site_id = {siteId:Int32}
             AND e.type = 'pageview'
@@ -316,7 +301,7 @@ export const buildMetricQuery = (
               hostname,
               timestamp,
               next_timestamp,
-              pageviews_in_session,
+              session_duration,
               if(isNull(next_timestamp), 0, dateDiff('second', timestamp, next_timestamp)) as time_diff_seconds
           FROM EventTimes
       ),
@@ -327,7 +312,7 @@ export const buildMetricQuery = (
               count() as visits,
               count(DISTINCT session_id) as unique_sessions,
               avg(if(time_diff_seconds < 0, 0, if(time_diff_seconds > 1800, 1800, time_diff_seconds))) as avg_time_on_page_seconds,
-              countIf(DISTINCT session_id, pageviews_in_session = 1) as bounced_sessions
+              countIf(DISTINCT session_id, session_duration < {bounceThreshold:UInt32}) as bounced_sessions
           FROM PageDurations
           GROUP BY pathname
       )
@@ -383,25 +368,15 @@ export const buildMetricQuery = (
   }
 
   return `
-    WITH ${filteredSessionsCTE ? `${filteredSessionsCTE},` : ""} SessionPageCounts AS (
-        SELECT
-            session_id,
-            COUNT() as pageviews_in_session
-        FROM events
-        WHERE
-            site_id = {siteId:Int32}
-            AND type = 'pageview'
-            ${timeStatement}
-        GROUP BY session_id
-    ),
+    WITH ${filteredSessionsCTE ? `${filteredSessionsCTE},` : ""} ${sessionDurationsCte},
     SessionData AS (
         SELECT
             ${valueExpression} as value,
             e.session_id AS session_id,
-            any(spc.pageviews_in_session) as pageviews_in_session
+            any(sd.session_duration) as session_duration
         FROM events e
         ${aliasedSessionJoin}
-        LEFT JOIN SessionPageCounts spc ON e.session_id = spc.session_id
+        LEFT JOIN SessionDurations sd ON e.session_id = sd.session_id
         WHERE
             e.site_id = {siteId:Int32}
             AND ${sqlParam} IS NOT NULL
@@ -415,7 +390,7 @@ export const buildMetricQuery = (
         round((COUNT(DISTINCT session_id) / sum(COUNT(DISTINCT session_id)) OVER ()) * 100, 2) as percentage,
         COUNT() as pageviews,
         round((COUNT() / sum(COUNT()) OVER ()) * 100, 2) as pageviews_percentage,
-        round((countIf(DISTINCT session_id, pageviews_in_session = 1) / nullIf(COUNT(DISTINCT session_id), 0)) * 100, 2) as bounce_rate
+        round((countIf(DISTINCT session_id, session_duration < {bounceThreshold:UInt32}) / nullIf(COUNT(DISTINCT session_id), 0)) * 100, 2) as bounce_rate
     FROM SessionData
     GROUP BY value
     ORDER BY count desc, value asc
@@ -428,7 +403,7 @@ export const getMetric = analyticsRoute<GetMetricRequest>(
   req => req.query.parameter,
   async (req: FastifyRequest<GetMetricRequest>, res: FastifyReply) => {
     const siteId = Number(req.params.siteId);
-    const params = { siteId };
+    const params = { siteId, bounceThreshold: await siteConfig.getBounceThreshold(siteId) };
 
     const result = await runPaginatedQuery<MetricItem>(
       { query: buildMetricQuery(req.query, siteId, false), params },

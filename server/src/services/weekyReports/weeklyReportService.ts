@@ -10,6 +10,7 @@ import { createServiceLogger } from "../../lib/logger/logger.js";
 import { sendWeeklyReportEmail } from "../../lib/email/email.js";
 import { filterSitesByMemberAccess } from "../../lib/access.js";
 import { IS_CLOUD } from "../../lib/const.js";
+import { siteConfig } from "../../lib/siteConfig.js";
 import {
   BreakdownDimension,
   buildBreakdownQuery,
@@ -31,7 +32,7 @@ class WeeklyReportService {
       const result = await clickhouse.query({
         query: buildOverviewQuery(spec),
         format: "JSONEachRow",
-        query_params: { siteId },
+        query_params: { siteId, bounceThreshold: await siteConfig.getBounceThreshold(siteId) },
       });
 
       const data = await processResults<OverviewData>(result);

@@ -8,6 +8,7 @@ import { clickhouse } from "../../db/clickhouse/clickhouse.js";
 import { processResults } from "../../api/analytics/utils/utils.js";
 import { getTimeStatement } from "../../api/analytics/utils/timeWindow.js";
 import { createServiceLogger } from "../../lib/logger/logger.js";
+import { siteConfig } from "../../lib/siteConfig.js";
 import {
   BreakdownDimension,
   buildBreakdownQuery,
@@ -169,7 +170,7 @@ class PdfReportService {
       const result = await clickhouse.query({
         query: buildOverviewQuery(spec),
         format: "JSONEachRow",
-        query_params: { siteId },
+        query_params: { siteId, bounceThreshold: await siteConfig.getBounceThreshold(siteId) },
       });
 
       const data = await processResults<OverviewData>(result);

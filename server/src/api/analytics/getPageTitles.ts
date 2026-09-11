@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { siteConfig } from "../../lib/siteConfig.js";
 import { getTimeStatement } from "./utils/timeWindow.js";
 import { FilterParams } from "@hygo/shared";
 import {
@@ -54,15 +55,16 @@ export const buildPageTitlesQuery = (
   // We also need a representative pathname and calculate average time on page.
   // Using argMax to get the pathname from the most recent event for that title in a session.
   const baseCteQuery = `
-    SessionPageCounts AS (
+    SessionDurations AS (
+        -- A bounce is a session shorter than the Site's bounce threshold; every event
+        -- counts toward the length, heartbeats included
         SELECT
             session_id,
-            COUNT() as pageviews_in_session
+            dateDiff('second', min(timestamp), max(timestamp)) as session_duration
         FROM events
         ${sessionJoin}
         WHERE
             site_id = {siteId:Int32}
-            AND type = 'pageview'
             ${timeStatement}
         GROUP BY session_id
     ),
@@ -88,9 +90,9 @@ export const buildPageTitlesQuery = (
             e.timestamp as timestamp,
             e.next_timestamp as next_timestamp,
             if(isNull(e.next_timestamp), 0, dateDiff('second', e.timestamp, e.next_timestamp)) as time_diff_seconds,
-            spc.pageviews_in_session as pageviews_in_session
+            sd.session_duration as session_duration
         FROM EventTimes e
-        LEFT JOIN SessionPageCounts spc ON e.session_id = spc.session_id
+        LEFT JOIN SessionDurations sd ON e.session_id = sd.session_id
     ),
     PageTitleStats AS (
         SELECT
@@ -100,7 +102,7 @@ export const buildPageTitlesQuery = (
             argMax(pd.pathname, pd.timestamp) as pathname,
             count(DISTINCT session_id) as unique_sessions,
             count() as pageviews,
-            countIf(DISTINCT session_id, pageviews_in_session = 1) as bounced_sessions,
+            countIf(DISTINCT session_id, session_duration < {bounceThreshold:UInt32}) as bounced_sessions,
             avg(if(time_diff_seconds < 0, 0, if(time_diff_seconds > 1800, 1800, time_diff_seconds))) as avg_time_on_page_seconds
         FROM PageDurations pd
         GROUP BY pd.page_title, untitled_pathname
@@ -141,7 +143,7 @@ export const getPageTitles = analyticsRoute<GetPageTitlesRequest>(
   "page titles",
   async (req: FastifyRequest<GetPageTitlesRequest>, res: FastifyReply) => {
     const siteId = Number(req.params.siteId);
-    const params = { siteId };
+    const params = { siteId, bounceThreshold: await siteConfig.getBounceThreshold(siteId) };
     const dataSpec = { query: buildPageTitlesQuery(req.query, siteId, false), params };
 
     if (req.query.page !== undefined) {

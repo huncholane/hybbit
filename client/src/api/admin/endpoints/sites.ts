@@ -30,6 +30,7 @@ export type SiteResponse = {
   trackFormInteractions?: boolean;
   trackHeartbeat?: boolean;
   heartbeatInterval?: number;
+  bounceThreshold?: number;
   tags?: string[];
 };
 
@@ -171,6 +172,7 @@ export function updateSiteConfig(
     trackFormInteractions?: boolean;
     trackHeartbeat?: boolean;
     heartbeatInterval?: number;
+    bounceThreshold?: number;
     tags?: string[];
   }
 ) {

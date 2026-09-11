@@ -93,11 +93,13 @@ describe("site metrics", () => {
       expect(buildOverviewQuery(pdfSpec)).not.toMatch(/anyLast\(user_id\)\) AS user_id/);
     });
 
-    it("reports bounce rate as a percentage of the session's full pageview count", () => {
+    it("counts sessions shorter than the site's bounce threshold as bounces", () => {
       const filters = JSON.stringify([{ parameter: "browser", type: "equals", value: ["Chrome"] }]);
       const sql = buildOverviewQuery(buildMetricsSpecForWindow(filters, SITE_ID, ""));
 
-      expect(sql).toContain("sumIf(1, f.pageviews = 1) / COUNT() * 100 AS bounce_rate");
+      expect(sql).toContain(
+        "sumIf(1, dateDiff('second', f.start_time, f.end_time) < {bounceThreshold:UInt32}) / COUNT() * 100 AS bounce_rate"
+      );
       expect(sql).toContain("INNER JOIN FilteredSessions USING (session_id)");
     });
 

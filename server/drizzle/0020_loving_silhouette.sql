@@ -1,0 +1,1 @@
+ALTER TABLE "sites" ADD COLUMN "bounce_threshold" integer DEFAULT 10;

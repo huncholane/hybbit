@@ -1,5 +1,6 @@
 import { FilterParams } from "@hygo/shared";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { siteConfig } from "../../lib/siteConfig.js";
 import { resolveTimeWindow } from "./utils/timeWindow.js";
 import { TimeBucket } from "./types.js";
 import { analyticsRoute, runAnalyticsQuery } from "./utils/analyticsQuery.js";
@@ -45,7 +46,8 @@ FROM
          ${window.bucketed("start_time", bucket)} AS time,
         COUNT() AS sessions,
         AVG(total_pageviews_in_session) AS pages_per_session,
-        sumIf(1, total_pageviews_in_session = 1) / COUNT() AS bounce_rate,
+        -- Shorter than the Site's threshold (first to last event, heartbeats included)
+        sumIf(1, dateDiff('second', start_time, end_time) < {bounceThreshold:UInt32}) / COUNT() AS bounce_rate,
         AVG(end_time - start_time) AS session_duration
     FROM SessionsWithStats
     GROUP BY time ORDER BY time ${fillClause}
@@ -109,7 +111,7 @@ export const getOverviewBucketed = analyticsRoute<GetOverviewBucketedRequest>(
         },
         Number(site)
       ),
-      params: { siteId: Number(site) },
+      params: { siteId: Number(site), bounceThreshold: await siteConfig.getBounceThreshold(Number(site)) },
     });
 
     return res.send({ data });

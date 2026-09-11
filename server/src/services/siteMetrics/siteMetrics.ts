@@ -79,11 +79,13 @@ export function buildMetricsSpec(params: FilterParams, siteId: number): SiteMetr
 
 /**
  * Sessions, pageviews, users, pages per session, bounce rate and session duration
- * for one window. Binds `{siteId:Int32}`.
+ * for one window. Binds `{siteId:Int32}` and `{bounceThreshold:UInt32}`: a session
+ * shorter than that many seconds (first to last event, heartbeats included) is a
+ * bounce, whatever its page count.
  *
- * Filters qualify session IDs first: a session that landed on three pages is not
- * a bounce, and does not lose duration or pageviews, because its acquisition
- * filter happened to match only the landing event.
+ * Filters qualify session IDs first: a session keeps its full duration and
+ * pageviews, so it does not turn into a bounce because its acquisition filter
+ * happened to match only the landing event.
  */
 export function buildOverviewQuery(spec: SiteMetricsSpec): string {
   const { timeStatement, filteredSessionsCTE } = spec;
@@ -111,7 +113,7 @@ export function buildOverviewQuery(spec: SiteMetricsSpec): string {
     SELECT
         COUNT() AS sessions,
         AVG(f.pageviews) AS pages_per_session,
-        sumIf(1, f.pageviews = 1) / COUNT() * 100 AS bounce_rate,
+        sumIf(1, dateDiff('second', f.start_time, f.end_time) < {bounceThreshold:UInt32}) / COUNT() * 100 AS bounce_rate,
         AVG(f.end_time - f.start_time) AS session_duration,
         SUM(f.pageviews) AS pageviews,
         COUNT(DISTINCT f.effective_user_id) AS users

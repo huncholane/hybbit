@@ -1860,5 +1860,11 @@
   "DsGdZP": "Organization IP exclusions",
   "r8AYOi": "Also exclude the IPs set for your whole organization. Edit the list in",
   "8Jjasl": "Organization settings",
-  "p1Z2Ux": "Your organization has no IP exclusions yet."
+  "p1Z2Ux": "Your organization has no IP exclusions yet.",
+  "kf2sxw": "Bounce threshold",
+  "N7eMMS": "Visits shorter than this count as bounces",
+  "cCgR8f": "Visits shorter than this count as bounces. Turn on Heartbeat so time on the last page counts",
+  "fqB0xk": "Bounce threshold in seconds",
+  "r9BKST": "Bounce threshold set to {seconds} seconds",
+  "4OJFIi": "Failed to update bounce threshold"
 }

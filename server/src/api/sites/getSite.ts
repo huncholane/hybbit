@@ -56,6 +56,7 @@ export async function getSite(request: FastifyRequest<GetSiteParams>, reply: Fas
       trackFormInteractions: site.trackFormInteractions,
       trackHeartbeat: site.trackHeartbeat,
       heartbeatInterval: site.heartbeatInterval,
+      bounceThreshold: site.bounceThreshold,
     });
   } catch (error) {
     request.log.error({ err: error }, "Error retrieving site");

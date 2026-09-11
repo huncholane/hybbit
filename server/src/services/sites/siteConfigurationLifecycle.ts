@@ -69,6 +69,7 @@ export type UpdateSiteConfigurationInput = {
   trackFormInteractions?: boolean;
   trackHeartbeat?: boolean;
   heartbeatInterval?: number;
+  bounceThreshold?: number;
 };
 
 export type SiteLifecycleErrorCode =
@@ -135,6 +136,7 @@ const DIRECT_UPDATE_FIELDS = [
   "trackFormInteractions",
   "trackHeartbeat",
   "heartbeatInterval",
+  "bounceThreshold",
 ] as const satisfies ReadonlyArray<keyof UpdateSiteConfigurationInput>;
 
 function normalizeSiteType(type: SiteType | null | undefined): SiteType {

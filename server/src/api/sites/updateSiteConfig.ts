@@ -67,6 +67,8 @@ const updateSiteConfigSchema = z.object({
   // Seconds between heartbeats. Capped at 5 minutes so an active visitor never
   // drops out of the 5-minute "online" window between pings
   heartbeatInterval: z.number().int().min(5).max(300).optional(),
+  // Sessions shorter than this many seconds count as bounces
+  bounceThreshold: z.number().int().min(1).max(600).optional(),
 });
 
 type UpdateSiteConfigRequest = z.infer<typeof updateSiteConfigSchema>;

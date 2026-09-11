@@ -1,5 +1,6 @@
 import { FilterParams } from "@hygo/shared";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { siteConfig } from "../../lib/siteConfig.js";
 import {
   buildMetricsSpec,
   buildOverviewQuery as buildOverviewMetricsQuery,
@@ -28,7 +29,7 @@ export const getOverview = analyticsRoute<OverviewRequest>(
 
     const data = await runAnalyticsQuery<OverviewRow>({
       query: buildOverviewQuery(req.query, siteId),
-      params: { siteId },
+      params: { siteId, bounceThreshold: await siteConfig.getBounceThreshold(siteId) },
     });
 
     return res.send({ data: data[0] });

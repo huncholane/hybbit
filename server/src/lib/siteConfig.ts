@@ -3,6 +3,9 @@ import { db } from "../db/postgres/postgres.js";
 import { organization, sites } from "../db/postgres/schema.js";
 import { logger } from "./logger/logger.js";
 
+/** Sessions shorter than this many seconds count as bounces unless a Site sets its own threshold */
+export const DEFAULT_BOUNCE_THRESHOLD_SECONDS = 10;
+
 // Site configuration interface
 export interface SiteConfigData {
   id: string | null;
@@ -39,6 +42,7 @@ export interface SiteConfigData {
   trackFormInteractions: boolean;
   trackHeartbeat: boolean;
   heartbeatInterval: number;
+  bounceThreshold: number; // Seconds; shorter sessions count as bounces
   tags: string[];
 }
 
@@ -144,6 +148,7 @@ class SiteConfig {
       trackFormInteractions: site.trackFormInteractions || false,
       trackHeartbeat: site.trackHeartbeat || false,
       heartbeatInterval: site.heartbeatInterval ?? 15,
+      bounceThreshold: site.bounceThreshold ?? DEFAULT_BOUNCE_THRESHOLD_SECONDS,
       tags: Array.isArray(site.tags) ? site.tags : [],
     };
   }
@@ -272,6 +277,16 @@ class SiteConfig {
   async resolveSiteId(siteIdOrId?: string | number): Promise<number | null> {
     const config = await this.getConfig(siteIdOrId);
     return config?.siteId ?? null;
+  }
+
+  /**
+   * Seconds under which a session counts as a bounce, bound into every bounce
+   * rate query as `{bounceThreshold:UInt32}`. Falls back to the default when the
+   * Site can't be read, so a Postgres blip never fails an analytics query.
+   */
+  async getBounceThreshold(siteIdOrId?: string | number): Promise<number> {
+    const config = await this.getConfig(siteIdOrId);
+    return config?.bounceThreshold ?? DEFAULT_BOUNCE_THRESHOLD_SECONDS;
   }
 
   /**

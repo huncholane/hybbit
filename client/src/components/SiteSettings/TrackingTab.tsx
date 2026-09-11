@@ -5,7 +5,6 @@ import { useExtracted } from "next-intl";
 import { useState, useCallback, ReactNode } from "react";
 import { toast } from "@/components/ui/sonner";
 
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
 import { updateSiteConfig, SiteResponse } from "@/api/admin/endpoints";
@@ -15,6 +14,7 @@ import { useStripeSubscription } from "@/lib/subscription/useStripeSubscription"
 import { Badge } from "@/components/ui/badge";
 import { IS_CLOUD } from "@/lib/const";
 
+import { SecondsSettingInput } from "./SecondsSettingInput";
 import { SettingRow, SettingsSection, SettingsSections } from "./SettingsSection";
 
 interface TrackingTabProps {
@@ -36,9 +36,11 @@ interface ToggleConfig {
   badge?: ReactNode;
 }
 
-// Same bounds the server enforces on heartbeatInterval
+// Same bounds the server enforces on heartbeatInterval and bounceThreshold
 const HEARTBEAT_MIN_SECONDS = 5;
 const HEARTBEAT_MAX_SECONDS = 300;
+const BOUNCE_MIN_SECONDS = 1;
+const BOUNCE_MAX_SECONDS = 600;
 
 export function TrackingTab({
   siteMetadata,
@@ -105,29 +107,26 @@ export function TrackingTab({
     [siteMetadata.siteId, refreshSiteQueries]
   );
 
-  const [heartbeatInterval, setHeartbeatInterval] = useState(siteMetadata.heartbeatInterval ?? 15);
-  const [heartbeatIntervalDraft, setHeartbeatIntervalDraft] = useState(String(siteMetadata.heartbeatInterval ?? 15));
+  const [secondsSettings, setSecondsSettings] = useState({
+    heartbeatInterval: siteMetadata.heartbeatInterval ?? 15,
+    bounceThreshold: siteMetadata.bounceThreshold ?? 10,
+  });
 
-  const saveHeartbeatInterval = async () => {
-    const parsed = heartbeatIntervalDraft.trim() === "" ? NaN : Math.round(Number(heartbeatIntervalDraft));
-    const next = Number.isFinite(parsed)
-      ? Math.min(HEARTBEAT_MAX_SECONDS, Math.max(HEARTBEAT_MIN_SECONDS, parsed))
-      : heartbeatInterval;
-    setHeartbeatIntervalDraft(String(next));
-    if (next === heartbeatInterval) return;
-
-    setLoadingStates(prev => ({ ...prev, heartbeatInterval: true }));
+  // Rethrows so the input can put the last saved value back
+  const saveSecondsSetting = async (
+    key: keyof typeof secondsSettings,
+    seconds: number,
+    messages: { success: string; failure: string }
+  ) => {
     try {
-      await updateSiteConfig(siteMetadata.siteId, { heartbeatInterval: next });
-      setHeartbeatInterval(next);
-      toast.success(t("Heartbeat interval set to {seconds} seconds", { seconds: String(next) }));
+      await updateSiteConfig(siteMetadata.siteId, { [key]: seconds });
+      setSecondsSettings(prev => ({ ...prev, [key]: seconds }));
+      toast.success(messages.success);
       refreshSiteQueries();
     } catch (error) {
-      console.error("Error updating heartbeatInterval:", error);
-      toast.error(t("Failed to update heartbeat interval"));
-      setHeartbeatIntervalDraft(String(heartbeatInterval));
-    } finally {
-      setLoadingStates(prev => ({ ...prev, heartbeatInterval: false }));
+      console.error(`Error updating ${key}:`, error);
+      toast.error(messages.failure);
+      throw error;
     }
   };
 
@@ -318,23 +317,20 @@ export function TrackingTab({
         "Measure time on site while the page is visible and in use. Pauses in background tabs and when the visitor is idle"
       )}
     >
-      <Input
+      <SecondsSettingInput
         id="heartbeatInterval"
-        type="number"
-        inputMode="numeric"
+        value={secondsSettings.heartbeatInterval}
         min={HEARTBEAT_MIN_SECONDS}
         max={HEARTBEAT_MAX_SECONDS}
-        value={heartbeatIntervalDraft}
-        onChange={e => setHeartbeatIntervalDraft(e.target.value)}
-        onBlur={saveHeartbeatInterval}
-        onKeyDown={e => {
-          if (e.key === "Enter") e.currentTarget.blur();
-        }}
-        disabled={!toggleStates.trackHeartbeat || loadingStates.heartbeatInterval || disabled}
-        aria-label={t("Heartbeat interval in seconds")}
-        className="w-20"
+        disabled={!toggleStates.trackHeartbeat || disabled}
+        ariaLabel={t("Heartbeat interval in seconds")}
+        onSave={seconds =>
+          saveSecondsSetting("heartbeatInterval", seconds, {
+            success: t("Heartbeat interval set to {seconds} seconds", { seconds: String(seconds) }),
+            failure: t("Failed to update heartbeat interval"),
+          })
+        }
       />
-      <span className="text-xs text-muted-foreground">{t("seconds")}</span>
       <Switch
         id="trackHeartbeat"
         checked={toggleStates.trackHeartbeat}
@@ -349,9 +345,43 @@ export function TrackingTab({
     </SettingRow>
   );
 
+  const bounceRow = (
+    <SettingRow
+      label={t("Bounce threshold")}
+      htmlFor="bounceThreshold"
+      description={
+        isMobileSite
+          ? t("Visits shorter than this count as bounces")
+          : t("Visits shorter than this count as bounces. Turn on Heartbeat so time on the last page counts")
+      }
+    >
+      <SecondsSettingInput
+        id="bounceThreshold"
+        value={secondsSettings.bounceThreshold}
+        min={BOUNCE_MIN_SECONDS}
+        max={BOUNCE_MAX_SECONDS}
+        disabled={disabled}
+        ariaLabel={t("Bounce threshold in seconds")}
+        onSave={seconds =>
+          saveSecondsSetting("bounceThreshold", seconds, {
+            success: t("Bounce threshold set to {seconds} seconds", { seconds: String(seconds) }),
+            failure: t("Failed to update bounce threshold"),
+          })
+        }
+      />
+    </SettingRow>
+  );
+
   return (
     <SettingsSections>
-      {renderToggleSection(analyticsToggles, t("Analytics Features"), heartbeatRow)}
+      {renderToggleSection(
+        analyticsToggles,
+        t("Analytics Features"),
+        <>
+          {heartbeatRow}
+          {bounceRow}
+        </>
+      )}
       {renderToggleSection(autoCaptureToggles, t("Auto Capture"))}
     </SettingsSections>
   );

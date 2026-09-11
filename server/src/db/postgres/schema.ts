@@ -105,6 +105,8 @@ export const sites = pgTable(
     // the page is visible and in use, so session time covers the last page too
     trackHeartbeat: boolean("track_heartbeat").default(false),
     heartbeatInterval: integer("heartbeat_interval").default(15),
+    // Sessions shorter than this many seconds count as bounces, whatever their page count
+    bounceThreshold: integer("bounce_threshold").default(10),
     apiKey: text("api_key"), // Format: rb_{64_hex_chars} = 67 chars total
     privateLinkKey: text("private_link_key"),
     tags: jsonb("tags").default([]).$type<string[]>(),

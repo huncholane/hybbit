@@ -73,10 +73,10 @@ describe("buildMetricQuery", () => {
   });
 
   describe("page_title", () => {
-    it("computes bounce rate from single-pageview sessions", () => {
+    it("computes bounce rate from sessions shorter than the site's threshold", () => {
       const sql = buildMetricQuery(baseQuery({ parameter: "page_title" }), SITE_ID);
-      expect(sql).toContain("SessionPageCounts");
-      expect(sql).toContain("pageviews_in_session = 1");
+      expect(sql).toContain("SessionDurations");
+      expect(sql).toContain("session_duration < {bounceThreshold:UInt32}");
       expect(sql).toContain("as bounce_rate");
     });
 
