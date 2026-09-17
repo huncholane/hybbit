@@ -12,6 +12,7 @@ use crate::{
 
 mod health;
 mod misc;
+mod tracking_config;
 
 /// Every route this service answers. Paths match the Node backend exactly, because
 /// Caddy switches them over to this service one area at a time.
@@ -25,6 +26,7 @@ pub fn router(state: AppState) -> Router {
         .route("/api/script.js", get(static_files::script_js))
         .route("/api/replay.js", get(static_files::replay_js))
         .route("/api/metrics.js", get(static_files::metrics_js))
+        .route("/api/site/tracking-config/{siteId}", get(tracking_config::tracking_config))
         .fallback(static_files::fallback)
         .method_not_allowed_fallback(errors::not_found)
         // Innermost first: CORS runs before handlers, errors are rewritten after

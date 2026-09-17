@@ -1,0 +1,359 @@
+[
+  {
+    "name": "site 1 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/1"
+  },
+  {
+    "name": "site 1 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/7c2ff798dacb"
+  },
+  {
+    "name": "site 2 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/2"
+  },
+  {
+    "name": "site 2 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/1a0c24753dda"
+  },
+  {
+    "name": "site 3 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/3"
+  },
+  {
+    "name": "site 3 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/948950eca4d1"
+  },
+  {
+    "name": "site 4 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/4"
+  },
+  {
+    "name": "site 4 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/461d87888934"
+  },
+  {
+    "name": "site 5 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/5"
+  },
+  {
+    "name": "site 5 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/4429428dd1a1"
+  },
+  {
+    "name": "site 6 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/6"
+  },
+  {
+    "name": "site 6 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/01555dc6cc96"
+  },
+  {
+    "name": "site 7 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/7"
+  },
+  {
+    "name": "site 7 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/436411d4cae7"
+  },
+  {
+    "name": "site 8 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/8"
+  },
+  {
+    "name": "site 8 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/282c3df962e0"
+  },
+  {
+    "name": "site 9 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/9"
+  },
+  {
+    "name": "site 9 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/067dec84f894"
+  },
+  {
+    "name": "site 10 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/10"
+  },
+  {
+    "name": "site 10 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/bc4085dd0352"
+  },
+  {
+    "name": "site 11 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/11"
+  },
+  {
+    "name": "site 11 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/8b6c9b938ac4"
+  },
+  {
+    "name": "site 12 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/12"
+  },
+  {
+    "name": "site 12 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/045d48f40e0b"
+  },
+  {
+    "name": "site 13 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/13"
+  },
+  {
+    "name": "site 13 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/14d70ce8bbc2"
+  },
+  {
+    "name": "site 14 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/14"
+  },
+  {
+    "name": "site 14 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/beec0df23b08"
+  },
+  {
+    "name": "site 16 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/16"
+  },
+  {
+    "name": "site 16 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/a00ca9317424"
+  },
+  {
+    "name": "site 17 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/17"
+  },
+  {
+    "name": "site 17 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/ddc2bcc3edc2"
+  },
+  {
+    "name": "site 18 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/18"
+  },
+  {
+    "name": "site 18 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/6cd259637efc"
+  },
+  {
+    "name": "site 19 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/19"
+  },
+  {
+    "name": "site 19 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/f48b2b584800"
+  },
+  {
+    "name": "site 29 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/29"
+  },
+  {
+    "name": "site 29 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/81f1c8eaf78d"
+  },
+  {
+    "name": "site 31 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/31"
+  },
+  {
+    "name": "site 31 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/47753c78412c"
+  },
+  {
+    "name": "site 32 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/32"
+  },
+  {
+    "name": "site 32 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/5ec58db5363d"
+  },
+  {
+    "name": "site 33 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/33"
+  },
+  {
+    "name": "site 33 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/9d09d101f361"
+  },
+  {
+    "name": "site 34 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/34"
+  },
+  {
+    "name": "site 34 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/122ca785363d"
+  },
+  {
+    "name": "site 35 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/35"
+  },
+  {
+    "name": "site 35 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/7183a1b0ffea"
+  },
+  {
+    "name": "site 36 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/36"
+  },
+  {
+    "name": "site 36 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/c9c57fa39b8c"
+  },
+  {
+    "name": "site 37 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/37"
+  },
+  {
+    "name": "site 37 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/24b757f76abe"
+  },
+  {
+    "name": "site 38 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/38"
+  },
+  {
+    "name": "site 38 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/a4625513572c"
+  },
+  {
+    "name": "site 39 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/39"
+  },
+  {
+    "name": "site 39 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/a50bd8fd7006"
+  },
+  {
+    "name": "site 43 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/43"
+  },
+  {
+    "name": "site 43 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/72bc92cd5dc8"
+  },
+  {
+    "name": "site 44 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/44"
+  },
+  {
+    "name": "site 44 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/dcabb361f9da"
+  },
+  {
+    "name": "site 45 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/45"
+  },
+  {
+    "name": "site 45 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/49fb48ba6e49"
+  },
+  {
+    "name": "site 46 (web) by number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/46"
+  },
+  {
+    "name": "site 46 by text id",
+    "method": "GET",
+    "path": "/api/site/tracking-config/31044185da33"
+  },
+  {
+    "name": "site 1 zero-padded",
+    "method": "GET",
+    "path": "/api/site/tracking-config/0001"
+  },
+  {
+    "name": "unknown numeric site",
+    "method": "GET",
+    "path": "/api/site/tracking-config/99999"
+  },
+  {
+    "name": "unknown text site",
+    "method": "GET",
+    "path": "/api/site/tracking-config/zzzzzzzzzzzz"
+  },
+  {
+    "name": "huge number",
+    "method": "GET",
+    "path": "/api/site/tracking-config/99999999999999999999999"
+  },
+  {
+    "name": "from a customer site",
+    "method": "GET",
+    "path": "/api/site/tracking-config/1",
+    "headers": {
+      "Origin": "https://spiritfacts.com"
+    }
+  },
+  {
+    "name": "preflight from a customer site",
+    "method": "OPTIONS",
+    "path": "/api/site/tracking-config/1",
+    "headers": {
+      "Origin": "https://spiritfacts.com",
+      "Access-Control-Request-Method": "GET"
+    }
+  }
+]

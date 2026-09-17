@@ -6,7 +6,7 @@ use sqlx::PgPool;
 use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
 use tracing::info;
 
-use crate::{clickhouse::ClickHouse, config::Config};
+use crate::{clickhouse::ClickHouse, config::Config, site_config::SiteConfigCache};
 
 /// Shared handles to the configuration and data stores, cloned into every handler.
 #[derive(Clone)]
@@ -15,6 +15,7 @@ pub struct AppState {
     pub pg: PgPool,
     pub clickhouse: ClickHouse,
     pub redis: redis::aio::ConnectionManager,
+    pub site_config: Arc<SiteConfigCache>,
 }
 
 impl AppState {
@@ -57,6 +58,8 @@ impl AppState {
             .context("connecting to Redis")?;
         info!(host = %config.redis.host, "Redis connected");
 
-        Ok(Self { config: Arc::new(config), pg, clickhouse, redis })
+        let site_config = Arc::new(SiteConfigCache::new(pg.clone()));
+
+        Ok(Self { config: Arc::new(config), pg, clickhouse, redis, site_config })
     }
 }
