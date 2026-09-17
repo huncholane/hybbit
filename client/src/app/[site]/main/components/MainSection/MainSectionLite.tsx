@@ -1,21 +1,16 @@
 "use client";
 import { Card, CardContent, CardLoader } from "@/components/ui/card";
 import { useExtracted } from "next-intl";
-import Link from "next/link";
 import { useGetOverviewBucketed } from "../../../../../api/analytics/hooks/useGetOverviewBucketed";
 import { BucketSelection } from "../../../../../components/BucketSelection";
-import { HygoTextLogo } from "../../../../../components/HygoLogo";
-import { useWhiteLabel } from "../../../../../hooks/useIsWhiteLabel";
-import { authClient } from "../../../../../lib/auth";
 import { useStore } from "../../../../../lib/store";
 import { Chart } from "./Chart";
 import { OverviewLite } from "./OverviewLite";
+import { SiteChartTitle } from "./SiteChartTitle";
 
 // Lite variant of MainSection: drops the 2 previous-period queries and reads
 // MV-backed endpoints. Halves the query count for the top of the dashboard.
 export function MainSectionLite() {
-  const { isWhiteLabel } = useWhiteLabel();
-  const session = authClient.useSession();
   const t = useExtracted();
 
   const { selectedStat, site, bucket } = useStore();
@@ -47,15 +42,13 @@ export function MainSectionLite() {
         {isFetching && <CardLoader />}
         <CardContent className="p-2 md:p-4 py-3 w-full">
           <div className="flex items-center justify-between px-2 md:px-0">
-            <div className="flex items-center space-x-4">
-              {!isWhiteLabel && (
-                <Link href={session.data ? "/" : "https://hygo.ai"} className="opacity-75">
-                  <HygoTextLogo width={80} height={0} />
-                </Link>
-              )}
+            <div className="flex min-w-0 flex-1 items-center">
+              <SiteChartTitle />
             </div>
-            <span className="text-sm text-neutral-700 dark:text-neutral-200">{getSelectedStatLabel()}</span>
-            <BucketSelection />
+            <span className="shrink-0 px-2 text-sm text-neutral-700 dark:text-neutral-200">{getSelectedStatLabel()}</span>
+            <div className="flex flex-1 items-center justify-end">
+              <BucketSelection />
+            </div>
           </div>
           <div className="h-[200px] md:h-[290px] relative">
             <Chart data={data} max={max} previousData={undefined} chartXMax={undefined} />

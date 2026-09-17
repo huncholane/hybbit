@@ -4,21 +4,18 @@ import { DateTime } from "luxon";
 import { Tilt_Warp } from "next/font/google";
 import { MessageSquarePlus } from "lucide-react";
 import { useExtracted } from "next-intl";
-import Link from "next/link";
 import { useState } from "react";
 import { useGetAnnotations } from "@/api/analytics/hooks/useAnnotations";
 import { Button } from "@/components/ui/button";
 import { useGetOverview } from "../../../../../api/analytics/hooks/useGetOverview";
 import { useGetOverviewBucketed } from "../../../../../api/analytics/hooks/useGetOverviewBucketed";
 import { BucketSelection } from "../../../../../components/BucketSelection";
-import { HygoTextLogo } from "../../../../../components/HygoLogo";
-import { useWhiteLabel } from "../../../../../hooks/useIsWhiteLabel";
-import { authClient } from "../../../../../lib/auth";
 import { getTimezone, useStore } from "../../../../../lib/store";
 import { AnnotationFormDialog, type AnnotationEditorState } from "./annotations/AnnotationFormDialog";
 import { useAnnotationPermissions } from "./annotations/useAnnotationPermissions";
 import { Chart } from "./Chart";
 import { Overview } from "./Overview";
+import { SiteChartTitle } from "./SiteChartTitle";
 
 // Moved inside component to use static t() calls
 
@@ -28,8 +25,6 @@ const tilt_wrap = Tilt_Warp({
 });
 
 export function MainSection() {
-  const { isWhiteLabel } = useWhiteLabel();
-  const session = authClient.useSession();
   const t = useExtracted();
 
   const { selectedStat, time, site, bucket } = useStore();
@@ -109,18 +104,11 @@ export function MainSection() {
         {(isFetching || isPreviousFetching) && <CardLoader />}
         <CardContent className="p-2 md:p-4 py-3 w-full">
           <div className="flex items-center justify-between px-2 md:px-0">
-            <div className="flex items-center space-x-4">
-              {!isWhiteLabel && (
-                <Link
-                  href={session.data ? "/" : "https://hygo.ai"}
-                  className="opacity-75"
-                >
-                  <HygoTextLogo width={80} />
-                </Link>
-              )}
+            <div className="flex min-w-0 flex-1 items-center">
+              <SiteChartTitle />
             </div>
-            <span className="text-sm text-neutral-700 dark:text-neutral-200">{getSelectedStatLabel()}</span>
-            <div className="flex items-center gap-2">
+            <span className="shrink-0 px-2 text-sm text-neutral-700 dark:text-neutral-200">{getSelectedStatLabel()}</span>
+            <div className="flex flex-1 items-center justify-end gap-2">
               {canAnnotate && (
                 <Button variant="outline" size="sm" onClick={() => setAnnotationEditor({ mode: "create" })}>
                   <MessageSquarePlus />
