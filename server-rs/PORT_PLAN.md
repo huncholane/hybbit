@@ -51,7 +51,7 @@ From the inventory of `server/src/index.ts`, `cluster.ts`, `lib/cors.ts`, `lib/a
 
 | # | Phase | Contents | Status |
 |---|---|---|---|
-| 0 | Foundation | Skeleton, config, store connections, JSON logs, health. HTTP layer: error rewriting, 404, CORS, write-origin check, request logging, auto-HEAD, JSON shaping, static and script routes, `/api/config`, `/api/version`. Dockerfile, compose service, Caddy matcher. | code done, 21/21 parity cases match (`parity/cases/phase0.json`); deploy pending |
+| 0 | Foundation | Skeleton, config, store connections, JSON logs, health. HTTP layer: error rewriting, 404, CORS, write-origin check, request logging, auto-HEAD, JSON shaping, static and script routes, `/api/config`, `/api/version`. Dockerfile, compose service, Caddy matcher. | live 2026-09-17: `backend-rs` container, Caddy `@rust` matcher; 21/21 parity cases, 8/8 live responses unchanged |
 | 1 | Tracking | tracking-config, track, identify, session replay record, flag evaluate; payload validation, client IP, exclusions, usage gate, bot detection (header/UA heuristics, client score, datacenter ASN, anomaly scorer, site baseline, stats), user id (daily salt, identity IP bucket, sticky identity), sessions, pageview/bot/observation queues with GeoIP enrichment, identity backfill queue | not started |
 | 2 | Auth | `/api/auth/*` (email+password, email OTP, sessions, organizations, teams, invitations, API keys, admin, MCP OAuth), guards, scopes, private links, public sites, rate limiting | not started |
 | 3 | Analytics reads | overview, metric, page titles, time series, lite, retention, journeys, bots, errors, performance, sessions, events, users and traits, funnels, goals, annotations, dashboards and run-card, segments, custom SQL and generate, flags and experiments CRUD/results, replay reads | not started |
@@ -78,9 +78,9 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
 | GET | /api/health | none | index.ts (text `OK`) | node |
-| GET | /api/config | none | api/getConfig.ts | node |
-| GET | /api/version | none | api/getConfig.ts | node |
-| GET | /api/script.js, /api/replay.js, /api/metrics.js | none | index.ts sendFile | node |
+| GET | /api/config | none | api/getConfig.ts | rust |
+| GET | /api/version | none | api/getConfig.ts | rust |
+| GET | /api/script.js, /api/replay.js, /api/metrics.js | none | index.ts sendFile | rust |
 | GET/HEAD | /* (public/: script.js, script-full.js, rrweb.min.js, web-vitals.iife.js) | none | @fastify/static | node |
 | GET | /api/site/check-install | HMAC + 5/min per IP | api/sites/checkInstall.ts | node |
 | GET | /api/user/unsubscribe-marketing-oneclick | HMAC | api/user/unsubscribeMarketing.ts | node |
