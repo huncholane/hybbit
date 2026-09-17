@@ -14,6 +14,8 @@
 //!
 //! Handlers read their parameters from the raw path with find-my-way's decoding
 //! and 404 past `maxParamLength` (see `request`).
+// Early replies travel as `Err(Response)`, the shape `analytics::chain` hands back
+#![allow(clippy::result_large_err)]
 
 use axum::{
     Router,
@@ -68,9 +70,10 @@ fn complete(handlers: MethodRouter<AppState>, registered: &[&str]) -> MethodRout
         ("TRACE", MethodFilter::TRACE),
         ("CONNECT", MethodFilter::CONNECT),
     ];
-    let has_get = registered.contains(&"GET");
+    // HEAD is answered by the GET handler wherever one is registered
+    let answered = |name: &str| registered.contains(&name) || (name == "HEAD" && registered.contains(&"GET"));
     all.into_iter()
-        .filter(|(name, _)| !registered.contains(name) && !(*name == "HEAD" && has_get))
+        .filter(|(name, _)| !answered(name))
         .fold(handlers, |handlers, (_, filter)| handlers.on(filter, request::unregistered_method))
 }
 
