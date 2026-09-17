@@ -111,18 +111,18 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | …/page-titles | | getPageTitles.ts | rust |
 | GET | …/retention | | getRetention.ts | rust |
 | GET | …/journeys | | getJourneys.ts | rust |
-| GET | …/bots/overview | | bots/getBotOverview.ts | node |
-| GET | …/bots/time-series | | bots/getBotTimeSeries.ts | node |
-| GET | …/bots/by-dimension | | bots/getBotDimension.ts | node |
-| GET | …/bots/ai-summary | | bots/getBotAiSummary.ts | node |
+| GET | …/bots/overview | | bots/getBotOverview.ts | rust |
+| GET | …/bots/time-series | | bots/getBotTimeSeries.ts | rust |
+| GET | …/bots/by-dimension | | bots/getBotDimension.ts | rust |
+| GET | …/bots/ai-summary | | bots/getBotAiSummary.ts | rust |
 | GET | …/export/pdf | authAnalyticsRead | generatePdfReport.ts | node |
 | GET | /api/org-event-count/:organizationId | orgAnalyticsRead | getOrgEventCount.ts | rust |
 | GET | …/errors/names | | getErrorNames.ts | rust |
 | GET | …/errors/events | | getErrorEvents.ts | rust |
 | GET | …/errors/time-series | | getErrorBucketed.ts | rust |
-| GET | …/performance/overview | | performance/getPerformanceOverview.ts | node |
-| GET | …/performance/time-series | | performance/getPerformanceTimeSeries.ts | node |
-| GET | …/performance/by-dimension | | performance/getPerformanceByDimension.ts | node |
+| GET | …/performance/overview | | performance/getPerformanceOverview.ts | rust |
+| GET | …/performance/time-series | | performance/getPerformanceTimeSeries.ts | rust |
+| GET | …/performance/by-dimension | | performance/getPerformanceByDimension.ts | rust |
 
 ### Sessions and events (`api/analytics/`)
 
@@ -158,17 +158,17 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/funnels | publicFunnelsRead | funnels/getFunnels.ts | node |
-| POST | …/funnels/analyze | publicFunnelsRead | funnels/getFunnel.ts | node |
-| POST | …/funnels/:stepNumber/sessions | publicFunnelsRead | funnels/getFunnelStepSessions.ts | node |
-| POST | …/funnels | authFunnelsWrite | funnels/createFunnel.ts | node |
-| DELETE | …/funnels/:funnelId | authFunnelsWrite | funnels/deleteFunnel.ts | node |
-| GET | …/goals | publicGoalsRead | goals/getGoals.ts | node |
-| GET | …/goals/time-series | publicGoalsRead | goals/getGoalTimeSeries.ts | node |
-| GET | …/goals/:goalId/sessions | publicGoalsRead | goals/getGoalSessions.ts | node |
-| POST | …/goals | authGoalsWrite | goals/createGoal.ts | node |
-| DELETE | …/goals/:goalId | authGoalsWrite | goals/deleteGoal.ts | node |
-| PUT | …/goals/:goalId | authGoalsWrite | goals/updateGoal.ts | node |
+| GET | …/funnels | publicFunnelsRead | funnels/getFunnels.ts | rust |
+| POST | …/funnels/analyze | publicFunnelsRead | funnels/getFunnel.ts | rust |
+| POST | …/funnels/:stepNumber/sessions | publicFunnelsRead | funnels/getFunnelStepSessions.ts | rust |
+| POST | …/funnels | authFunnelsWrite | funnels/createFunnel.ts | rust |
+| DELETE | …/funnels/:funnelId | authFunnelsWrite | funnels/deleteFunnel.ts | rust |
+| GET | …/goals | publicGoalsRead | goals/getGoals.ts | rust |
+| GET | …/goals/time-series | publicGoalsRead | goals/getGoalTimeSeries.ts | rust |
+| GET | …/goals/:goalId/sessions | publicGoalsRead | goals/getGoalSessions.ts | rust |
+| POST | …/goals | authGoalsWrite | goals/createGoal.ts | rust |
+| DELETE | …/goals/:goalId | authGoalsWrite | goals/deleteGoal.ts | rust |
+| PUT | …/goals/:goalId | authGoalsWrite | goals/updateGoal.ts | rust |
 | GET | …/annotations | publicAnnotationsRead | annotations/getAnnotations.ts | node |
 | POST | …/annotations | authAnnotationsWrite | annotations/createAnnotation.ts | node |
 | PUT | …/annotations/:annotationId | authAnnotationsWrite | annotations/updateAnnotation.ts | node |
