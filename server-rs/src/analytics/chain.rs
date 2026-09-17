@@ -183,7 +183,9 @@ async fn expand_segment(
     // loadSegmentForSite
     let organization_id: Option<Option<String>> =
         sqlx::query_scalar("SELECT organization_id FROM sites WHERE site_id = $1 LIMIT 1")
-            .bind(numeric_site_id)
+            // i64 like auth's identical statement: sqlx caches prepared statements per
+            // connection by SQL text, and an int4 bound to the cached int8 one fails
+            .bind(i64::from(numeric_site_id))
             .fetch_optional(&state.pg)
             .await
             .map_err(internal_error)?;
