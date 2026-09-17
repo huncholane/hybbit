@@ -9,7 +9,9 @@
 //! repeated query param) so JavaScript coercions carry over.
 #![allow(dead_code)] // consumed as the analytics routes are ported
 
+pub mod chain;
 pub mod js;
+pub mod routes;
 pub mod segments;
 pub mod sql_string;
 pub mod types;

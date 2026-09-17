@@ -33,6 +33,7 @@ pub fn router(state: AppState) -> Router {
         .route("/api/site/tracking-config/{siteId}", get(tracking_config::tracking_config))
         .route("/api/track", post(track::track))
         .route("/api/identify", post(track::identify))
+        .merge(crate::analytics::routes::router())
         .fallback(static_files::fallback)
         .method_not_allowed_fallback(errors::not_found)
         .with_state(state);
