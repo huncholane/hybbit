@@ -227,6 +227,15 @@ pub async fn param_failure(failure: ParamFailure, method: Method, uri: Uri) -> R
     }
 }
 
+/// An unregistered method on a workspace path: find-my-way still decodes the URL
+/// first, so a malformed escape answers FST_ERR_BAD_URL rather than the 404.
+pub async fn unregistered_method(method: Method, uri: Uri) -> Response {
+    match route_params(&uri, &[]) {
+        Err(failure) => param_failure(failure, method, uri).await,
+        Ok(_) => http::errors::not_found(method, uri).await,
+    }
+}
+
 fn rejection_response(rejection: BodyRejection) -> Response {
     let mut response = http::json(rejection.status, &rejection.body);
     if rejection.close_connection {
@@ -257,6 +266,61 @@ fn to_js(value: &ParsedJson) -> JsValue {
 /// (JSON through secure-json-parse, text/plain as a string) with the 10 MB limit.
 /// `Undefined` when the request has neither a body nor a content type.
 pub async fn read_body(headers: &HeaderMap, body: Body) -> Result<JsValue, Response> {
+    read_body_checked(headers, body).await.map(|(value, _)| value)
+}
+
+/// Whether JSON text holds a `\uD800`-`\uDFFF` escape that is not half of a pair.
+/// `JSON.parse` keeps such a lone surrogate in the string; the Rust parsers turn it
+/// into U+FFFD. The difference only shows where Node re-serialises the value into a
+/// jsonb column: `JSON.stringify` writes the escape back and Postgres rejects it.
+pub fn has_lone_surrogate_escape(raw: &[u8]) -> bool {
+    let mut in_string = false;
+    let mut pending_high = false;
+    let mut index = 0;
+    while index < raw.len() {
+        let byte = raw[index];
+        if !in_string {
+            in_string = byte == b'"';
+            index += 1;
+            continue;
+        }
+        match byte {
+            b'"' => {
+                if pending_high {
+                    return true;
+                }
+                in_string = false;
+                index += 1;
+            }
+            b'\\' if raw.get(index + 1) == Some(&b'u') => {
+                let unit = raw
+                    .get(index + 2..index + 6)
+                    .and_then(|hex| std::str::from_utf8(hex).ok())
+                    .and_then(|hex| u16::from_str_radix(hex, 16).ok())
+                    .unwrap_or(0);
+                match unit {
+                    0xD800..=0xDBFF if pending_high => return true,
+                    0xD800..=0xDBFF => pending_high = true,
+                    0xDC00..=0xDFFF if pending_high => pending_high = false,
+                    0xDC00..=0xDFFF => return true,
+                    _ if pending_high => return true,
+                    _ => {}
+                }
+                index += 6;
+            }
+            _ => {
+                if pending_high {
+                    return true;
+                }
+                index += if byte == b'\\' { 2 } else { 1 };
+            }
+        }
+    }
+    pending_high
+}
+
+/// [`read_body`] plus whether the raw JSON held a lone surrogate escape.
+pub async fn read_body_checked(headers: &HeaderMap, body: Body) -> Result<(JsValue, bool), Response> {
     let body_headers = BodyHeaders::from_headers(headers);
     if let Some(rejection) = reject_before_reading(&body_headers) {
         return Err(rejection_response(rejection));
@@ -269,10 +333,18 @@ pub async fn read_body(headers: &HeaderMap, body: Body) -> Result<JsValue, Respo
         }
     };
     match parse_body_with_depth(&body_headers, &raw, BODY_KEEP_DEPTH) {
-        Ok(None) => Ok(JsValue::Undefined),
-        Ok(Some(value)) => Ok(to_js(&value)),
+        Ok(None) => Ok((JsValue::Undefined, false)),
+        Ok(Some(value @ ParsedJson::String(_))) => Ok((to_js(&value), false)),
+        Ok(Some(value)) => Ok((to_js(&value), has_lone_surrogate_escape(&raw))),
         Err(rejection) => Err(rejection_response(rejection)),
     }
+}
+
+/// Postgres's refusal of a lone surrogate escape in jsonb input, for the value Node
+/// would have sent: only possible when the body carried one and the stored JSON
+/// holds the replacement character it became.
+pub fn jsonb_rejects(lone_surrogate: bool, stored_json: &str) -> bool {
+    lone_surrogate && stored_json.contains('\u{FFFD}')
 }
 
 /// proxy-addr's `parse` of X-Forwarded-For: addresses from right to left, split
@@ -373,6 +445,17 @@ mod tests {
         assert_eq!(request_ip(&headers, peer), "127.0.0.1");
         headers.append("x-forwarded-for", HeaderValue::from_static("4.4.4.4"));
         assert_eq!(request_ip(&headers, peer), "4.4.4.4");
+    }
+
+    #[test]
+    fn finds_lone_surrogate_escapes() {
+        assert!(has_lone_surrogate_escape(br#"{"a":"\ud800"}"#));
+        assert!(has_lone_surrogate_escape(br#"["\udc00x"]"#));
+        assert!(has_lone_surrogate_escape(br#"["\ud83dA"]"#));
+        // Built at runtime so the escapes stay escapes: a pair, an escaped backslash, a BMP escape
+        let paired = format!(r#"["\{u}d83d\{u}de00", "\\{u}d800", "\{u}00e9"]"#, u = 'u');
+        assert!(!has_lone_surrogate_escape(paired.as_bytes()));
+        assert!(!has_lone_surrogate_escape("[\"\u{1F600}\"]".as_bytes()));
     }
 
     #[test]

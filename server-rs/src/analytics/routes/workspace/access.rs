@@ -9,11 +9,11 @@
 
 use axum::http::HeaderMap;
 use sqlx::PgPool;
-use tracing::debug;
+use tracing::{debug, error};
 
 use crate::{
     auth::{
-        access::{is_system_admin, get_org_membership},
+        access::{get_org_membership, is_system_admin},
         guards::Authenticated,
         session::get_session,
     },
@@ -48,7 +48,19 @@ impl<'a> RequestAccess<'a> {
     /// `getSitesUserHasAccessTo(request, adminOnly)` as site ids. Lookup failures
     /// answer no sites, as in Node.
     pub async fn site_ids(&self, admin_only: bool) -> Vec<i32> {
-        self.state.sites_access.sites_for(&self.state.pg, &self.auth.principal(), admin_only).await
+        let principal = self.auth.principal();
+        if !(self.auth.bearer && principal.user_id.is_some()) {
+            return self.state.sites_access.sites_for(&self.state.pg, &principal, admin_only).await;
+        }
+        // A user credential: system-admin authority comes from the cookie session, if any
+        let session_user = match self.session_user_id().await {
+            Ok(user) => user,
+            Err(err) => {
+                error!(error = %err, "Error getting sites user has access to");
+                return Vec::new();
+            }
+        };
+        self.state.sites_access.sites_for_request(&self.state.pg, &principal, session_user.as_deref(), admin_only).await
     }
 
     /// `getUserHasAccessToSite` / `getUserHasAdminAccessToSite`:

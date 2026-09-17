@@ -38,6 +38,9 @@ enum HandlerError {
     Db(#[from] sqlx::Error),
     #[error("integer out of range for type integer")]
     OutOfRange,
+    /// Postgres refusing the lone surrogate escape `JSON.stringify` would send
+    #[error("unsupported Unicode escape sequence")]
+    UnsupportedEscape,
 }
 
 fn bind_int(id: f64) -> Result<i32, HandlerError> {
@@ -207,7 +210,7 @@ pub async fn create(State(state): State<AppState>, method: Method, uri: Uri, hea
         Ok(params) => params,
         Err(failure) => return request::param_failure(failure, method, uri).await,
     };
-    let body = match request::read_body(&headers, body).await {
+    let (body, lone_surrogate) = match request::read_body_checked(&headers, body).await {
         Ok(body) => body,
         Err(response) => return response,
     };
@@ -226,6 +229,9 @@ pub async fn create(State(state): State<AppState>, method: Method, uri: Uri, hea
     let config_text = json::stringify(&config).unwrap_or_default();
 
     let result: Result<Response, HandlerError> = async {
+        if request::jsonb_rejects(lone_surrogate, &config_text) {
+            return Err(HandlerError::UnsupportedEscape);
+        }
         let dashboard_id: Option<i32> = sqlx::query_scalar(
             r#"insert into "dashboards" ("site_id", "user_id", "name", "config") values ($1, $2, $3, $4::jsonb)
                returning "dashboard_id""#,
@@ -255,7 +261,7 @@ pub async fn update(State(state): State<AppState>, method: Method, uri: Uri, hea
         Ok(params) => params,
         Err(failure) => return request::param_failure(failure, method, uri).await,
     };
-    let body = match request::read_body(&headers, body).await {
+    let (body, lone_surrogate) = match request::read_body_checked(&headers, body).await {
         Ok(body) => body,
         Err(response) => return response,
     };
@@ -300,7 +306,11 @@ pub async fn update(State(state): State<AppState>, method: Method, uri: Uri, hea
             statement = statement.bind(name.clone());
         }
         if let Some(config) = &input.config {
-            statement = statement.bind(json::stringify(config).unwrap_or_default());
+            let config_text = json::stringify(config).unwrap_or_default();
+            if request::jsonb_rejects(lone_surrogate, &config_text) {
+                return Err(HandlerError::UnsupportedEscape);
+            }
+            statement = statement.bind(config_text);
         }
         let now = crate::analytics::js::date::to_iso_string(now_ms()).unwrap_or_default();
         statement = statement.bind(now).bind(bind_int(dashboard_id)?);

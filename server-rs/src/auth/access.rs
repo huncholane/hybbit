@@ -236,7 +236,39 @@ impl SitesAccessCache {
         if let Some(ids) = self.get(&key) {
             return ids;
         }
-        match user_site_ids(pg, user_id, admin_only).await {
+        match user_site_ids(pg, user_id, Some(user_id), admin_only).await {
+            Ok(ids) => {
+                self.set(key, ids.clone());
+                ids
+            }
+            Err(err) => {
+                error!(error = %err, "Error getting sites user has access to");
+                Vec::new()
+            }
+        }
+    }
+
+    /// `getSitesUserHasAccessTo` for a request whose `request.user` may come from a
+    /// bearer credential. Node's system-admin check (`getIsUserAdmin(req)`) reads the
+    /// cookie session, not `request.user`, and the result is cached under the
+    /// bearer user's key: a user API key sent alongside a system admin's cookie sees
+    /// every site (and so does that user for the rest of the cache window), while a
+    /// system admin's own API key without a cookie gets no admin authority.
+    pub async fn sites_for_request(
+        &self,
+        pg: &PgPool,
+        principal: &AccessPrincipal,
+        session_user_id: Option<&str>,
+        admin_only: bool,
+    ) -> Vec<i32> {
+        let Some(user_id) = principal.user_id.as_deref() else {
+            return self.sites_for(pg, principal, admin_only).await;
+        };
+        let key = format!("{user_id}:{admin_only}");
+        if let Some(ids) = self.get(&key) {
+            return ids;
+        }
+        match user_site_ids(pg, user_id, session_user_id, admin_only).await {
             Ok(ids) => {
                 self.set(key, ids.clone());
                 ids
@@ -249,8 +281,14 @@ impl SitesAccessCache {
     }
 }
 
-async fn user_site_ids(pg: &PgPool, user_id: &str, admin_only: bool) -> Result<Vec<i32>, sqlx::Error> {
-    if is_system_admin(pg, Some(user_id)).await? {
+/// `admin_source`: whose role decides system-admin authority (see `sites_for_request`).
+async fn user_site_ids(
+    pg: &PgPool,
+    user_id: &str,
+    admin_source: Option<&str>,
+    admin_only: bool,
+) -> Result<Vec<i32>, sqlx::Error> {
+    if is_system_admin(pg, admin_source).await? {
         return sqlx::query_scalar("SELECT site_id FROM sites").fetch_all(pg).await;
     }
 

@@ -41,6 +41,9 @@ pub enum StoreError {
     Db(#[from] sqlx::Error),
     #[error("integer out of range for type integer")]
     OutOfRange,
+    /// Postgres refusing the lone surrogate escape `JSON.stringify` would send
+    #[error("unsupported Unicode escape sequence")]
+    UnsupportedEscape,
 }
 
 fn bind_int(id: f64) -> Result<i32, StoreError> {
@@ -73,6 +76,8 @@ pub struct NewSegment {
     pub description: Option<String>,
     pub filters: Vec<Filter>,
     pub is_public: bool,
+    /// The request body held a lone surrogate escape (see `request::jsonb_rejects`)
+    pub lone_surrogate: bool,
 }
 
 /// The `.set()` of `updateSegment`: `None` leaves a column alone.
@@ -85,6 +90,8 @@ pub struct SegmentChanges {
     pub site_id: Option<Option<i32>>,
     /// `new Date().toISOString()`
     pub updated_at: String,
+    /// The request body held a lone surrogate escape (see `request::jsonb_rejects`)
+    pub lone_surrogate: bool,
 }
 
 /// The Postgres side of the segment handlers.
@@ -275,7 +282,13 @@ pub async fn get_segment<S: SegmentStore, C: Caller>(store: &S, caller: &C, site
 }
 
 /// `createSegment`
-pub async fn create_segment<S: SegmentStore, C: Caller>(store: &S, caller: &C, site_param: &str, body: &JsValue) -> Reply {
+pub async fn create_segment<S: SegmentStore, C: Caller>(
+    store: &S,
+    caller: &C,
+    site_param: &str,
+    body: &JsValue,
+    lone_surrogate: bool,
+) -> Reply {
     let Some(site_id) = parse_positive_id(site_param) else {
         return Reply::error(StatusCode::BAD_REQUEST, "Invalid site ID");
     };
@@ -306,6 +319,7 @@ pub async fn create_segment<S: SegmentStore, C: Caller>(store: &S, caller: &C, s
             },
             filters: body.filters.clone().unwrap_or_default(),
             is_public: body.is_public.unwrap_or(false),
+            lone_surrogate,
         };
         let Some(row) = store.insert(new_segment).await? else {
             return Ok(Reply::error(StatusCode::INTERNAL_SERVER_ERROR, "Failed to create segment"));
@@ -324,6 +338,7 @@ pub async fn update_segment<S: SegmentStore, C: Caller>(
     site_param: &str,
     segment_param: &str,
     body: &JsValue,
+    lone_surrogate: bool,
 ) -> Reply {
     let (site_id, segment_id) = match ids(site_param, segment_param) {
         Ok(ids) => ids,
@@ -363,6 +378,7 @@ pub async fn update_segment<S: SegmentStore, C: Caller>(
                 Some(SegmentScope::Site) => Some(Some(bind_int(site_id)?)),
             },
             updated_at: date::to_iso_string(now_ms()).unwrap_or_default(),
+            lone_surrogate,
         };
         let Some(row) = store.update(segment_id, changes).await? else {
             return Ok(Reply::error(StatusCode::INTERNAL_SERVER_ERROR, "Failed to update segment"));
@@ -464,6 +480,10 @@ impl SegmentStore for PgSegments<'_> {
     }
 
     async fn insert(&self, segment: NewSegment) -> Result<Option<SegmentRow>, StoreError> {
+        let filters = filters_json(&segment.filters);
+        if request::jsonb_rejects(segment.lone_surrogate, &filters) {
+            return Err(StoreError::UnsupportedEscape);
+        }
         let row = sqlx::query(&format!(
             r#"insert into "segments" ("organization_id", "site_id", "user_id", "name", "description", "filters", "is_public")
                values ($1, $2, $3, $4, $5, $6::jsonb, $7) returning {SEGMENT_COLUMNS}"#
@@ -473,7 +493,7 @@ impl SegmentStore for PgSegments<'_> {
         .bind(&segment.user_id)
         .bind(&segment.name)
         .bind(&segment.description)
-        .bind(filters_json(&segment.filters))
+        .bind(filters)
         .bind(segment.is_public)
         .fetch_optional(self.pg)
         .await?;
@@ -481,6 +501,11 @@ impl SegmentStore for PgSegments<'_> {
     }
 
     async fn update(&self, segment_id: f64, changes: SegmentChanges) -> Result<Option<SegmentRow>, StoreError> {
+        if let Some(filters) = &changes.filters
+            && request::jsonb_rejects(changes.lone_surrogate, &filters_json(filters))
+        {
+            return Err(StoreError::UnsupportedEscape);
+        }
         let mut assignments = Vec::new();
         let mut position = 1;
         let mut push = |column: &str, cast: &str| {
@@ -601,7 +626,7 @@ pub async fn create(State(state): State<AppState>, method: Method, uri: Uri, hea
         Ok(params) => params,
         Err(failure) => return request::param_failure(failure, method, uri).await,
     };
-    let body = match request::read_body(&headers, body).await {
+    let (body, lone_surrogate) = match request::read_body_checked(&headers, body).await {
         Ok(body) => body,
         Err(response) => return response,
     };
@@ -610,7 +635,7 @@ pub async fn create(State(state): State<AppState>, method: Method, uri: Uri, hea
         Err(response) => return response,
     };
     let caller = RequestAccess::new(&state, &headers, &site.auth);
-    create_segment(&PgSegments { pg: &state.pg }, &caller, &site.site_id, &body).await.into_response()
+    create_segment(&PgSegments { pg: &state.pg }, &caller, &site.site_id, &body, lone_surrogate).await.into_response()
 }
 
 /// PUT /api/sites/:siteId/segments/:segmentId (`authSegmentsWrite`)
@@ -619,7 +644,7 @@ pub async fn update(State(state): State<AppState>, method: Method, uri: Uri, hea
         Ok(params) => params,
         Err(failure) => return request::param_failure(failure, method, uri).await,
     };
-    let body = match request::read_body(&headers, body).await {
+    let (body, lone_surrogate) = match request::read_body_checked(&headers, body).await {
         Ok(body) => body,
         Err(response) => return response,
     };
@@ -628,7 +653,9 @@ pub async fn update(State(state): State<AppState>, method: Method, uri: Uri, hea
         Err(response) => return response,
     };
     let caller = RequestAccess::new(&state, &headers, &site.auth);
-    update_segment(&PgSegments { pg: &state.pg }, &caller, &site.site_id, &params[1], &body).await.into_response()
+    update_segment(&PgSegments { pg: &state.pg }, &caller, &site.site_id, &params[1], &body, lone_surrogate)
+        .await
+        .into_response()
 }
 
 /// DELETE /api/sites/:siteId/segments/:segmentId (`authSegmentsWrite`)
@@ -865,7 +892,7 @@ mod tests {
     #[tokio::test]
     async fn create_segment_cases() {
         let store = member(vec![]);
-        let reply = create_segment(&store, &store, "1", &body(&format!(r#"{{"name":"Mobile","filters":{}}}"#, filters_body()))).await;
+        let reply = create_segment(&store, &store, "1", &body(&format!(r#"{{"name":"Mobile","filters":{}}}"#, filters_body())), false).await;
         assert_eq!(reply.status, StatusCode::CREATED);
         let written = store.state.lock().unwrap().writes[0].1.clone().unwrap();
         assert_eq!((written.organization_id.as_str(), written.site_id, written.user_id.as_deref(), written.is_public), ("org_1", Some(1), Some("member_1"), false));
@@ -873,10 +900,10 @@ mod tests {
 
         let store = member(vec![]);
         let org_wide = body(&format!(r#"{{"name":"Paid","filters":{},"scope":"organization"}}"#, filters_body()));
-        assert_eq!(create_segment(&store, &store, "1", &org_wide).await.status, StatusCode::FORBIDDEN);
+        assert_eq!(create_segment(&store, &store, "1", &org_wide, false).await.status, StatusCode::FORBIDDEN);
         assert!(store.state.lock().unwrap().writes.is_empty());
         let store = admin(vec![]);
-        assert_eq!(create_segment(&store, &store, "1", &org_wide).await.status, StatusCode::CREATED);
+        assert_eq!(create_segment(&store, &store, "1", &org_wide, false).await.status, StatusCode::CREATED);
         assert_eq!(store.state.lock().unwrap().writes[0].1.as_ref().unwrap().site_id, None);
 
         let store = admin(vec![]);
@@ -888,31 +915,31 @@ mod tests {
         assert!(store.state.lock().unwrap().writes.is_empty());
 
         let store = viewer(vec![]);
-        let reply = create_segment(&store, &store, "1", &body(&format!(r#"{{"name":"Mobile","filters":{}}}"#, filters_body()))).await;
+        let reply = create_segment(&store, &store, "1", &body(&format!(r#"{{"name":"Mobile","filters":{}}}"#, filters_body())), false).await;
         assert_eq!(reply.status, StatusCode::FORBIDDEN);
     }
 
     #[tokio::test]
     async fn update_segment_cases() {
         let store = member(vec![segment_row(7, Some("member_1"), Some(1), false)]);
-        let reply = update_segment(&store, &store, "1", "7", &body(r#"{"name":"Renamed"}"#)).await;
+        let reply = update_segment(&store, &store, "1", "7", &body(r#"{"name":"Renamed"}"#), false).await;
         assert_eq!(reply.status, StatusCode::OK);
         assert_eq!(store.state.lock().unwrap().writes[0].2.as_ref().unwrap().name.as_deref(), Some("Renamed"));
 
         let store = member(vec![segment_row(7, Some("admin_1"), Some(1), false)]);
-        assert_eq!(update_segment(&store, &store, "1", "7", &body(r#"{"name":"Renamed"}"#)).await.status, StatusCode::FORBIDDEN);
+        assert_eq!(update_segment(&store, &store, "1", "7", &body(r#"{"name":"Renamed"}"#), false).await.status, StatusCode::FORBIDDEN);
         assert!(store.state.lock().unwrap().writes.is_empty());
 
         let store = admin(vec![segment_row(7, Some("member_1"), Some(1), false)]);
-        assert_eq!(update_segment(&store, &store, "1", "7", &body(r#"{"isPublic":true}"#)).await.status, StatusCode::OK);
+        assert_eq!(update_segment(&store, &store, "1", "7", &body(r#"{"isPublic":true}"#), false).await.status, StatusCode::OK);
         assert_eq!(store.state.lock().unwrap().writes[0].2.as_ref().unwrap().is_public, Some(true));
 
         let store = member(vec![segment_row(7, Some("member_1"), Some(1), false)]);
-        assert_eq!(update_segment(&store, &store, "1", "7", &body(r#"{"scope":"organization"}"#)).await.status, StatusCode::FORBIDDEN);
+        assert_eq!(update_segment(&store, &store, "1", "7", &body(r#"{"scope":"organization"}"#), false).await.status, StatusCode::FORBIDDEN);
         assert!(store.state.lock().unwrap().writes.is_empty());
 
         let store = admin(vec![segment_row(7, Some("member_1"), Some(1), false)]);
-        let reply = update_segment(&store, &store, "1", "7", &body(r#"{"filters":[{"parameter":"browser","type":"equals","value":[]}]}"#)).await;
+        let reply = update_segment(&store, &store, "1", "7", &body(r#"{"filters":[{"parameter":"browser","type":"equals","value":[]}]}"#), false).await;
         assert_eq!(reply.status, StatusCode::BAD_REQUEST);
     }
 
