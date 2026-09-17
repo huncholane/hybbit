@@ -17,6 +17,7 @@ percent-encoding = "2.3.2"
 rand = "0.10.2"
 redis = { version = "1.7.0", features = ["tokio-comp", "connection-manager"] }
 regex = "1.13.1"
+regress = { version = "0.12.0", features = ["utf16"] }
 reqwest = { version = "0.13.5", default-features = false, features = ["json", "query", "rustls"] }
 ryu-js = "1.0.3"
 serde = { version = "1.0.229", features = ["derive"] }
