@@ -55,8 +55,9 @@ impl ClickHouse {
             .collect()
     }
 
-    /// Insert rows as JSONEachRow. `table` must be a fixed table name from this
-    /// codebase, never request input.
+    /// Insert rows as JSONEachRow, each line spelled the way `JSON.stringify` spells
+    /// it (as @clickhouse/client sends it). `table` must be a fixed table name from
+    /// this codebase, never request input.
     pub async fn insert<T: Serialize>(&self, table: &str, rows: &[T]) -> Result<(), ClickHouseError> {
         if rows.is_empty() {
             return Ok(());
@@ -64,7 +65,7 @@ impl ClickHouse {
 
         let mut body = String::new();
         for row in rows {
-            body.push_str(&serde_json::to_string(row)?);
+            body.push_str(&crate::js_json::to_string(row)?);
             body.push('\n');
         }
 
