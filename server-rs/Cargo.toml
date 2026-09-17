@@ -8,6 +8,7 @@ anyhow = "1.0.104"
 axum = "0.8.9"
 base64 = "0.23.1"
 chrono = { version = "0.4.45", features = ["serde"] }
+chrono-tz = { version = "0.10.4", features = ["case-insensitive"] }
 fancy-regex = "0.19.2"
 hex = "0.4.3"
 hmac = "0.13.0"
@@ -34,6 +35,7 @@ tower-http = { version = "0.7.1", features = ["trace"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["json", "env-filter"] }
 unicode-normalization = "0.1"
+unicode-segmentation = "1.13.3"
 url = "2.5.8"
 
 [dev-dependencies]
