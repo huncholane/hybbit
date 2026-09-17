@@ -908,7 +908,7 @@ mod tests {
 
         let store = admin(vec![]);
         let reply =
-            create_segment(&store, &store, "1", &body(r#"{"name":"Bad","filters":[{"parameter":"session_id","type":"equals","value":["x"]}]}"#))
+            create_segment(&store, &store, "1", &body(r#"{"name":"Bad","filters":[{"parameter":"session_id","type":"equals","value":["x"]}]}"#), false)
                 .await;
         assert_eq!(reply.status, StatusCode::BAD_REQUEST);
         assert_eq!(field(&reply.body, "error"), &JsValue::String("Validation error".into()));
