@@ -19,6 +19,8 @@ pub struct Config {
     pub mapbox_token: Option<String>,
     /// Directory with script.js, rrweb.min.js and friends (PUBLIC_DIR, default ./public)
     pub public_dir: PathBuf,
+    /// Directory with GeoLite2-City.mmdb and GeoLite2-ASN.mmdb (GEOIP_DIR, default: working directory, like Node)
+    pub geoip_dir: PathBuf,
     pub postgres: PostgresConfig,
     pub clickhouse: ClickHouseConfig,
     pub redis: RedisConfig,
@@ -59,6 +61,7 @@ impl Config {
             lite_dashboard: flag("LITE_DASHBOARD"),
             mapbox_token: std::env::var("MAPBOX_TOKEN").ok(),
             public_dir: PathBuf::from(env_or("PUBLIC_DIR", "public")),
+            geoip_dir: PathBuf::from(env_or("GEOIP_DIR", ".")),
             postgres: PostgresConfig {
                 host: env_or("POSTGRES_HOST", "postgres"),
                 port: port_from_env("POSTGRES_PORT", 5432)?,

@@ -25,5 +25,6 @@ RUN apt-get update \
 WORKDIR /app
 COPY --from=builder /build/server-rs/target/release/hygo-backend /usr/local/bin/hygo-backend
 COPY server/public ./public
+COPY server/GeoLite2-City.mmdb server/GeoLite2-ASN.mmdb ./
 EXPOSE 3001
 CMD ["hygo-backend"]

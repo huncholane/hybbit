@@ -70,7 +70,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | POST | /api/track | none | services/tracker/trackEvent.ts | node |
 | POST | /api/identify | none | services/tracker/identifyService.ts | node |
 | POST | /api/session-replay/record/:siteId | none | api/sessionReplay/recordSessionReplay.ts | node |
-| GET | /api/site/tracking-config/:siteId | none | api/sites/getTrackingConfig.ts | node |
+| GET | /api/site/tracking-config/:siteId | none | api/sites/getTrackingConfig.ts | rust |
 | POST | /api/site/:siteId/feature-flags/evaluate | none | api/featureFlags/index.ts | node |
 
 ### Static, scripts, misc

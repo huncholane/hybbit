@@ -8,6 +8,7 @@ mod clickhouse;
 mod config;
 mod error;
 mod feature_flags;
+mod geo;
 mod http;
 mod json_shape;
 mod routes;
