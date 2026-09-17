@@ -12,7 +12,6 @@ use sha2::{Digest, Sha256};
 
 use super::{
     ip_bucket::bucket_ip_for_identity,
-    node_asn::lookup_asn_like_node,
     normalize_user_agent::normalize_user_agent_for_identity,
     sticky::{StickyIdentityInput, StickyStore, resolve_sticky_user_id_with, sticky_identity_enabled},
 };
@@ -130,7 +129,7 @@ impl UserIdService {
     ///
     /// `asn_lookup` is the request's memoised resolver (Node falls back to the
     /// global `lookupAsn`, which answers the same). The IP string is read the way
-    /// Node's `lookupAsn` reads it (see `node_asn`), so spoofed spellings such as
+    /// Node's `lookupAsn` reads it (see `geo::node_ip`), so spoofed spellings such as
     /// zone ids classify alike on both backends.
     pub async fn generate_user_id<R: StickyStore, C: SaltSettingSource>(
         &self,
@@ -222,6 +221,11 @@ impl UserIdService {
 
         Ok(sha256_hex(&format!("{site_id}:{client_id}:{salt}"))[..12].to_string())
     }
+}
+
+/// `lookupAsn(ip)?.asn` through the request's memoised resolver.
+pub fn lookup_asn_like_node(lookup: &AsnLookup<'_>, ip: &str) -> Option<u32> {
+    lookup.lookup(ip).map(|info| info.asn)
 }
 
 #[cfg(test)]

@@ -4,6 +4,8 @@
 //! only degrades ASN-based bot detection and IP-topology inference when missing.
 #![allow(dead_code)] // consumed by ingestion as it is ported
 
+pub mod node_ip;
+
 use std::{collections::HashMap, net::IpAddr, path::Path, sync::Mutex};
 
 use anyhow::{Context, Result};
@@ -59,9 +61,10 @@ impl Geo {
         Ok(Self { city, asn })
     }
 
-    /// City-level location, or None for invalid, private or unknown IPs.
+    /// City-level location, or None for invalid, private or unknown IPs. The string
+    /// is read the way Node's reader reads it (see `node_ip`).
     pub fn location(&self, ip: &str) -> Option<Location> {
-        let address: IpAddr = ip.trim().parse().ok()?;
+        let address: IpAddr = node_ip::node_ip_address(ip)?;
         let city: geoip2::City = self.city.lookup(address).ok()?.decode().ok()??;
 
         Some(Location {
@@ -82,7 +85,7 @@ impl Geo {
     /// `lookupAsn`: None when the database is missing or the IP has no ASN record.
     pub fn asn(&self, ip: &str) -> Option<AsnInfo> {
         let reader = self.asn.as_ref()?;
-        let address: IpAddr = ip.trim().parse().ok()?;
+        let address: IpAddr = node_ip::node_ip_address(ip)?;
         let record: geoip2::Asn = reader.lookup(address).ok()?.decode().ok()??;
         Some(AsnInfo {
             asn: record.autonomous_system_number?,
@@ -128,6 +131,9 @@ mod tests {
         assert_eq!(geo.asn("8.8.8.8").map(|info| info.asn), Some(15169));
         assert_eq!(geo.location("not an ip"), None);
         assert_eq!(geo.location("10.0.0.1"), None);
+        // Node's reader rejects padding and accepts IPv6 zone ids
+        assert_eq!(geo.asn(" 8.8.8.8"), None);
+        assert_eq!(geo.asn("2001:4860:4860::8888%eth0").map(|info| info.asn), Some(15169));
         assert_eq!(geo.asn("127.0.0.1"), None);
     }
 

@@ -1,24 +1,24 @@
-//! ASN lookups that read the IP string exactly the way Node's `lookupAsn`
-//! (server/src/db/geolocation/asn.ts) does.
+//! IP strings read exactly the way Node's GeoLite2 readers read them
+//! (`@maxmind/geoip2-node` 6.1.0 over `mmdb-lib` 2.2.1, behind `getLocation` and
+//! `lookupAsn` in server/src/db/geolocation).
 //!
-//! Node's reader (`@maxmind/geoip2-node` 6.1.0 over `mmdb-lib` 2.2.1) gates the
-//! string with `net.isIP` and then parses it with mmdb-lib's own parser, which
-//! is looser than `std::net`: an IPv6 zone id (`2a06:98c0::1%eth0`) passes the
-//! gate and is then mostly ignored. `crate::geo::Geo::asn` instead trims the
-//! string and uses `std::net` parsing, so for a spoofed forwarding header the two
-//! backends could disagree on whether the visitor is datacenter egress, and
-//! therefore on the user id. Identity routes lookups through this module so the
-//! ids match; the tree walk itself is still `AsnLookup`'s.
+//! The reader gates the string with `net.isIP` and then parses it with mmdb-lib's
+//! own parser, which is looser than `std::net`: an IPv6 zone id
+//! (`2a06:98c0::1%eth0`) passes the gate and is then mostly ignored, while
+//! surrounding whitespace fails it. Forwarding headers are client-controlled, so
+//! both backends must agree on these spellings or they disagree on geolocation,
+//! datacenter egress and therefore user ids.
 //!
 //! Everything below mirrors the JavaScript, number quirks included: mmdb-lib
 //! stores `parseInt(chunk, 16) >> 8` and `& 0xff`, so only the low 16 bits of
 //! JavaScript's ToInt32 of the parsed double survive.
 
-use std::{net::Ipv6Addr, sync::LazyLock};
+use std::{
+    net::{IpAddr, Ipv4Addr, Ipv6Addr},
+    sync::LazyLock,
+};
 
 use regex::Regex;
-
-use crate::geo::AsnLookup;
 
 /// Node's `IPv4Reg` (lib/internal/net.js, Node 26).
 static NODE_IPV4: LazyLock<Regex> = LazyLock::new(|| {
@@ -62,24 +62,19 @@ pub fn node_is_ip(input: &str) -> u8 {
     }
 }
 
-/// `lookupAsn(ip)?.asn`, resolved through the request's memoised `AsnLookup`.
-pub fn lookup_asn_like_node(lookup: &AsnLookup<'_>, ip: &str) -> Option<u32> {
-    if ip.is_empty() {
-        return None;
-    }
+/// The address Node's reader would look up for `ip`, or None where it throws
+/// (empty, or not an IP by `net.isIP`).
+pub fn node_ip_address(ip: &str) -> Option<IpAddr> {
     match node_is_ip(ip) {
         // A string that passes IPv4Reg is canonical dotted decimal, which std parses alike
-        4 => lookup.lookup(ip).map(|info| info.asn),
-        6 => {
-            let address = Ipv6Addr::from(mmdb_lib_parse_ipv6(ip));
-            lookup.lookup(&address.to_string()).map(|info| info.asn)
-        }
+        4 => ip.parse::<Ipv4Addr>().ok().map(IpAddr::V4),
+        6 => Some(IpAddr::V6(Ipv6Addr::from(mmdb_lib_parse_ipv6(ip)))),
         _ => None,
     }
 }
 
 /// mmdb-lib `parseIPv6`, reduced to the 16 bytes the tree walk reads.
-pub(crate) fn mmdb_lib_parse_ipv6(input: &str) -> [u8; 16] {
+pub fn mmdb_lib_parse_ipv6(input: &str) -> [u8; 16] {
     let mut address = [0u8; 16];
 
     let rewritten = if input.contains('.') {

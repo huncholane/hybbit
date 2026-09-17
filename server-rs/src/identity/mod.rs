@@ -32,7 +32,7 @@
 //!   user id is the trimmed `payload.user_id` or "".
 //! - Dashboard identify (`identifyUser.ts`): `identify::backfill_identified_user_id`
 //!   with `days: None`.
-//! - ASN questions about the client IP go through `node_asn::lookup_asn_like_node`,
+//! - ASN questions about the client IP go through `geo::AsnLookup` (which reads IP strings like Node, see `geo::node_ip`),
 //!   which reads IP strings the way Node's `lookupAsn` does.
 #![allow(dead_code)] // wired into the track and identify routes as they are ported
 
@@ -41,7 +41,6 @@ use std::time::Duration;
 pub mod backfill;
 pub mod identify;
 pub mod ip_bucket;
-pub mod node_asn;
 pub mod normalize_user_agent;
 pub mod sessions;
 pub mod sticky;
@@ -57,7 +56,7 @@ pub use identify::{IdentifyDeps, IdentifyPayload, IdentifyRequest, backfill_iden
 #[allow(unused_imports)]
 pub use ip_bucket::bucket_ip_for_identity;
 #[allow(unused_imports)]
-pub use node_asn::lookup_asn_like_node;
+pub use user_id::lookup_asn_like_node;
 #[allow(unused_imports)]
 pub use normalize_user_agent::normalize_user_agent_for_identity;
 #[allow(unused_imports)]

@@ -7,10 +7,13 @@ use sqlx::postgres::PgPoolOptions;
 use super::{PARITY_PG, SECRET, diff_dir, report, server_dir};
 use crate::{
     datacenter_asns::is_datacenter_asn,
-    geo::Geo,
+    geo::{
+        Geo,
+        node_ip::{mmdb_lib_parse_ipv6, node_is_ip},
+    },
     identity::{
         ip_bucket::bucket_ip_for_identity,
-        node_asn::{lookup_asn_like_node, mmdb_lib_parse_ipv6, node_is_ip},
+        lookup_asn_like_node,
         normalize_user_agent::normalize_user_agent_for_identity,
         sessions::session_key,
         sticky::tests::RecordingStickyStore,
