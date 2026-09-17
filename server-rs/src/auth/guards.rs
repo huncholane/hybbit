@@ -215,7 +215,7 @@ impl<'a> AuthContext<'a> {
             return Ok(session_principal(Some(session)));
         }
 
-        let target = AccessTarget { organization_id, site_id: site_id.and_then(js_number_param), ..Default::default() };
+        let target = AccessTarget { organization_id, site_id: site_id.and_then(js_number_param), site_param: site_id };
         let result = self.check_api_key(target).await?;
         if result.valid {
             return if bearer_scope_ok(&result, scope) { Ok(bearer_principal(result)) } else { Err(insufficient_scope(scope.unwrap())) };
