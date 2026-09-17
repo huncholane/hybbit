@@ -117,9 +117,9 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | …/bots/ai-summary | | bots/getBotAiSummary.ts | node |
 | GET | …/export/pdf | authAnalyticsRead | generatePdfReport.ts | node |
 | GET | /api/org-event-count/:organizationId | orgAnalyticsRead | getOrgEventCount.ts | rust |
-| GET | …/errors/names | | getErrorNames.ts | node |
-| GET | …/errors/events | | getErrorEvents.ts | node |
-| GET | …/errors/time-series | | getErrorBucketed.ts | node |
+| GET | …/errors/names | | getErrorNames.ts | rust |
+| GET | …/errors/events | | getErrorEvents.ts | rust |
+| GET | …/errors/time-series | | getErrorBucketed.ts | rust |
 | GET | …/performance/overview | | performance/getPerformanceOverview.ts | node |
 | GET | …/performance/time-series | | performance/getPerformanceTimeSeries.ts | node |
 | GET | …/performance/by-dimension | | performance/getPerformanceByDimension.ts | node |
@@ -128,31 +128,31 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/sessions | publicSessionsRead | sessions/getSessions.ts | node |
-| GET | …/sessions/:sessionId | publicSessionsRead | sessions/getSession.ts | node |
-| GET | …/sessions/locations | publicSessionsRead | sessions/getSessionLocations.ts | node |
-| GET | …/events | publicEventsRead | events/getEvents.ts | node |
-| GET | …/events/time-series | publicEventsRead | events/getEventBucketed.ts | node |
+| GET | …/sessions | publicSessionsRead | sessions/getSessions.ts | rust |
+| GET | …/sessions/:sessionId | publicSessionsRead | sessions/getSession.ts | rust |
+| GET | …/sessions/locations | publicSessionsRead | sessions/getSessionLocations.ts | rust |
+| GET | …/events | publicEventsRead | events/getEvents.ts | rust |
+| GET | …/events/time-series | publicEventsRead | events/getEventBucketed.ts | rust |
 | GET | …/events/count | publicEventsRead | events/getSiteEventCount.ts | rust |
-| GET | …/events/names | publicEventsRead | events/getEventNames.ts | node |
-| GET | …/events/properties | publicEventsRead | events/getEventProperties.ts | node |
-| GET | …/events/autocapture | publicEventsRead | events/getAutocaptureEvents.ts | node |
-| GET | …/events/autocapture-values | publicEventsRead | events/getAutocaptureValues.ts | node |
-| GET | …/events/outbound | publicEventsRead | events/getOutboundLinks.ts | node |
+| GET | …/events/names | publicEventsRead | events/getEventNames.ts | rust |
+| GET | …/events/properties | publicEventsRead | events/getEventProperties.ts | rust |
+| GET | …/events/autocapture | publicEventsRead | events/getAutocaptureEvents.ts | rust |
+| GET | …/events/autocapture-values | publicEventsRead | events/getAutocaptureValues.ts | rust |
+| GET | …/events/outbound | publicEventsRead | events/getOutboundLinks.ts | rust |
 
 ### Users (`api/analytics/users/`)
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/users | publicUsersRead | getUsers.ts | node |
-| GET | …/users/session-count | publicUsersRead | getUserSessionCount.ts | node |
-| GET | …/users/:userId | publicUsersRead | getUserInfo.ts | node |
-| POST | …/users/identify | authUsersWrite | identifyUser.ts | node |
-| PUT | …/users/:userId/traits | authUsersWrite | updateUserTraits.ts | node |
-| DELETE | …/users/:userId | adminUsersWrite | deleteUser.ts | node |
-| GET | …/user-traits/keys | publicUsersRead | getUserTraits.ts | node |
-| GET | …/user-traits/values | publicUsersRead | getUserTraits.ts | node |
-| GET | …/user-traits/users | publicUsersRead | getUserTraits.ts | node |
+| GET | …/users | publicUsersRead | getUsers.ts | rust |
+| GET | …/users/session-count | publicUsersRead | getUserSessionCount.ts | rust |
+| GET | …/users/:userId | publicUsersRead | getUserInfo.ts | rust |
+| POST | …/users/identify | authUsersWrite | identifyUser.ts | rust |
+| PUT | …/users/:userId/traits | authUsersWrite | updateUserTraits.ts | rust |
+| DELETE | …/users/:userId | adminUsersWrite | deleteUser.ts | rust |
+| GET | …/user-traits/keys | publicUsersRead | getUserTraits.ts | rust |
+| GET | …/user-traits/values | publicUsersRead | getUserTraits.ts | rust |
+| GET | …/user-traits/users | publicUsersRead | getUserTraits.ts | rust |
 
 ### Funnels, goals, annotations (`api/analytics/`)
 
