@@ -111,7 +111,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | …/page-titles | | getPageTitles.ts | rust |
 | GET | …/retention | | getRetention.ts | rust |
 | GET | …/journeys | | getJourneys.ts | rust |
-| GET | …/bots/overview | | bots/getBotOverview.ts | rust |
+| GET | …/bots/overview | | bots/getBotOverview.ts | node |
 | GET | …/bots/time-series | | bots/getBotTimeSeries.ts | node |
 | GET | …/bots/by-dimension | | bots/getBotDimension.ts | node |
 | GET | …/bots/ai-summary | | bots/getBotAiSummary.ts | node |
@@ -120,7 +120,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | …/errors/names | | getErrorNames.ts | node |
 | GET | …/errors/events | | getErrorEvents.ts | node |
 | GET | …/errors/time-series | | getErrorBucketed.ts | node |
-| GET | …/performance/overview | | performance/getPerformanceOverview.ts | rust |
+| GET | …/performance/overview | | performance/getPerformanceOverview.ts | node |
 | GET | …/performance/time-series | | performance/getPerformanceTimeSeries.ts | node |
 | GET | …/performance/by-dimension | | performance/getPerformanceByDimension.ts | node |
 
