@@ -58,3 +58,6 @@ coverage/
 .impeccable/critique
 # Local database snapshots (Postgres and ClickHouse dumps)
 backups/
+
+# Rust backend build output
+server-rs/target/
