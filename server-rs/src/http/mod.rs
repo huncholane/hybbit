@@ -13,7 +13,12 @@ use axum::{
 };
 use serde_json::Value;
 
-/// A JSON response with the content type Fastify sends for objects.
+/// Response extension for replies Fastify writes straight to the socket before
+/// any hook runs (`onBadUrl`): the CORS and error-body layers pass them through
+/// untouched.
+#[derive(Clone, Copy, Debug)]
+pub struct RawFrameworkResponse;
+
 /// A JSON response spelled the way `JSON.stringify` spells it (see `js_json`), for
 /// bodies that carry user-provided numbers such as feature flag payloads.
 pub fn js_json(status: StatusCode, value: &Value) -> Response {
@@ -25,6 +30,7 @@ pub fn js_json(status: StatusCode, value: &Value) -> Response {
     response
 }
 
+/// A JSON response with the content type Fastify sends for objects.
 pub fn json(status: StatusCode, value: &Value) -> Response {
     let mut response = Response::new(Body::from(serde_json::to_vec(value).unwrap_or_default()));
     *response.status_mut() = status;

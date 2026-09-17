@@ -114,7 +114,9 @@ pub async fn cors(State(policy): State<Arc<CorsPolicy>>, req: Request, next: Nex
     let Some(credentials) = allow else {
         // A disabled preflight falls through to routing and ends in the 404 handler
         let mut response = next.run(req).await;
-        add_vary_origin(response.headers_mut());
+        if response.extensions().get::<super::RawFrameworkResponse>().is_none() {
+            add_vary_origin(response.headers_mut());
+        }
         return response;
     };
     let origin = raw_origin.unwrap_or_else(|| HeaderValue::from_static(""));
@@ -136,6 +138,9 @@ pub async fn cors(State(policy): State<Arc<CorsPolicy>>, req: Request, next: Nex
     }
 
     let mut response = next.run(req).await;
+    if response.extensions().get::<super::RawFrameworkResponse>().is_some() {
+        return response;
+    }
     // Better Auth sets its own Access-Control-Allow-Origin on some responses (`*` on
     // MCP client registration); in Node it writes after @fastify/cors, so its value wins
     if !response.headers().contains_key(header::ACCESS_CONTROL_ALLOW_ORIGIN) {

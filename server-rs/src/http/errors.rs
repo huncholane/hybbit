@@ -121,7 +121,11 @@ pub async fn api_error_responses(req: Request, next: Next) -> Response {
     let response = next.run(req).await;
 
     let forced = response.extensions().get::<RewriteApiError>().is_some();
-    if response.status().as_u16() < 400 || !is_api_path(&path) || (is_excluded_from_rewrite(&path) && !forced) {
+    if response.status().as_u16() < 400
+        || !is_api_path(&path)
+        || (is_excluded_from_rewrite(&path) && !forced)
+        || response.extensions().get::<super::RawFrameworkResponse>().is_some()
+    {
         return response;
     }
 

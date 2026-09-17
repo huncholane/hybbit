@@ -179,7 +179,17 @@ impl<'a> AuthContext<'a> {
     }
 
     async fn check_api_key(&self, target: AccessTarget<'_>) -> Result<BearerAuthResult, Response> {
-        check_api_key(&self.state.pg, self.token(), target).await.map_err(internal_error)
+        check_api_key(&self.state.pg, self.token(), target).await.map_err(|err| match &err {
+            // Fastify's error handler sends a thrown DrizzleQueryError's message
+            sqlx::Error::Protocol(message) if message.starts_with(super::FAILED_QUERY_PREFIX) => {
+                error!(error = %message, "Auth guard query failed");
+                reply(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    json!({"statusCode": 500, "error": "Internal Server Error", "message": message}),
+                )
+            }
+            _ => internal_error(err),
+        })
     }
 
     async fn session_user_id(&self) -> Result<Option<String>, Response> {
@@ -205,7 +215,7 @@ impl<'a> AuthContext<'a> {
             return Ok(session_principal(Some(session)));
         }
 
-        let target = AccessTarget { organization_id, site_id: site_id.and_then(js_number_param) };
+        let target = AccessTarget { organization_id, site_id: site_id.and_then(js_number_param), ..Default::default() };
         let result = self.check_api_key(target).await?;
         if result.valid {
             return if bearer_scope_ok(&result, scope) { Ok(bearer_principal(result)) } else { Err(insufficient_scope(scope.unwrap())) };
@@ -231,7 +241,8 @@ impl<'a> AuthContext<'a> {
             return Err(reply(StatusCode::BAD_REQUEST, json!({"error": "Site ID required"})));
         };
 
-        let result = self.check_api_key(AccessTarget { site_id: js_number_param(site_id), ..Default::default() }).await?;
+        let target = AccessTarget { site_id: js_number_param(site_id), site_param: Some(site_id), ..Default::default() };
+        let result = self.check_api_key(target).await?;
         let mut scope_denied = false;
         if result.valid {
             if bearer_scope_ok(&result, scope) {
@@ -258,7 +269,8 @@ impl<'a> AuthContext<'a> {
             return Err(reply(StatusCode::BAD_REQUEST, json!({"error": "Site ID required"})));
         };
 
-        let result = self.check_api_key(AccessTarget { site_id: js_number_param(site_id), ..Default::default() }).await?;
+        let target = AccessTarget { site_id: js_number_param(site_id), site_param: Some(site_id), ..Default::default() };
+        let result = self.check_api_key(target).await?;
         let mut scope_denied = false;
         if result.valid && matches!(result.role.as_deref(), Some("admin" | "owner")) {
             if bearer_scope_ok(&result, scope) {
@@ -290,7 +302,8 @@ impl<'a> AuthContext<'a> {
             return Err(reply(StatusCode::BAD_REQUEST, json!({"error": "Site ID required"})));
         };
 
-        let result = self.check_api_key(AccessTarget { site_id: js_number_param(site_id), ..Default::default() }).await?;
+        let target = AccessTarget { site_id: js_number_param(site_id), site_param: Some(site_id), ..Default::default() };
+        let result = self.check_api_key(target).await?;
         let mut scope_denied = false;
         if result.valid {
             if bearer_scope_ok(&result, scope) {

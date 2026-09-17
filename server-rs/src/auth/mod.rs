@@ -33,6 +33,21 @@ pub struct BearerAuthResult {
 pub struct AccessTarget<'a> {
     pub organization_id: Option<&'a str>,
     pub site_id: Option<i64>,
+    /// The `:siteId` route parameter as sent. When set it replaces `site_id`:
+    /// Node looks the site up with `Number(siteId)`, and a value Postgres cannot
+    /// read as an integer (NaN, 1.5, out of range) fails that query
+    pub site_param: Option<&'a str>,
+}
+
+/// The message of the `DrizzleQueryError` Node's site lookup throws for such a
+/// parameter; guards answer it with a 500 carrying this message.
+pub const FAILED_QUERY_PREFIX: &str = "Failed query: ";
+
+fn failed_site_lookup(site_number: f64) -> sqlx::Error {
+    sqlx::Error::Protocol(format!(
+        "{FAILED_QUERY_PREFIX}select \"organization_id\" from \"sites\" where \"sites\".\"site_id\" = $1 limit $2\nparams: {},1",
+        crate::analytics::js::number::number_to_string(site_number)
+    ))
 }
 
 /// `resolveBearerTokenFromRequest`: `Authorization: Bearer` first, then `?api_key=`
@@ -46,7 +61,19 @@ async fn target_organization_id(pg: &PgPool, target: AccessTarget<'_>) -> Result
     if let Some(organization_id) = target.organization_id.filter(|id| !id.is_empty()) {
         return Ok(Some(organization_id.to_string()));
     }
-    let Some(site_id) = target.site_id.filter(|id| *id != 0) else {
+    let site_id = match target.site_param {
+        Some(raw) if !raw.is_empty() => {
+            let number = crate::analytics::js::JsValue::from(raw).to_number();
+            if !(number.fract() == 0.0 && number >= f64::from(i32::MIN) && number <= f64::from(i32::MAX)) {
+                debug!(site_param = raw, "Site parameter is not an integer Postgres accepts");
+                return Err(failed_site_lookup(number));
+            }
+            Some(number as i64)
+        }
+        Some(_) => None,
+        None => target.site_id,
+    };
+    let Some(site_id) = site_id.filter(|id| *id != 0) else {
         return Ok(None);
     };
     let organization_id: Option<Option<String>> =
@@ -149,6 +176,7 @@ mod parity {
             let target = AccessTarget {
                 organization_id: case["target"]["organizationId"].as_str(),
                 site_id: case["target"]["siteId"].as_i64(),
+                site_param: None,
             };
             let result = check_api_key(&pg, token, target).await.unwrap();
             let rows: String = sqlx::query_scalar(plan["state"].as_str().unwrap()).fetch_one(&pg).await.unwrap();
