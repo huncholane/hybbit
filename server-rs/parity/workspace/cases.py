@@ -271,7 +271,7 @@ CARD_QUERIES = [
     {"query": "SELECT * FROM system.tables"}, {"query": "SELECT hostName() h FROM scoped_events LIMIT 1"},
     {"query": "SELECT sleepEachRow(3) FROM scoped_events LIMIT 4"},
     {"query": "SELECT count() FROM scoped_events", "startDate": "2026-09-01", "endDate": "2026-09-01", "timeZone": "+05:30"},
-    {"query": "SELECT toTimeZone(timestamp, {{tz}}) FROM scoped_events LIMIT 1", "timeZone": "Europe/Berlin"},
+    {"query": "SELECT toTimeZone(timestamp, {{tz}}) FROM scoped_events ORDER BY timestamp_ms, session_id LIMIT 1", "timeZone": "Europe/Berlin"},
     {"query": "SELECT count() FROM scoped_events SETTINGS max_result_rows = 0"},
     {"query": "SELECT number FROM numbers(5)"},
     {"query": "SELECT * FROM url('http://127.0.0.1:1/', CSV, 'a String')"},

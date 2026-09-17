@@ -2,7 +2,7 @@
 client, Postgres row fixtures with symbolic ids, and response normalisation.
 
 Outputs (creds.json, results) live in $PARITY_WORKSPACE_OUT."""
-import http.client, json, os, re, socket, time
+import calendar, http.client, json, os, re, socket, time
 
 import psycopg2
 
@@ -190,10 +190,10 @@ def is_recent(text):
     if not isinstance(text, str) or not RECENT.match(text):
         return False
     try:
-        stamp = time.mktime(time.strptime(text[:19].replace("T", " "), "%Y-%m-%d %H:%M:%S"))
+        stamp = calendar.timegm(time.strptime(text[:19].replace("T", " "), "%Y-%m-%d %H:%M:%S"))
     except ValueError:
         return False
-    return abs(stamp - time.mktime(time.gmtime())) < 900
+    return abs(stamp - time.time()) < 900
 
 
 def snapshot(ids):

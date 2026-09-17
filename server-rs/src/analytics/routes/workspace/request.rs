@@ -208,11 +208,21 @@ pub async fn param_failure(failure: ParamFailure, method: Method, uri: Uri) -> R
     match failure {
         ParamFailure::NotFound => http::errors::not_found(method, uri).await,
         ParamFailure::BadUrl => {
-            let message = format!("'{}' is not a valid url component", uri.path());
-            http::json(
-                StatusCode::BAD_REQUEST,
-                &json!({ "error": "Bad Request", "code": "FST_ERR_BAD_URL", "message": message, "statusCode": 400 }),
-            )
+            // find-my-way reports the URL as requested, query string included, and
+            // Fastify writes the reply itself: plain JSON content type, no hooks
+            let url = uri.path_and_query().map_or_else(|| uri.path().to_string(), |value| value.as_str().to_string());
+            warn!(url = %url, "Request URL is not a valid url component");
+            let body = json!({
+                "error": "Bad Request",
+                "code": "FST_ERR_BAD_URL",
+                "message": format!("'{url}' is not a valid url component"),
+                "statusCode": 400,
+            });
+            let mut response = Response::new(Body::from(crate::js_json::stringify(&body)));
+            *response.status_mut() = StatusCode::BAD_REQUEST;
+            response.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
+            response.extensions_mut().insert(http::RawFrameworkResponse);
+            response
         }
     }
 }
