@@ -5,7 +5,8 @@ The Fastify backend in `../server` is being rewritten in Rust (this crate), rout
 ## Decisions (2026-09-17)
 
 - **Cutover:** route by route. The Rust container runs next to Node on the rybbit box; Caddy sends ported paths to Rust and everything else to Node until nothing is left, then Node is removed.
-- **Scope:** everything, including features with no production data (Stripe, AppSumo, Search Console, session replay, imports, feature flags, experiments, goals, segments, dashboards, annotations, identify, MCP, PDF export).
+- **Scope:** everything, including features with no production data (Search Console, session replay, imports, feature flags, experiments, goals, segments, dashboards, annotations, identify, MCP, PDF export).
+- **No billing** (user, 2026-09-17: "we don't really need stripe"): Stripe and AppSumo routes, the Stripe webhook, the usage cron and plan lookups are not ported. They were only registered with `CLOUD=true`, which production never set, so nothing live changes. Wherever Node consults a plan (import quotas, PDF export, replay entitlement, API key limits, over-limit checks), Rust implements the self-hosted answer Node gives without `CLOUD`.
 - **Logins keep working:** `/api/auth/*` is reimplemented wire-compatible with the Better Auth 1.6.25 subset the client uses, reading and writing the same Postgres rows, so no user is logged out and no password changes.
 - **PDF export:** drawn with the `pdf-writer` crate, no Chromium.
 - **Sign-ups stay disabled** (`DISABLE_SIGNUP=true`): both password sign-up and email-code sign-in for unknown emails are refused, matching `emailAndPassword.disableSignUp` and `emailOTP({ disableSignUp })`.
@@ -45,7 +46,7 @@ From the inventory of `server/src/index.ts`, `cluster.ts`, `lib/cors.ts`, `lib/a
 - **Logging:** request log levels as in `requestLogging.ts` (errors ≥ 500, warnings ≥ 400, ingest and script successes at debug, others info), silent for health and live-user-count; redact credentials, cookies, tokens, emails, bodies, queries, SQL and prompts.
 - **Ingest quirks to keep:** hard-coded drop of site 9133 events with an 800×600 screen; `ingest:write` bearer lets the payload override `ip_address`/`user_agent` and skips bot detection.
 - **Startup side effects:** promote the oldest user to admin on every boot; migrations stay with drizzle-kit (the Rust service never runs migrations).
-- **Known Node bugs to decide on, not copy blindly:** the Stripe webhook never has a raw body (always 400); the AppSumo webhook has no signature check; the pageview and bot queues are not flushed on shutdown (Rust should flush).
+- **Known Node bugs to decide on, not copy blindly:** the pageview and bot queues are not flushed on shutdown (Rust should flush).
 
 ## Phases
 
@@ -56,7 +57,7 @@ From the inventory of `server/src/index.ts`, `cluster.ts`, `lib/cors.ts`, `lib/a
 | 2 | Auth | `/api/auth/*` (email+password, email OTP, sessions, organizations, teams, invitations, API keys, admin, MCP OAuth), guards, scopes, private links, public sites, rate limiting | not started |
 | 3 | Analytics reads | overview, metric, page titles, time series, lite, retention, journeys, bots, errors, performance, sessions, events, users and traits, funnels, goals, annotations, dashboards and run-card, segments, custom SQL and generate, flags and experiments CRUD/results, replay reads | not started |
 | 4 | Sites and orgs | sites, config, exclusions, private links, usage, imports, embed stats, check-install, organizations, members, teams, member access, org exclusions, API keys, API usage, account settings, unsubscribe | not started |
-| 5 | The rest | admin, Stripe and AppSumo (cloud-gated), Search Console, PDF (pdf-writer), telemetry, usage/weekly/lifecycle crons, MCP server and `.well-known` | not started |
+| 5 | The rest | admin, Search Console, PDF (pdf-writer), telemetry, weekly/lifecycle crons, MCP server and `.well-known` (no Stripe or AppSumo) | not started |
 | 6 | Remove Node | Caddy default to Rust, drop the `backend` service and image | not started |
 
 ## Route inventory
@@ -291,20 +292,20 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | DELETE | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | node |
 | GET | /api/admin/service-event-count | getAdminServiceEventCount.ts | node |
 
-### Stripe and AppSumo (registered only when `CLOUD=true`)
+### Stripe and AppSumo (registered only when `CLOUD=true`; not ported, see Decisions)
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| POST | /api/stripe/create-checkout-session | authOnlyNoScopedKeys | api/stripe/createCheckoutSession.ts | node |
-| POST | /api/stripe/create-portal-session | authOnlyNoScopedKeys | api/stripe/createPortalSession.ts | node |
-| POST | /api/stripe/preview-subscription-update | authOnlyNoScopedKeys | api/stripe/previewSubscriptionUpdate.ts | node |
-| POST | /api/stripe/update-subscription | authOnlyNoScopedKeys | api/stripe/updateSubscription.ts | node |
-| GET | /api/stripe/subscription | authOnlyNoScopedKeys | api/stripe/getSubscription.ts | node |
-| GET | /api/stripe/invoices | authOnlyNoScopedKeys | api/stripe/getInvoices.ts | node |
-| POST | /api/stripe/cancellation-feedback | authOnlyNoScopedKeys | api/stripe/submitCancellationFeedback.ts | node |
-| POST | /api/stripe/webhook | raw body | api/stripe/webhook.ts | node |
-| POST | /api/as/activate | authOnlyNoScopedKeys | api/as/activate.ts | node |
-| POST | /api/as/webhook | none | api/as/webhook.ts | node |
+| POST | /api/stripe/create-checkout-session | authOnlyNoScopedKeys | api/stripe/createCheckoutSession.ts | dropped |
+| POST | /api/stripe/create-portal-session | authOnlyNoScopedKeys | api/stripe/createPortalSession.ts | dropped |
+| POST | /api/stripe/preview-subscription-update | authOnlyNoScopedKeys | api/stripe/previewSubscriptionUpdate.ts | dropped |
+| POST | /api/stripe/update-subscription | authOnlyNoScopedKeys | api/stripe/updateSubscription.ts | dropped |
+| GET | /api/stripe/subscription | authOnlyNoScopedKeys | api/stripe/getSubscription.ts | dropped |
+| GET | /api/stripe/invoices | authOnlyNoScopedKeys | api/stripe/getInvoices.ts | dropped |
+| POST | /api/stripe/cancellation-feedback | authOnlyNoScopedKeys | api/stripe/submitCancellationFeedback.ts | dropped |
+| POST | /api/stripe/webhook | raw body | api/stripe/webhook.ts | dropped |
+| POST | /api/as/activate | authOnlyNoScopedKeys | api/as/activate.ts | dropped |
+| POST | /api/as/webhook | none | api/as/webhook.ts | dropped |
 
 ### MCP and OAuth discovery
 
@@ -326,6 +327,6 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | site baseline refresh | services/tracker/botBlocking/siteBaseline.ts | refresh 15 min (Redis lock), mirror 5 min | 1 (lock-coordinated, safe in both) |
 | bot detection stats | services/tracker/botBlocking/botDetectionStats.ts | every 60 s | 1 (per backend) |
 | telemetry | services/telemetryService.ts | boot + daily, unless CLOUD or DISABLE_TELEMETRY | 5 |
-| usage (Stripe + CH counts, over-limit sets) | services/usageService.ts | every 30 min, CLOUD only | 5 |
+| usage (Stripe + CH counts, over-limit sets) | services/usageService.ts | every 30 min, CLOUD only | dropped (no billing) |
 | weekly reports | services/weekyReports/weeklyReportService.ts | Mondays, CLOUD only | 5 |
 | lifecycle emails | services/lifecycleEmails/lifecycleEmailService.ts | every 10 min, CLOUD only | 5 |
