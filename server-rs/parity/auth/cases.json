@@ -1,0 +1,480 @@
+{
+  "_comment": "Bearer credential parity: each case resets the parity-* apikey and oauthAccessToken rows, runs checkApiKey, then records the result and the surviving rows. Run with parity/auth/run.sh.",
+  "org": "kb0biUnGlr3qcPEnKUTeqjv0TyGK2eHE",
+  "owner": "XoNIxodDwuJOefJZebreRpXzn7Sq3hlL",
+  "member": "ZDZZHJlo6olnWqliEC5t0kHoxcurXqBM",
+  "client": "parity-client",
+  "cases": [
+    {
+      "name": "no token",
+      "token": null,
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "unknown token",
+      "token": "rb_nothing_here",
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "user key, owner, unrestricted",
+      "token": "parity-user-owner",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-user-owner",
+          "referenceId": "$owner",
+          "configId": "default"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "legacy key without configId",
+      "token": "parity-legacy",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-legacy",
+          "referenceId": "$member",
+          "configId": null
+        }
+      ],
+      "target": {
+        "siteId": 2
+      }
+    },
+    {
+      "name": "user key via query string",
+      "token": null,
+      "queryApiKey": "parity-query",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-query",
+          "referenceId": "$member",
+          "configId": "default"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "user key, not a member",
+      "token": "parity-stranger",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-stranger",
+          "referenceId": "parity-nobody",
+          "configId": "default",
+          "permissions": "{\"ingest\":[\"write\"]}"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "user key, unknown site",
+      "token": "parity-nosite",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-nosite",
+          "referenceId": "$owner",
+          "configId": "default"
+        }
+      ],
+      "target": {
+        "siteId": 99999
+      }
+    },
+    {
+      "name": "user key, explicit organization",
+      "token": "parity-orgtarget",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-orgtarget",
+          "referenceId": "$owner",
+          "configId": "default"
+        }
+      ],
+      "target": {
+        "organizationId": "$org"
+      }
+    },
+    {
+      "name": "org key, own site, scoped",
+      "token": "rb_org_parity",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "rb_org_parity",
+          "referenceId": "$org",
+          "configId": "org",
+          "permissions": "{\"ingest\":[\"write\"],\"goals\":[\"read\",\"write\"],\"bogus\":[\"read\"]}"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "org key, other organization",
+      "token": "rb_org_other",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "rb_org_other",
+          "referenceId": "parity-other-org",
+          "configId": "org"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "disabled key",
+      "token": "parity-disabled",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-disabled",
+          "referenceId": "$owner",
+          "configId": "default",
+          "enabled": false
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "expired key is deleted",
+      "token": "parity-expired",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-expired",
+          "referenceId": "$owner",
+          "configId": "default",
+          "expiresAtOffsetSeconds": -60
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "unexpired key",
+      "token": "parity-fresh",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-fresh",
+          "referenceId": "$owner",
+          "configId": "default",
+          "expiresAtOffsetSeconds": 3600
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "exhausted key is deleted",
+      "token": "parity-exhausted",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-exhausted",
+          "referenceId": "$owner",
+          "configId": "default",
+          "remaining": 0
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "remaining decrements",
+      "token": "parity-remaining",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-remaining",
+          "referenceId": "$owner",
+          "configId": "default",
+          "remaining": 2
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "refill due",
+      "token": "parity-refill",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-refill",
+          "referenceId": "$owner",
+          "configId": "default",
+          "remaining": 0,
+          "refillAmount": 5,
+          "refillInterval": 1000,
+          "lastRefillAtOffsetSeconds": -3600
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "refill not due and empty",
+      "token": "parity-norefill",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-norefill",
+          "referenceId": "$owner",
+          "configId": "default",
+          "remaining": 0,
+          "refillAmount": 5,
+          "refillInterval": 86400000,
+          "lastRefillAtOffsetSeconds": -60
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "refill from createdAt",
+      "token": "parity-refill-created",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-refill-created",
+          "referenceId": "$owner",
+          "configId": "default",
+          "remaining": 1,
+          "refillAmount": 3,
+          "refillInterval": 1000
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "unparseable permissions are unrestricted",
+      "token": "parity-badjson",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-badjson",
+          "referenceId": "$owner",
+          "configId": "default",
+          "permissions": "not json"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "empty permissions object denies all",
+      "token": "parity-empty",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-empty",
+          "referenceId": "$owner",
+          "configId": "default",
+          "permissions": "{}"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "array permissions deny all",
+      "token": "parity-array",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-array",
+          "referenceId": "$owner",
+          "configId": "default",
+          "permissions": "[\"ingest\"]"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "oauth token with custom scopes",
+      "token": "parityoauthvalid",
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parityoauthvalid",
+          "userId": "$member",
+          "expiresOffsetSeconds": 3600,
+          "scopes": "openid profile ingest:write sql:read nope:read"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "oauth token with only oidc scopes",
+      "token": "parityoauthoidc",
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parityoauthoidc",
+          "userId": "$owner",
+          "expiresOffsetSeconds": 3600,
+          "scopes": "openid email offline_access"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "expired oauth token",
+      "token": "parityoauthold",
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parityoauthold",
+          "userId": "$owner",
+          "expiresOffsetSeconds": -5,
+          "scopes": "openid"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "oauth token without user",
+      "token": "parityoauthnouser",
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parityoauthnouser",
+          "userId": null,
+          "expiresOffsetSeconds": 3600,
+          "scopes": "openid"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "api key wins over a same-valued oauth token",
+      "token": "parity-both",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-both",
+          "referenceId": "$org",
+          "configId": "org"
+        }
+      ],
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parity-both",
+          "userId": "$member",
+          "expiresOffsetSeconds": 3600,
+          "scopes": "openid"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "disabled key falls through to oauth",
+      "token": "parity-fallthrough",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-fallthrough",
+          "referenceId": "$owner",
+          "configId": "default",
+          "enabled": false
+        }
+      ],
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parity-fallthrough",
+          "userId": "$member",
+          "expiresOffsetSeconds": 3600,
+          "scopes": "goals:read"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "oauth token, user outside the organization",
+      "token": "parityoauthstranger",
+      "oauth": [
+        {
+          "id": "parity-o1",
+          "accessToken": "parityoauthstranger",
+          "userId": "$stranger",
+          "expiresOffsetSeconds": 3600,
+          "scopes": "ingest:write"
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    },
+    {
+      "name": "refill due on a millisecond timestamp",
+      "token": "parity-refill-ms",
+      "keys": [
+        {
+          "id": "parity-1",
+          "key": "parity-refill-ms",
+          "referenceId": "$owner",
+          "configId": "default",
+          "remaining": 0,
+          "refillAmount": 5,
+          "refillInterval": 1000,
+          "lastRefillAtOffsetSeconds": -3600,
+          "millisecondTimestamps": true
+        }
+      ],
+      "target": {
+        "siteId": 1
+      }
+    }
+  ],
+  "stranger": "GrOwOZVmycGqPD5WD7yIiw4CWBv0dPBa"
+}

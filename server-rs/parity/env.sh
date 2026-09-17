@@ -2,6 +2,8 @@
 # stores from docker-compose.yml. Mirrors production's settings where they change
 # behaviour (NODE_ENV, BASE_URL, DISABLE_SIGNUP); secrets are local placeholders.
 export NODE_ENV=production
+# Production containers run in UTC, and Node reads timestamp-without-time-zone columns as local time
+export TZ=UTC
 export BASE_URL=https://a.hygo.ai
 export BETTER_AUTH_SECRET=parity-local-secret-not-for-production
 export DISABLE_SIGNUP=true
