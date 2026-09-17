@@ -1,0 +1,38 @@
+[
+  { "name": "health", "method": "GET", "path": "/api/health" },
+  { "name": "config", "method": "GET", "path": "/api/config" },
+  { "name": "version", "method": "GET", "path": "/api/version" },
+  { "name": "version from any origin (public path)", "method": "GET", "path": "/api/version", "headers": { "Origin": "https://spiritfacts.com" } },
+  { "name": "config from the dashboard origin", "method": "GET", "path": "/api/config", "headers": { "Origin": "https://a.hygo.ai" } },
+  { "name": "config from an untrusted origin", "method": "GET", "path": "/api/config", "headers": { "Origin": "https://evil.example" } },
+  {
+    "name": "tracking preflight from a customer site",
+    "method": "OPTIONS",
+    "path": "/api/track",
+    "headers": { "Origin": "https://spiritfacts.com", "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "content-type" }
+  },
+  {
+    "name": "tracking preflight from the dashboard origin",
+    "method": "OPTIONS",
+    "path": "/api/track",
+    "headers": { "Origin": "https://a.hygo.ai", "Access-Control-Request-Method": "POST" }
+  },
+  { "name": "preflight without a request method", "method": "OPTIONS", "path": "/api/track", "headers": { "Origin": "https://spiritfacts.com" } },
+  {
+    "name": "preflight to a private path from an untrusted origin",
+    "method": "OPTIONS",
+    "path": "/api/config",
+    "headers": { "Origin": "https://evil.example", "Access-Control-Request-Method": "GET" }
+  },
+  { "name": "write from an untrusted origin", "method": "POST", "path": "/api/config", "headers": { "Origin": "https://evil.example" }, "body": {} },
+  { "name": "write with an unparseable origin", "method": "PUT", "path": "/api/config", "headers": { "Origin": "null" }, "body": {} },
+  { "name": "script.js", "method": "GET", "path": "/api/script.js" },
+  { "name": "script.js HEAD", "method": "HEAD", "path": "/api/script.js" },
+  { "name": "replay.js", "method": "GET", "path": "/api/replay.js" },
+  { "name": "metrics.js", "method": "GET", "path": "/api/metrics.js" },
+  { "name": "script.js from a customer site", "method": "GET", "path": "/api/script.js", "headers": { "Origin": "https://spiritfacts.com" } },
+  { "name": "root static script-full.js", "method": "GET", "path": "/script-full.js" },
+  { "name": "unknown api route", "method": "GET", "path": "/api/definitely-not-a-route?x=1" },
+  { "name": "wrong method on a known path", "method": "DELETE", "path": "/api/version" },
+  { "name": "unknown non-api path", "method": "GET", "path": "/definitely-not-a-file" }
+]

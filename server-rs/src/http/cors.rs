@@ -90,12 +90,14 @@ pub async fn cors(State(policy): State<Arc<CorsPolicy>>, req: Request, next: Nex
         .and_then(normalize_origin);
     let public = is_public_cors_path(&path);
 
-    // Node refuses cross-origin writes from untrusted origins in an onRequest hook
-    // that runs before CORS, so this 403 carries no CORS headers
+    // Node refuses cross-origin writes from untrusted origins in an onRequest hook.
+    // CORS has already run by then, but for an untrusted origin it adds only Vary.
     if is_unsafe_method(&method) && raw_origin.is_some() && !public {
         let trusted = normalized_origin.as_deref().is_some_and(|origin| policy.is_trusted(origin));
         if !trusted {
-            return super::json(StatusCode::FORBIDDEN, &json!({ "error": "Origin not allowed" }));
+            let mut response = super::json(StatusCode::FORBIDDEN, &json!({ "error": "Origin not allowed" }));
+            add_vary_origin(response.headers_mut());
+            return response;
         }
     }
 

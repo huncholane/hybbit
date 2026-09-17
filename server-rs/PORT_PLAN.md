@@ -51,7 +51,7 @@ From the inventory of `server/src/index.ts`, `cluster.ts`, `lib/cors.ts`, `lib/a
 
 | # | Phase | Contents | Status |
 |---|---|---|---|
-| 0 | Foundation | Skeleton, config, store connections, JSON logs, health. HTTP layer: error rewriting, 404, CORS, write-origin check, request logging, auto-HEAD, JSON shaping, static and script routes, `/api/config`, `/api/version`. Dockerfile, compose service, Caddy matcher. | skeleton done |
+| 0 | Foundation | Skeleton, config, store connections, JSON logs, health. HTTP layer: error rewriting, 404, CORS, write-origin check, request logging, auto-HEAD, JSON shaping, static and script routes, `/api/config`, `/api/version`. Dockerfile, compose service, Caddy matcher. | code done, 21/21 parity cases match (`parity/cases/phase0.json`); deploy pending |
 | 1 | Tracking | tracking-config, track, identify, session replay record, flag evaluate; payload validation, client IP, exclusions, usage gate, bot detection (header/UA heuristics, client score, datacenter ASN, anomaly scorer, site baseline, stats), user id (daily salt, identity IP bucket, sticky identity), sessions, pageview/bot/observation queues with GeoIP enrichment, identity backfill queue | not started |
 | 2 | Auth | `/api/auth/*` (email+password, email OTP, sessions, organizations, teams, invitations, API keys, admin, MCP OAuth), guards, scopes, private links, public sites, rate limiting | not started |
 | 3 | Analytics reads | overview, metric, page titles, time series, lite, retention, journeys, bots, errors, performance, sessions, events, users and traits, funnels, goals, annotations, dashboards and run-card, segments, custom SQL and generate, flags and experiments CRUD/results, replay reads | not started |

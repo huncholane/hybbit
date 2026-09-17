@@ -62,9 +62,10 @@ async fn serve_or_not_found(path: &Path, max_age: u32, headers: &HeaderMap, rout
 async fn file_response(path: &Path, max_age: u32, request_headers: &HeaderMap) -> Option<Response> {
     let metadata = tokio::fs::metadata(path).await.ok().filter(|metadata| metadata.is_file())?;
     let modified = metadata.modified().ok();
+    // Node's fs.Stats rounds the modification time to the nearest millisecond
     let mtime_ms = modified
         .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
-        .map_or(0, |duration| duration.as_millis());
+        .map_or(0, |duration| (duration.as_nanos() + 500_000) / 1_000_000);
     // The `etag` package's stat form, which @fastify/send uses
     let etag = format!("W/\"{:x}-{:x}\"", metadata.len(), mtime_ms);
     let last_modified = modified.map(httpdate::fmt_http_date);
