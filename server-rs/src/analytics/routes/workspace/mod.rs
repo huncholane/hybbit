@@ -22,7 +22,7 @@ use axum::{
     routing::{MethodFilter, MethodRouter, get, post, put},
 };
 
-use crate::state::AppState;
+use crate::{http::errors, state::AppState};
 
 mod access;
 mod annotation_schema;
@@ -74,7 +74,7 @@ fn complete(handlers: MethodRouter<AppState>, registered: &[&str]) -> MethodRout
     let answered = |name: &str| registered.contains(&name) || (name == "HEAD" && registered.contains(&"GET"));
     all.into_iter()
         .filter(|(name, _)| !answered(name))
-        .fold(handlers, |handlers, (_, filter)| handlers.on(filter, request::unregistered_method))
+        .fold(handlers, |handlers, (_, filter)| handlers.on(filter, errors::not_found))
 }
 
 pub fn router() -> Router<AppState> {

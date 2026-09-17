@@ -207,6 +207,7 @@ pub fn route_params(uri: &Uri, indices: &[usize]) -> Result<Vec<String>, ParamFa
 pub async fn param_failure(failure: ParamFailure, method: Method, uri: Uri) -> Response {
     match failure {
         ParamFailure::NotFound => http::errors::not_found(method, uri).await,
+        // Normally answered earlier by http::bad_url at the edge; kept for a direct call
         ParamFailure::BadUrl => {
             // find-my-way reports the URL as requested, query string included, and
             // Fastify writes the reply itself: plain JSON content type, no hooks
@@ -224,15 +225,6 @@ pub async fn param_failure(failure: ParamFailure, method: Method, uri: Uri) -> R
             response.extensions_mut().insert(http::RawFrameworkResponse);
             response
         }
-    }
-}
-
-/// An unregistered method on a workspace path: find-my-way still decodes the URL
-/// first, so a malformed escape answers FST_ERR_BAD_URL rather than the 404.
-pub async fn unregistered_method(method: Method, uri: Uri) -> Response {
-    match route_params(&uri, &[]) {
-        Err(failure) => param_failure(failure, method, uri).await,
-        Ok(_) => http::errors::not_found(method, uri).await,
     }
 }
 
