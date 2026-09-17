@@ -4,6 +4,7 @@
 
 pub mod bearer;
 pub mod scopes;
+pub mod session;
 
 use sqlx::PgPool;
 use tracing::debug;

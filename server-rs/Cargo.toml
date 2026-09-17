@@ -10,6 +10,7 @@ base64 = "0.23.1"
 chrono = { version = "0.4.45", features = ["serde"] }
 fancy-regex = "0.19.2"
 hex = "0.4.3"
+hmac = "0.13.0"
 httpdate = "1.0.3"
 indexmap = "2.14.2"
 maxminddb = { version = "0.32.0", features = ["mmap"] }
