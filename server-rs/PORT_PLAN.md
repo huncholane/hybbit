@@ -93,7 +93,8 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| ALL | /api/auth/* | Better Auth | lib/auth.ts | node |
+| ALL | /api/auth/* (the 64 paths in `auth::endpoints::ported_paths`: sign-in/up/out, session, user, email OTP, organizations, admin, api-key list/delete, MCP OAuth) | Better Auth | lib/auth.ts | rust (2026-09-17, Caddy `@rustAuth`) |
+| ALL | /api/auth/* (everything else: teams, account linking, api-key create/get/update, reset-password, dash, events) | Better Auth | lib/auth.ts | node (dash and events blocked at Caddy) |
 | ALL | /auth/* | Better Auth | lib/auth.ts | node |
 
 ### Analytics reads (`api/analytics/`, guard publicAnalyticsRead unless noted)
