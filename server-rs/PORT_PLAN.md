@@ -101,26 +101,26 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/live-user-count | publicAnalyticsRead (silent) | getLiveUsercount.ts | node |
-| GET | …/overview | | getOverview.ts | node |
-| GET | …/overview/time-series | | getOverviewBucketed.ts | node |
-| GET | …/overview-lite | | lite/getOverviewLite.ts | node |
-| GET | …/overview-bucketed-lite | | lite/getOverviewBucketedLite.ts | node |
-| GET | …/metric-lite | | lite/getMetricLite.ts | node |
-| GET | …/metric | | getMetric.ts | node |
-| GET | …/page-titles | | getPageTitles.ts | node |
-| GET | …/retention | | getRetention.ts | node |
-| GET | …/journeys | | getJourneys.ts | node |
-| GET | …/bots/overview | | bots/getBotOverview.ts | node |
+| GET | …/live-user-count | publicAnalyticsRead (silent) | getLiveUsercount.ts | rust |
+| GET | …/overview | | getOverview.ts | rust |
+| GET | …/overview/time-series | | getOverviewBucketed.ts | rust |
+| GET | …/overview-lite | | lite/getOverviewLite.ts | rust |
+| GET | …/overview-bucketed-lite | | lite/getOverviewBucketedLite.ts | rust |
+| GET | …/metric-lite | | lite/getMetricLite.ts | rust |
+| GET | …/metric | | getMetric.ts | rust |
+| GET | …/page-titles | | getPageTitles.ts | rust |
+| GET | …/retention | | getRetention.ts | rust |
+| GET | …/journeys | | getJourneys.ts | rust |
+| GET | …/bots/overview | | bots/getBotOverview.ts | rust |
 | GET | …/bots/time-series | | bots/getBotTimeSeries.ts | node |
 | GET | …/bots/by-dimension | | bots/getBotDimension.ts | node |
 | GET | …/bots/ai-summary | | bots/getBotAiSummary.ts | node |
 | GET | …/export/pdf | authAnalyticsRead | generatePdfReport.ts | node |
-| GET | /api/org-event-count/:organizationId | orgAnalyticsRead | getOrgEventCount.ts | node |
+| GET | /api/org-event-count/:organizationId | orgAnalyticsRead | getOrgEventCount.ts | rust |
 | GET | …/errors/names | | getErrorNames.ts | node |
 | GET | …/errors/events | | getErrorEvents.ts | node |
 | GET | …/errors/time-series | | getErrorBucketed.ts | node |
-| GET | …/performance/overview | | performance/getPerformanceOverview.ts | node |
+| GET | …/performance/overview | | performance/getPerformanceOverview.ts | rust |
 | GET | …/performance/time-series | | performance/getPerformanceTimeSeries.ts | node |
 | GET | …/performance/by-dimension | | performance/getPerformanceByDimension.ts | node |
 
@@ -133,7 +133,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | …/sessions/locations | publicSessionsRead | sessions/getSessionLocations.ts | node |
 | GET | …/events | publicEventsRead | events/getEvents.ts | node |
 | GET | …/events/time-series | publicEventsRead | events/getEventBucketed.ts | node |
-| GET | …/events/count | publicEventsRead | events/getSiteEventCount.ts | node |
+| GET | …/events/count | publicEventsRead | events/getSiteEventCount.ts | rust |
 | GET | …/events/names | publicEventsRead | events/getEventNames.ts | node |
 | GET | …/events/properties | publicEventsRead | events/getEventProperties.ts | node |
 | GET | …/events/autocapture | publicEventsRead | events/getAutocaptureEvents.ts | node |
@@ -225,8 +225,8 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | DELETE | /api/sites/:siteId | adminSitesWrite | deleteSite.ts | node |
 | GET | …/private-link-config | adminSitesWrite | getSitePrivateLinkConfig.ts | node |
 | POST | …/private-link-config | adminSitesWrite | updateSitePrivateLinkConfig.ts | node |
-| GET | …/has-data | publicSitesRead | getSiteHasData.ts | node |
-| GET | …/is-public | publicSitesRead | getSiteIsPublic.ts | node |
+| GET | …/has-data | publicSitesRead | getSiteHasData.ts | rust |
+| GET | …/is-public | publicSitesRead | getSiteIsPublic.ts | rust |
 | GET | …/excluded-ips | authSitesRead | getSiteExclusions.ts | node |
 | GET | …/excluded-countries | authSitesRead | getSiteExclusions.ts | node |
 | GET | …/excluded-paths | authSitesRead | getSiteExclusions.ts | node |
