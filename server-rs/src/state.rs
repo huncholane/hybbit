@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use anyhow::{Context, Result};
 use percent_encoding::{NON_ALPHANUMERIC, utf8_percent_encode};
 use sqlx::PgPool;
@@ -6,16 +8,17 @@ use tracing::info;
 
 use crate::{clickhouse::ClickHouse, config::Config};
 
-/// Shared handles to the data stores, cloned into every handler.
+/// Shared handles to the configuration and data stores, cloned into every handler.
 #[derive(Clone)]
 pub struct AppState {
+    pub config: Arc<Config>,
     pub pg: PgPool,
     pub clickhouse: ClickHouse,
     pub redis: redis::aio::ConnectionManager,
 }
 
 impl AppState {
-    pub async fn connect(config: &Config) -> Result<Self> {
+    pub async fn connect(config: Config) -> Result<Self> {
         let pg_options = PgConnectOptions::new()
             .host(&config.postgres.host)
             .port(config.postgres.port)
@@ -54,6 +57,6 @@ impl AppState {
             .context("connecting to Redis")?;
         info!(host = %config.redis.host, "Redis connected");
 
-        Ok(Self { pg, clickhouse, redis })
+        Ok(Self { config: Arc::new(config), pg, clickhouse, redis })
     }
 }

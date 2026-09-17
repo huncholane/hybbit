@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use anyhow::{Context, Result};
 
 /// Settings read from the same environment variables as the Node backend, so the
@@ -6,6 +8,17 @@ use anyhow::{Context, Result};
 #[derive(Clone)]
 pub struct Config {
     pub port: u16,
+    /// Public origin of the dashboard (BASE_URL); the trusted CORS origin
+    pub base_url: Option<String>,
+    /// NODE_ENV == "production": no localhost CORS origins, secure cookies
+    pub production: bool,
+    pub disable_signup: bool,
+    pub lite_dashboard: bool,
+    /// MAPBOX_TOKEN exactly as Node sees it: unset stays absent from /api/config,
+    /// an empty value is sent as ""
+    pub mapbox_token: Option<String>,
+    /// Directory with script.js, rrweb.min.js and friends (PUBLIC_DIR, default ./public)
+    pub public_dir: PathBuf,
     pub postgres: PostgresConfig,
     pub clickhouse: ClickHouseConfig,
     pub redis: RedisConfig,
@@ -40,6 +53,12 @@ impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
             port: port_from_env("PORT", 3001)?,
+            base_url: env_opt("BASE_URL"),
+            production: std::env::var("NODE_ENV").as_deref() == Ok("production"),
+            disable_signup: flag("DISABLE_SIGNUP"),
+            lite_dashboard: flag("LITE_DASHBOARD"),
+            mapbox_token: std::env::var("MAPBOX_TOKEN").ok(),
+            public_dir: PathBuf::from(env_or("PUBLIC_DIR", "public")),
             postgres: PostgresConfig {
                 host: env_or("POSTGRES_HOST", "postgres"),
                 port: port_from_env("POSTGRES_PORT", 5432)?,
@@ -50,6 +69,8 @@ impl Config {
             clickhouse: ClickHouseConfig {
                 url: env_or("CLICKHOUSE_HOST", "http://clickhouse:8123"),
                 database: env_or("CLICKHOUSE_DB", "analytics"),
+                // Node always connects as `default`; CLICKHOUSE_USER is honoured here
+                // only so a local setup can differ
                 user: env_or("CLICKHOUSE_USER", "default"),
                 password: env_or("CLICKHOUSE_PASSWORD", ""),
             },
@@ -60,6 +81,11 @@ impl Config {
             },
         })
     }
+}
+
+/// Node's `process.env.X === "true"`
+fn flag(name: &str) -> bool {
+    std::env::var(name).as_deref() == Ok("true")
 }
 
 fn env_opt(name: &str) -> Option<String> {

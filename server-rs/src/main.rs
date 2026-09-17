@@ -1,18 +1,20 @@
 //! Hygo analytics backend: the Rust port of the Fastify server in `../server`.
 //!
 //! The port happens route by route. Caddy sends every path this service implements
-//! here and everything else to the Node backend until the port is complete.
+//! here and everything else to the Node backend until the port is complete; see
+//! PORT_PLAN.md for what is ported and what must match Node exactly.
 
 mod clickhouse;
 mod config;
 mod error;
+mod http;
+mod json_shape;
 mod routes;
 mod state;
 
 use std::net::SocketAddr;
 
 use anyhow::Context;
-use tower_http::trace::TraceLayer;
 use tracing::info;
 
 use crate::{config::Config, state::AppState};
@@ -22,11 +24,12 @@ async fn main() -> anyhow::Result<()> {
     init_tracing();
 
     let config = Config::from_env().context("reading configuration")?;
-    let state = AppState::connect(&config).await.context("connecting to data stores")?;
+    let port = config.port;
+    let state = AppState::connect(config).await.context("connecting to data stores")?;
 
-    let app = routes::router(state).layer(TraceLayer::new_for_http());
+    let app = routes::router(state);
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .with_context(|| format!("binding {addr}"))?;
