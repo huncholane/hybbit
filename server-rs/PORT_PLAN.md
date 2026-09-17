@@ -54,7 +54,7 @@ From the inventory of `server/src/index.ts`, `cluster.ts`, `lib/cors.ts`, `lib/a
 | # | Phase | Contents | Status |
 |---|---|---|---|
 | 0 | Foundation | Skeleton, config, store connections, JSON logs, health. HTTP layer: error rewriting, 404, CORS, write-origin check, request logging, auto-HEAD, JSON shaping, static and script routes, `/api/config`, `/api/version`. Dockerfile, compose service, Caddy matcher. | live 2026-09-17: `backend-rs` container, Caddy `@rust` matcher; 21/21 parity cases, 8/8 live responses unchanged |
-| 1 | Tracking | tracking-config, track, identify, session replay record, flag evaluate; payload validation, client IP, exclusions, usage gate, bot detection (header/UA heuristics, client score, datacenter ASN, anomaly scorer, site baseline, stats), user id (daily salt, identity IP bucket, sticky identity), sessions, pageview/bot/observation queues with GeoIP enrichment, identity backfill queue | tracking-config, track, identify and both flag evaluate routes live on Rust (2026-09-17); session replay record still on Node |
+| 1 | Tracking | tracking-config, track, identify, session replay record, flag evaluate; payload validation, client IP, exclusions, usage gate, bot detection (header/UA heuristics, client score, datacenter ASN, anomaly scorer, site baseline, stats), user id (daily salt, identity IP bucket, sticky identity), sessions, pageview/bot/observation queues with GeoIP enrichment, identity backfill queue | tracking-config, track, identify and both flag evaluate routes and session replay record live on Rust (2026-09-17) |
 | 2 | Auth | `/api/auth/*` (email+password, email OTP, sessions, organizations, teams, invitations, API keys, admin, MCP OAuth), guards, scopes, private links, public sites, rate limiting | not started |
 | 3 | Analytics reads | overview, metric, page titles, time series, lite, retention, journeys, bots, errors, performance, sessions, events, users and traits, funnels, goals, annotations, dashboards and run-card, segments, custom SQL and generate, flags and experiments CRUD/results, replay reads | not started |
 | 4 | Sites and orgs | sites, config, exclusions, private links, usage, imports, embed stats, check-install, organizations, members, teams, member access, org exclusions, API keys, API usage, account settings, unsubscribe | not started |
@@ -71,7 +71,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 |---|---|---|---|---|
 | POST | /api/track | none | services/tracker/trackEvent.ts | rust |
 | POST | /api/identify | none | services/tracker/identifyService.ts | rust |
-| POST | /api/session-replay/record/:siteId | none | api/sessionReplay/recordSessionReplay.ts | node |
+| POST | /api/session-replay/record/:siteId | none | api/sessionReplay/recordSessionReplay.ts | rust |
 | GET | /api/site/tracking-config/:siteId | none | api/sites/getTrackingConfig.ts | rust |
 | POST | /api/site/:siteId/feature-flags/evaluate | none | api/featureFlags/index.ts | rust |
 
@@ -211,9 +211,9 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/session-replay/list | publicReplayRead | getSessionReplays.ts | node |
-| GET | …/session-replay/:sessionId | publicReplayRead | getSessionReplayEvents.ts | node |
-| DELETE | …/session-replay/:sessionId | authReplayWrite | deleteSessionReplay.ts | node |
+| GET | …/session-replay/list | publicReplayRead | getSessionReplays.ts | rust |
+| GET | …/session-replay/:sessionId | publicReplayRead | getSessionReplayEvents.ts | rust |
+| DELETE | …/session-replay/:sessionId | authReplayWrite | deleteSessionReplay.ts | rust |
 
 ### Sites (`api/sites/`)
 
