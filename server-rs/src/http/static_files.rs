@@ -41,6 +41,13 @@ pub async fn fallback(State(state): State<AppState>, method: Method, uri: Uri, h
     errors::not_found(method, uri).await
 }
 
+/// A plain top-level file of `public/` for a GET or HEAD at the root, as
+/// @fastify/static serves it (`max-age=0`, ETag, Last-Modified).
+pub async fn public_file(public_dir: &Path, path: &str, headers: &HeaderMap) -> Option<Response> {
+    let name = public_file_name(path)?;
+    file_response(&public_dir.join(name), 0, headers).await
+}
+
 /// Only plain top-level file names: `public/` has no subdirectories, and dotfiles and
 /// traversal never resolve.
 fn public_file_name(path: &str) -> Option<&str> {
@@ -62,12 +69,7 @@ async fn serve_or_not_found(path: &Path, max_age: u32, headers: &HeaderMap, rout
 async fn file_response(path: &Path, max_age: u32, request_headers: &HeaderMap) -> Option<Response> {
     let metadata = tokio::fs::metadata(path).await.ok().filter(|metadata| metadata.is_file())?;
     let modified = metadata.modified().ok();
-    // Node's fs.Stats rounds the modification time to the nearest millisecond
-    let mtime_ms = modified
-        .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
-        .map_or(0, |duration| (duration.as_nanos() + 500_000) / 1_000_000);
-    // The `etag` package's stat form, which @fastify/send uses
-    let etag = format!("W/\"{:x}-{:x}\"", metadata.len(), mtime_ms);
+    let etag = stat_etag(metadata.len(), modified);
     let last_modified = modified.map(httpdate::fmt_http_date);
 
     let mut headers = HeaderMap::new();
@@ -90,8 +92,17 @@ async fn file_response(path: &Path, max_age: u32, request_headers: &HeaderMap) -
     Some((StatusCode::OK, headers, Body::from(bytes)).into_response())
 }
 
+/// The `etag` package's stat form, which @fastify/send uses: size and modification
+/// time in hex. Node's fs.Stats rounds the modification time to the nearest millisecond.
+pub fn stat_etag(len: u64, modified: Option<std::time::SystemTime>) -> String {
+    let mtime_ms = modified
+        .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
+        .map_or(0, |duration| (duration.as_nanos() + 500_000) / 1_000_000);
+    format!("W/\"{len:x}-{mtime_ms:x}\"")
+}
+
 /// If-None-Match wins when present (weak comparison); otherwise If-Modified-Since.
-fn is_fresh(request_headers: &HeaderMap, etag: &str, modified: Option<std::time::SystemTime>) -> bool {
+pub fn is_fresh(request_headers: &HeaderMap, etag: &str, modified: Option<std::time::SystemTime>) -> bool {
     if let Some(if_none_match) = request_headers.get(header::IF_NONE_MATCH).and_then(|value| value.to_str().ok()) {
         let bare = etag.trim_start_matches("W/");
         return if_none_match

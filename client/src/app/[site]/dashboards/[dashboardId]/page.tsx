@@ -5,7 +5,8 @@ import "react-resizable/css/styles.css";
 
 import type { DashboardCard } from "@hygo/shared";
 import { ArrowLeft, Check, ChevronLeft, ChevronRight, Loader2, Pencil, Plus } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Responsive, WidthProvider, type Layout } from "react-grid-layout";
 import { useGetDashboard, useUpdateDashboard } from "../../../../api/analytics/hooks/useDashboards";
@@ -39,7 +40,7 @@ const BREAKPOINTS = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 
 export default function DashboardDetailPage() {
   useSetPageTitle("Dashboard");
-  const params = useParams<{ site: string; dashboardId: string }>();
+  const params = useRouteParams<{ site: string; dashboardId: string }>();
   const siteId = Number(params.site);
   const dashboardId = Number(params.dashboardId);
   const router = useRouter();

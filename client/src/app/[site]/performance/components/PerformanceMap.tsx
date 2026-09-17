@@ -17,7 +17,7 @@ import { Style, Fill, Stroke } from "ol/style";
 import { useCountries } from "../../../../lib/geo";
 import { addFilter } from "../../../../lib/store";
 import { CountryFlag } from "../../components/shared/icons/CountryFlag";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { usePerformanceStore } from "../performanceStore";
 import {
   getPerformanceThresholds,
@@ -42,7 +42,7 @@ interface TooltipPosition {
 
 export function PerformanceMap({ height }: { height: string }) {
   const t = useExtracted();
-  const params = useParams();
+  const params = useRouteParams();
   const site = params.site as string;
   const { selectedPercentile, selectedPerformanceMetric } = usePerformanceStore();
 

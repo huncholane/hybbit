@@ -89,6 +89,16 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | POST | /api/user/unsubscribe-marketing-oneclick | none | api/user/unsubscribeMarketing.ts | node |
 | POST | /api/admin/telemetry | 403 unless CLOUD | api/admin/collectTelemetry.ts | node |
 
+### Dashboard client (formerly the `client` container)
+
+`client/` is built with `output: "export"` in the `backend-rs` image and served from `CLIENT_DIR` by `src/http/client_app/` as the router's fallback. Status `client` means still served by the Next container until Caddy's catch-all points at `backend-rs`.
+
+| Method | Path | Replaces | Status |
+|---|---|---|---|
+| ALL | /* not under /api (pages, `/_next/static`, `client/public` files, flight data `.txt`) | Next standalone server | client |
+| ALL | /{site}, /{site}/{12 hex}, paths containing /auth/callback/github or /auth/callback/google (307), trailing and repeated slashes (308) | client/src/proxy.ts, Next URL normalisation | client |
+| GET/HEAD/OPTIONS | /widget/:siteId | client/src/app/widget/[siteId]/route.ts | client |
+
 ### Auth
 
 | Method | Path | Guard | Node handler | Status |

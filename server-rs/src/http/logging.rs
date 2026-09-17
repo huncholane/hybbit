@@ -9,10 +9,12 @@ fn is_silent(route: &str) -> bool {
     route == "/api/health" || route == "/api/sites/{siteId}/live-user-count"
 }
 
-/// Successful responses on these are logged at debug: they fire on every tracked page.
+/// Successful responses on these are logged at debug: they fire on every tracked page,
+/// or, for the dashboard's hashed build assets, dozens of times per page load.
 fn is_high_volume(route: &str) -> bool {
     matches!(route, "/api/identify" | "/api/metrics.js" | "/api/replay.js" | "/api/script.js" | "/api/track")
         || route.ends_with("/session-replay/record/{siteId}")
+        || route.starts_with("/_next/static/")
 }
 
 pub async fn request_log(req: Request, next: Next) -> Response {

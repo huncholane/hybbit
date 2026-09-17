@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Play } from "lucide-react";
 import { useExtracted } from "next-intl";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { usePlaygroundStore } from "../hooks/usePlaygroundStore";
 import { methodColors, parameterMetadata } from "../utils/endpointConfig";
 import { buildCommonQueryParams } from "../utils/queryParams";
@@ -15,7 +15,7 @@ import { RequestBodyEditor } from "./RequestBodyEditor";
 
 export function ParameterControls() {
   const t = useExtracted();
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = params.site as string;
 
   const {

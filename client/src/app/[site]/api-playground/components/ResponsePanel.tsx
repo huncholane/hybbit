@@ -3,7 +3,7 @@
 import { CodeSnippet } from "@/components/CodeSnippet";
 import { XCircle } from "lucide-react";
 import { useExtracted } from "next-intl";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useMemo } from "react";
 import { usePlaygroundStore } from "../hooks/usePlaygroundStore";
 import { CodeGenConfig } from "../utils/codeGenerators";
@@ -13,7 +13,7 @@ import { BACKEND_URL } from "../../../../lib/const";
 
 export function ResponsePanel() {
   const t = useExtracted();
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = params.site as string;
 
   const {

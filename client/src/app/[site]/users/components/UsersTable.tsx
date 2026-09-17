@@ -13,7 +13,7 @@ import { addFilter, getTimezone } from "@/lib/store";
 import { Info } from "lucide-react";
 import { DateTime } from "luxon";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useEffect, useState } from "react";
 import { useExtracted } from "next-intl";
 import { useDateTimeFormat } from "../../../../hooks/useDateTimeFormat";
@@ -100,7 +100,7 @@ export function UsersTable() {
       </div>
     );
   };
-  const { site } = useParams();
+  const { site } = useRouteParams();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,

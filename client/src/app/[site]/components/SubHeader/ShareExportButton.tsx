@@ -2,7 +2,7 @@
 
 import { Copy, Download, FileArchive, FileText, Loader2, Share } from "lucide-react";
 import { useExtracted } from "next-intl";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useState } from "react";
 import { toast } from "@/components/ui/sonner";
 import {
@@ -28,7 +28,7 @@ import { exportCsv, exportPdf } from "./Export";
 export function ShareExportButton() {
   const t = useExtracted();
   const session = authClient.useSession();
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = Number(params.site);
   const canShare = !!session.data;
 

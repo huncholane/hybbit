@@ -23,6 +23,11 @@ pub struct Config {
     pub public_dir: PathBuf,
     /// Directory with GeoLite2-City.mmdb and GeoLite2-ASN.mmdb (GEOIP_DIR, default: working directory, like Node)
     pub geoip_dir: PathBuf,
+    /// The dashboard's static export, `client/out` (CLIENT_DIR, default: `client` next to the binary)
+    pub client_dir: PathBuf,
+    /// The API origin the embed widget's script calls: NEXT_PUBLIC_BACKEND_URL (what the
+    /// client export was built with), else BASE_URL, else Node's default, plus `/api`
+    pub widget_api_url: String,
     pub postgres: PostgresConfig,
     pub clickhouse: ClickHouseConfig,
     pub redis: RedisConfig,
@@ -119,6 +124,13 @@ impl Config {
             better_auth_secret: std::env::var("BETTER_AUTH_SECRET").ok(),
             public_dir: PathBuf::from(env_or("PUBLIC_DIR", "public")),
             geoip_dir: PathBuf::from(env_or("GEOIP_DIR", ".")),
+            client_dir: env_opt("CLIENT_DIR").map_or_else(default_client_dir, PathBuf::from),
+            widget_api_url: format!(
+                "{}/api",
+                env_opt("NEXT_PUBLIC_BACKEND_URL")
+                    .or_else(|| env_opt("BASE_URL"))
+                    .unwrap_or_else(|| "http://localhost:3001".to_string())
+            ),
             postgres: PostgresConfig {
                 host: env_or("POSTGRES_HOST", "postgres"),
                 port: port_from_env("POSTGRES_PORT", 5432)?,
@@ -142,6 +154,14 @@ impl Config {
             auth: AuthConfig::from_env(),
         })
     }
+}
+
+/// `client` beside the executable, so a release directory can carry its own export.
+fn default_client_dir() -> PathBuf {
+    std::env::current_exe()
+        .ok()
+        .and_then(|exe| exe.parent().map(|dir| dir.join("client")))
+        .unwrap_or_else(|| PathBuf::from("client"))
 }
 
 /// Node's `process.env.X === "true"`

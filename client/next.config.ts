@@ -15,7 +15,12 @@ const withNextIntl = createNextIntlPlugin({
 });
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // A static export served by the Rust backend (server-rs/src/http/client_app.rs),
+  // which also does what proxy.ts and the widget route handler used to do.
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
   env: {
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     NEXT_PUBLIC_DISABLE_SIGNUP: process.env.NEXT_PUBLIC_DISABLE_SIGNUP,

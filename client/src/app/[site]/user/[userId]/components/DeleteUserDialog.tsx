@@ -1,7 +1,8 @@
 "use client";
 
 import { useExtracted } from "next-intl";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { toast } from "@/components/ui/sonner";
 
 import { useDeleteUser } from "@/api/analytics/hooks/useDeleteUser";
@@ -24,7 +25,7 @@ interface DeleteUserDialogProps {
 
 export function DeleteUserDialog({ userId, open, onOpenChange }: DeleteUserDialogProps) {
   const t = useExtracted();
-  const { site } = useParams();
+  const { site } = useRouteParams();
   const router = useRouter();
   const deleteUser = useDeleteUser();
 

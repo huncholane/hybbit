@@ -4,7 +4,7 @@ import { useExtracted } from "next-intl";
 import { SessionsList } from "@/components/Sessions/SessionsList";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useRef, useState } from "react";
 import { useUserInfo } from "../../../../api/analytics/hooks/userGetInfo";
 import { useGetSessions, useGetUserSessionCount } from "../../../../api/analytics/hooks/useGetUserSessions";
@@ -41,7 +41,7 @@ const LIMIT = 25;
 export default function UserPage() {
   const t = useExtracted();
 
-  const { userId: rawUserId, site } = useParams();
+  const { userId: rawUserId, site } = useRouteParams();
   const { time, setTime } = useStore();
   const userId = (() => {
     const value = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId;

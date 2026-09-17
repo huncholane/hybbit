@@ -6,7 +6,7 @@ import { ArrowRight, ChevronDown, ChevronRight, Video } from "lucide-react";
 import { DateTime } from "luxon";
 import { useExtracted } from "next-intl";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { memo, useCallback, useState } from "react";
 import { GetSessionsResponse } from "../../api/analytics/endpoints";
 import { useDateTimeFormat } from "@/hooks/useDateTimeFormat";
@@ -35,7 +35,7 @@ interface SessionCardProps {
 }
 
 export function SessionCard({ session, onClick, userId, expandedByDefault, highlightedEventTimestamp }: SessionCardProps) {
-  const { site } = useParams();
+  const { site } = useRouteParams();
   const t = useExtracted();
   const { hour12, formatDateTime } = useDateTimeFormat();
   const [expanded, setExpanded] = useState(expandedByDefault || false);

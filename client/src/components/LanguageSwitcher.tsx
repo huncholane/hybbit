@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
+import { useChangeLocale } from "../i18n/IntlProvider";
 import { CountryFlag } from "../app/[site]/components/shared/icons/CountryFlag";
 import {
   Select,
@@ -27,13 +27,9 @@ const LOCALE_OPTIONS = [
 ] as const;
 
 export function LanguageSwitcher() {
-  const router = useRouter();
   const currentLocale = useLocale();
-
-  function handleLocaleChange(locale: string) {
-    document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`;
-    router.refresh();
-  }
+  // Stores the choice in the NEXT_LOCALE cookie and loads that language's messages
+  const handleLocaleChange = useChangeLocale();
 
   return (
     <Select value={currentLocale} onValueChange={handleLocaleChange}>

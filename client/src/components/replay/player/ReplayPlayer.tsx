@@ -1,4 +1,4 @@
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useCallback, useEffect } from "react";
 import "rrweb-player/dist/style.css";
 import { useShallow } from "zustand/react/shallow";
@@ -13,7 +13,7 @@ import { SKIP_SECONDS } from "./utils/replayUtils";
 import { ReplayPlayerTopbar } from "./ReplayPlayerTopbar";
 
 export function ReplayPlayer({ width, height, isDrawer }: { width: number; height: number; isDrawer?: boolean }) {
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = Number(params.site);
   const {
     sessionId,

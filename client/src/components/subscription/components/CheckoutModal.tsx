@@ -4,7 +4,9 @@ import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { STRIPE_PUBLISHABLE_KEY } from "@/lib/const";
 
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+// Without a key, loadStripe rejects as soon as this module runs. The static export
+// prefetches (and so evaluates) linked pages early, so that happened on /login.
+const stripePromise = STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
 
 interface CheckoutModalProps {
   clientSecret: string | null;

@@ -1,7 +1,8 @@
 "use client";
 
 import { useExtracted } from "next-intl";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +14,7 @@ import { useQueryState, parseAsJson } from "nuqs";
 
 function SelectGSCPropertyPageContent() {
   const t = useExtracted();
-  const params = useParams();
+  const params = useRouteParams();
   const router = useRouter();
   const site = params.site as string;
 

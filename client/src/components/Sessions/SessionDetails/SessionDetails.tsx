@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight } from "lucide-react";
 import { useExtracted } from "next-intl";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useMemo, useState } from "react";
 
 import { useGetSessionDetailsInfinite } from "../../../api/analytics/hooks/useGetUserSessions";
@@ -28,7 +28,7 @@ export function SessionDetails({ session, userId, highlightedEventTimestamp }: S
     hasNextPage,
     isFetchingNextPage,
   } = useGetSessionDetailsInfinite(session.session_id);
-  const { site } = useParams();
+  const { site } = useRouteParams();
   const t = useExtracted();
 
   // Flatten all events into a single array

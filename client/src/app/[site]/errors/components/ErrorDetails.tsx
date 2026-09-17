@@ -13,7 +13,7 @@ import { getCountryName, truncateString } from "@/lib/utils";
 import { AlertTriangle, Code, Loader2, TriangleAlert } from "lucide-react";
 import { DateTime } from "luxon";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useMemo } from "react";
 import { Avatar } from "../../../../components/Avatar";
 import { ErrorState } from "../../../../components/ErrorState";
@@ -31,7 +31,7 @@ function ErrorEventItem({ errorEvent }: { errorEvent: ErrorEvent }) {
   const t = useExtracted();
   const { formatRelative } = useDateTimeFormat();
   const { getRegionName } = useGetRegionName();
-  const { site } = useParams();
+  const { site } = useRouteParams();
 
   const getFullLocation = (event: ErrorEvent) => {
     let location = "";

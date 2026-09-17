@@ -6,5 +6,6 @@
 **/node_modules
 **/*.tsbuildinfo
 client/.next
+client/out
 server/dist
 shared/dist

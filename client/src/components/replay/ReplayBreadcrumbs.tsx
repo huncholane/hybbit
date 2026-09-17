@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { DateTime, Duration } from "luxon";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useVirtualizer, type VirtualItem } from "@tanstack/react-virtual";
 import { useShallow } from "zustand/react/shallow";
@@ -167,7 +167,7 @@ function PanelShell({ children }: { children: React.ReactNode }) {
 
 export function ReplayBreadcrumbs() {
   const t = useExtracted();
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = Number(params.site);
   const [showTechnical, setShowTechnical] = useState(false);
   const { sessionId, player, setCurrentTime } = useReplayStore(

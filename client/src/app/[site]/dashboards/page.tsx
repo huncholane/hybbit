@@ -2,7 +2,8 @@
 
 import { LayoutGrid, Loader2, Plus, Trash2 } from "lucide-react";
 import { DateTime } from "luxon";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useState } from "react";
 import { useCreateDashboard, useDeleteDashboard, useGetDashboards } from "../../../api/analytics/hooks/useDashboards";
 import { Button } from "../../../components/ui/button";
@@ -29,7 +30,7 @@ function relativeUpdated(updatedAt: string | null | undefined): string | null {
 
 export default function DashboardsListPage() {
   useSetPageTitle("Dashboards");
-  const params = useParams<{ site: string }>();
+  const params = useRouteParams<{ site: string }>();
   const siteId = Number(params.site);
   const router = useRouter();
 

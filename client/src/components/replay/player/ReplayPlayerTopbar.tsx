@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useMemo } from "react";
 import { useGetSessionReplayEvents } from "@/api/analytics/hooks/sessionReplay/useGetSessionReplayEvents";
 import {
@@ -22,7 +22,7 @@ function getDisplayPath(url: string): string {
 }
 
 export function ReplayPlayerTopbar() {
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = Number(params.site);
   const { sessionId, currentTime } = useReplayStore(
     useShallow(s => ({ sessionId: s.sessionId, currentTime: s.currentTime }))

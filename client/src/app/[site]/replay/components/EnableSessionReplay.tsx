@@ -2,7 +2,7 @@
 
 import { Video } from "lucide-react";
 import { useExtracted } from "next-intl";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { toast } from "@/components/ui/sonner";
 import { updateSiteConfig } from "../../../../api/admin/endpoints";
 import { useGetSite } from "../../../../api/admin/hooks/useSites";
@@ -14,7 +14,7 @@ import { IS_CLOUD } from "../../../../lib/const";
 
 export function EnableSessionReplay() {
   const t = useExtracted();
-  const params = useParams();
+  const params = useRouteParams();
   const siteId = Number(params.site);
   const { data: siteMetadata, isLoading, refetch } = useGetSite(siteId);
   const { data: subscription } = useStripeSubscription();

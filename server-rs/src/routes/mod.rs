@@ -2,11 +2,12 @@ use std::sync::Arc;
 
 use axum::{
     Router, middleware,
-    routing::{get, post},
+    routing::{any, get, post},
 };
 
 use crate::{
     http::{
+        client_app,
         cors::{self, CorsPolicy},
         errors, logging, static_files,
     },
@@ -18,6 +19,7 @@ mod health;
 mod misc;
 mod track;
 mod tracking_config;
+mod widget;
 
 /// Every route this service answers. Paths match the Node backend exactly, because
 /// Caddy switches them over to this service one area at a time.
@@ -40,7 +42,10 @@ pub fn router(state: AppState) -> Router {
         .merge(crate::replay::router())
         .merge(crate::auth::endpoints::router())
         .merge(crate::auth::endpoints::mcp::well_known_router())
-        .fallback(static_files::fallback)
+        // The embeddable widget, formerly a Next route handler
+        .route("/widget/{siteId}", any(widget::widget))
+        // Everything else outside /api is the dashboard's static export
+        .fallback(client_app::fallback)
         .method_not_allowed_fallback(errors::not_found)
         .with_state(state);
 

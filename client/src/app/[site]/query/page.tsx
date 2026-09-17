@@ -1,7 +1,7 @@
 "use client";
 
 import { useExtracted } from "next-intl";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGetSite } from "../../../api/admin/hooks/useSites";
@@ -17,7 +17,7 @@ import { createQueryTab, formatQuery, getColumns, getErrorMessage, isAbortError,
 export default function QueryPage() {
   useSetPageTitle("Query");
   const t = useExtracted();
-  const params = useParams<{ site: string }>();
+  const params = useRouteParams<{ site: string }>();
   const siteId = Number(params.site);
   const { data: siteMetadata, isLoading: isLoadingSite } = useGetSite(siteId);
   const organizationId = siteMetadata?.organizationId;

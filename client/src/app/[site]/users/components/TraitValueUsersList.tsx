@@ -6,7 +6,7 @@ import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { Loader2, Search } from "lucide-react";
 import { Input } from "../../../../components/ui/input";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useGetUserTraitValueUsers } from "../../../../api/analytics/hooks/useGetUserTraits";
 import { Avatar } from "../../../../components/Avatar";
 import { IdentifiedBadge } from "../../../../components/IdentifiedBadge";
@@ -29,7 +29,7 @@ export function TraitValueUsersList({
 }) {
   const t = useExtracted();
   const [searchTerm, setSearchTerm] = useState("");
-  const { site } = useParams();
+  const { site } = useRouteParams();
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetUserTraitValueUsers(traitKey, value);
 

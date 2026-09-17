@@ -29,6 +29,7 @@ mod ua;
 use std::net::SocketAddr;
 
 use anyhow::Context;
+use axum::serve::ListenerExt;
 use tracing::info;
 
 use crate::{config::Config, state::AppState};
@@ -45,9 +46,16 @@ async fn main() -> anyhow::Result<()> {
     let app = routes::router(state.clone());
 
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
+    // TCP_NODELAY: a response written in several pieces (headers, then a streamed
+    // file) otherwise stalls ~40 ms per request on Nagle and delayed ACKs behind Caddy
     let listener = tokio::net::TcpListener::bind(addr)
         .await
-        .with_context(|| format!("binding {addr}"))?;
+        .with_context(|| format!("binding {addr}"))?
+        .tap_io(|stream| {
+            if let Err(error) = stream.set_nodelay(true) {
+                tracing::warn!(%error, "could not set TCP_NODELAY on a connection");
+            }
+        });
     info!(%addr, "hygo backend listening");
 
     axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>())

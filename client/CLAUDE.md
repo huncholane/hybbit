@@ -58,7 +58,6 @@ src/
 │   └── urlParams.ts        # URL param management
 ├── types/                  # TypeScript definitions
 ├── i18n/request.ts         # next-intl config
-└── proxy.ts                # Next.js middleware (routing)
 
 messages/                   # Translation files (en.json, de.json, etc.)
 ```
@@ -129,7 +128,7 @@ Only `timezone` is persisted; everything else is session-only.
 - `/login`, `/signup` – auth pages
 - `/settings` – user settings
 
-Middleware in `proxy.ts` handles redirects and OAuth callbacks (`/auth/callback/github`, `/auth/callback/google`).
+The client is a static export (`output: "export"`) served by the Rust backend (`server-rs/src/http/client_app/`), which also performs the redirects (`/{siteId}`, OAuth callbacks) and renders `/widget/:siteId`. Dynamic segments are exported once with a placeholder, so read route params with `useRouteParams()` (`hooks/useRouteParams.tsx`), never `useParams()`. Locale detection and message loading happen in the browser (`i18n/IntlProvider.tsx`).
 
 ## Code Conventions
 

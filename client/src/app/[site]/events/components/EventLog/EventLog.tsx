@@ -2,7 +2,7 @@
 
 import { useExtracted } from "next-intl";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useParams } from "next/navigation";
+import { useRouteParams } from "@/hooks/useRouteParams";
 import { useCallback, useState } from "react";
 import { Event } from "../../../../../api/analytics/endpoints";
 import { EVENT_TYPE_CONFIG } from "../../../../../lib/events";
@@ -19,7 +19,7 @@ const ALL_EVENT_TYPES = new Set(EVENT_TYPE_CONFIG.map((c) => c.value as string))
 
 export function EventLog() {
   const t = useExtracted();
-  const { site } = useParams();
+  const { site } = useRouteParams();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [visibleTypes, setVisibleTypes] = useState<Set<string>>(ALL_EVENT_TYPES);

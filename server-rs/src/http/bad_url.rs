@@ -116,7 +116,9 @@ pub fn is_bad_url(url: &str) -> bool {
 /// The raw 400 for a URL find-my-way cannot decode; everything else passes through.
 pub async fn reject_bad_url(req: Request, next: Next) -> Response {
     let url = req.uri().path_and_query().map_or_else(|| req.uri().path().to_string(), |value| value.as_str().to_string());
-    if !is_bad_url(&url) {
+    // Paths outside /api are the dashboard, which Next served with its own answers to
+    // bad escapes (client_app reproduces them), so only backend paths get Fastify's 400
+    if !is_bad_url(&url) || !crate::http::client_app::is_backend_path(req.uri().path()) {
         return next.run(req).await;
     }
     warn!(method = %req.method(), "URL is not a valid url component");

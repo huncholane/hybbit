@@ -40,7 +40,7 @@ Run commands from `client/`.
 - `src/lib/` - stores, auth client, URL state, date helpers, and utilities.
 - `src/i18n/` - next-intl request configuration.
 - `messages/` - locale JSON files.
-- `src/proxy.ts` - Next.js middleware and redirects.
+- `src/hooks/useRouteParams.tsx` - real dynamic route params (the app is a static export served by `server-rs`, which also does the redirects).
 
 Do not edit `.next/`, `node_modules/`, `tsconfig.tsbuildinfo`, or other generated output.
 
