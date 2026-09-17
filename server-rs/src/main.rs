@@ -4,6 +4,7 @@
 //! here and everything else to the Node backend until the port is complete; see
 //! PORT_PLAN.md for what is ported and what must match Node exactly.
 
+mod analytics;
 mod auth;
 mod bot;
 mod clickhouse;
