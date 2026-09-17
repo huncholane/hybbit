@@ -26,6 +26,60 @@ pub struct Config {
     pub postgres: PostgresConfig,
     pub clickhouse: ClickHouseConfig,
     pub redis: RedisConfig,
+    pub auth: AuthConfig,
+}
+
+/// The environment Better Auth (server/src/lib/auth.ts) and the email module read
+/// beyond the settings above.
+#[derive(Clone)]
+pub struct AuthConfig {
+    /// CLOUD == "true": Resend email, Turnstile captcha, plan gates
+    pub cloud: bool,
+    pub resend_api_key: Option<String>,
+    pub turnstile_secret_key: Option<String>,
+    /// Better Auth's `getBaseURL` environment chain: BETTER_AUTH_URL,
+    /// NEXT_PUBLIC_BETTER_AUTH_URL, PUBLIC_BETTER_AUTH_URL, NUXT_PUBLIC_BETTER_AUTH_URL,
+    /// NUXT_PUBLIC_AUTH_URL, then BASE_URL unless it is "/". Raw value, unvalidated.
+    pub base_url_env: Option<String>,
+    /// BETTER_AUTH_TRUSTED_ORIGINS, comma separated
+    pub trusted_origins_env: Option<String>,
+    pub google_client_id: Option<String>,
+    pub google_client_secret: Option<String>,
+    pub github_client_id: Option<String>,
+    /// NODE_ENV "dev"/"development": Better Auth's `isDevelopment()` (client IP falls
+    /// back to 127.0.0.1)
+    pub development: bool,
+    /// NODE_ENV "test" or TEST truthy: `isTest()` (origin checks skipped)
+    pub test: bool,
+}
+
+impl AuthConfig {
+    pub fn from_env() -> Self {
+        // `env.X || ...`: empty strings fall through like undefined
+        let base_url_env = [
+            "BETTER_AUTH_URL",
+            "NEXT_PUBLIC_BETTER_AUTH_URL",
+            "PUBLIC_BETTER_AUTH_URL",
+            "NUXT_PUBLIC_BETTER_AUTH_URL",
+            "NUXT_PUBLIC_AUTH_URL",
+        ]
+        .iter()
+        .find_map(|name| env_opt(name))
+        .or_else(|| env_opt("BASE_URL").filter(|value| value != "/"));
+        Self {
+            cloud: flag("CLOUD"),
+            resend_api_key: env_opt("RESEND_API_KEY"),
+            turnstile_secret_key: env_opt("TURNSTILE_SECRET_KEY"),
+            base_url_env,
+            trusted_origins_env: env_opt("BETTER_AUTH_TRUSTED_ORIGINS"),
+            google_client_id: env_opt("GOOGLE_CLIENT_ID"),
+            google_client_secret: env_opt("GOOGLE_CLIENT_SECRET"),
+            github_client_id: env_opt("GITHUB_CLIENT_ID"),
+            development: matches!(std::env::var("NODE_ENV").as_deref(), Ok("dev" | "development")),
+            test: std::env::var("NODE_ENV").as_deref() == Ok("test")
+                || std::env::var("TEST").is_ok_and(|value| !value.is_empty() && value != "false"),
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -85,6 +139,7 @@ impl Config {
                 port: port_from_env("REDIS_PORT", 6379)?,
                 password: env_opt("REDIS_PASSWORD"),
             },
+            auth: AuthConfig::from_env(),
         })
     }
 }

@@ -10,6 +10,7 @@ mod bot;
 mod clickhouse;
 mod config;
 mod datacenter_asns;
+mod email;
 mod error;
 mod feature_flags;
 mod geo;

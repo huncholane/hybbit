@@ -22,6 +22,7 @@ regex = "1.13.1"
 regress = { version = "0.12.0", features = ["utf16"] }
 reqwest = { version = "0.13.5", default-features = false, features = ["json", "query", "rustls"] }
 ryu-js = "1.0.3"
+scrypt = { version = "0.12", default-features = false }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.151", features = ["preserve_order", "float_roundtrip"] }
 sha2 = "0.11.0"
@@ -31,6 +32,7 @@ tokio = { version = "1.53.1", features = ["full"] }
 tower-http = { version = "0.7.1", features = ["trace"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["json", "env-filter"] }
+unicode-normalization = "0.1"
 url = "2.5.8"
 
 [dev-dependencies]
