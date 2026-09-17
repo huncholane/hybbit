@@ -7,7 +7,8 @@ use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
 use tracing::info;
 
 use crate::{
-    auth::access::SitesAccessCache, clickhouse::ClickHouse, config::Config, geo::Geo, site_config::SiteConfigCache,
+    auth::access::SitesAccessCache, clickhouse::ClickHouse, config::Config, geo::Geo, ingest::Ingest,
+    site_config::SiteConfigCache,
 };
 
 /// Shared handles to the configuration and data stores, cloned into every handler.
@@ -21,6 +22,8 @@ pub struct AppState {
     pub geo: Arc<Geo>,
     /// `sitesAccessCache`: per-process, 15 s
     pub sites_access: Arc<SitesAccessCache>,
+    /// Tracking pipeline services and queues
+    pub ingest: Arc<Ingest>,
 }
 
 impl AppState {
@@ -66,6 +69,8 @@ impl AppState {
         let site_config = Arc::new(SiteConfigCache::new(pg.clone()));
         let geo = Arc::new(Geo::load(&config.geoip_dir).context("loading GeoLite2 databases")?);
 
+        let ingest = Arc::new(Ingest::new(redis.clone(), clickhouse.clone()));
+
         Ok(Self {
             config: Arc::new(config),
             pg,
@@ -74,6 +79,7 @@ impl AppState {
             site_config,
             geo,
             sites_access: Arc::new(SitesAccessCache::default()),
+            ingest,
         })
     }
 }

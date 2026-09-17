@@ -86,6 +86,37 @@ impl JsValue {
             _ => None,
         }
     }
+
+    /// The value as serde JSON for handlers written against `serde_json::Value`.
+    /// Non-finite numbers become null (what `JSON.stringify` stores). Structures
+    /// deeper than the parse kept keep their type but carry a string longer than
+    /// any size limit a handler applies (2 KB), since a structure that deep is at
+    /// least that long as JSON and Node rejects it for size.
+    pub fn to_serde(&self) -> serde_json::Value {
+        use serde_json::Value;
+        const TOO_DEEP: usize = 4097;
+        match self {
+            JsValue::Null => Value::Null,
+            JsValue::Bool(value) => Value::Bool(*value),
+            JsValue::Number(number) => serde_json::Number::from_f64(*number).map_or(Value::Null, |n| {
+                // Integral doubles as integers, so serde prints them like JSON.stringify
+                if number.fract() == 0.0 && number.abs() < 9_007_199_254_740_992.0 {
+                    Value::Number((*number as i64).into())
+                } else {
+                    Value::Number(n)
+                }
+            }),
+            JsValue::String(text) => Value::String(text.clone()),
+            JsValue::Array(items) => Value::Array(items.iter().map(JsValue::to_serde).collect()),
+            JsValue::Object(entries) => {
+                Value::Object(entries.iter().map(|(key, value)| (key.clone(), value.to_serde())).collect())
+            }
+            JsValue::UnreadArray => Value::Array(vec![Value::String("x".repeat(TOO_DEEP))]),
+            JsValue::UnreadObject => {
+                Value::Object([(String::new(), Value::String("x".repeat(TOO_DEEP)))].into_iter().collect())
+            }
+        }
+    }
 }
 
 #[derive(Debug)]

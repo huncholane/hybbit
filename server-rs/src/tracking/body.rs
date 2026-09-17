@@ -158,6 +158,16 @@ pub fn body_too_large() -> BodyRejection {
 /// Turns the raw request into `request.body`: `Ok(None)` is `undefined` (no body and
 /// no Content-Type), otherwise the parsed JSON value or the text/plain string.
 pub fn parse_track_body(headers: &BodyHeaders, raw: &[u8]) -> Result<Option<JsValue>, BodyRejection> {
+    parse_body_with_depth(headers, raw, TRACK_BODY_KEEP_DEPTH)
+}
+
+/// [`parse_track_body`] for routes that read deeper into the body (identify keeps
+/// whole trait objects). The same Fastify defaults apply to every route.
+pub fn parse_body_with_depth(
+    headers: &BodyHeaders,
+    raw: &[u8],
+    keep_depth: usize,
+) -> Result<Option<JsValue>, BodyRejection> {
     let Some(parser) = choose_parser(headers)? else {
         return Ok(None);
     };
@@ -186,7 +196,7 @@ pub fn parse_track_body(headers: &BodyHeaders, raw: &[u8]) -> Result<Option<JsVa
             }
             // secure-json-parse drops one leading byte order mark
             let json_text = text.strip_prefix('\u{FEFF}').unwrap_or(&text);
-            match parse_json(json_text, TRACK_BODY_KEEP_DEPTH) {
+            match parse_json(json_text, keep_depth) {
                 Ok(parsed) if !parsed.prototype_poisoned => Ok(Some(parsed.value)),
                 Ok(_) => {
                     tracing::warn!("Tracking body contains forbidden prototype property");

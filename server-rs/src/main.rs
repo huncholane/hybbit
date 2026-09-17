@@ -38,8 +38,9 @@ async fn main() -> anyhow::Result<()> {
     let config = Config::from_env().context("reading configuration")?;
     let port = config.port;
     let state = AppState::connect(config).await.context("connecting to data stores")?;
+    state.ingest.start(state.redis.clone(), state.clickhouse.clone());
 
-    let app = routes::router(state);
+    let app = routes::router(state.clone());
 
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     let listener = tokio::net::TcpListener::bind(addr)
@@ -52,6 +53,10 @@ async fn main() -> anyhow::Result<()> {
         .await
         .context("serving")?;
 
+    // Buffered events and identity backfills would otherwise be lost on every deploy
+    if tokio::time::timeout(std::time::Duration::from_secs(8), state.ingest.shutdown(&state.clickhouse)).await.is_err() {
+        tracing::warn!("Timed out draining ingestion queues");
+    }
     info!("hygo backend stopped");
     Ok(())
 }
