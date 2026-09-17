@@ -234,6 +234,9 @@ const pluginList = [
     },
   }),
   emailOTP({
+    // Without this, signing in with a code for an unknown email creates the
+    // account, so DISABLE_SIGNUP alone would not stop new sign-ups
+    disableSignUp: DISABLE_SIGNUP,
     async sendVerificationOTP({ email, otp, type }) {
       await sendOtpEmail(email, otp, type);
     },
