@@ -9,3 +9,7 @@ client/.next
 client/out
 server/dist
 shared/dist
+
+# Rust build output and agent worktrees are never image inputs
+server-rs/target
+.claude
