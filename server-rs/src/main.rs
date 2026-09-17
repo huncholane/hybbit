@@ -4,16 +4,21 @@
 //! here and everything else to the Node backend until the port is complete; see
 //! PORT_PLAN.md for what is ported and what must match Node exactly.
 
+mod bot;
 mod clickhouse;
 mod config;
+mod datacenter_asns;
 mod error;
 mod feature_flags;
 mod geo;
 mod http;
+mod identity;
 mod json_shape;
 mod routes;
 mod site_config;
 mod state;
+mod tracking;
+mod ua;
 
 use std::net::SocketAddr;
 
