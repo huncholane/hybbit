@@ -56,3 +56,5 @@ coverage/
 .github/
 
 .impeccable/critique
+# Local database snapshots (Postgres and ClickHouse dumps)
+backups/
