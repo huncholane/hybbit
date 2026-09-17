@@ -265,7 +265,18 @@ impl AnalyticsClickHouse {
     }
 
     pub fn from_parts(url: &str, database: &str, user: &str, password: &str) -> Result<Self, reqwest::Error> {
-        let http = reqwest::Client::builder().timeout(REQUEST_TIMEOUT).build()?;
+        Self::from_parts_with_timeout(url, database, user, password, REQUEST_TIMEOUT)
+    }
+
+    /// A client with its own `request_timeout` (the `clickhouseQuery` client uses 30 s).
+    pub fn from_parts_with_timeout(
+        url: &str,
+        database: &str,
+        user: &str,
+        password: &str,
+        timeout: Duration,
+    ) -> Result<Self, reqwest::Error> {
+        let http = reqwest::Client::builder().timeout(timeout).build()?;
         Ok(Self {
             http,
             url: url.trim_end_matches('/').to_string(),
@@ -282,7 +293,17 @@ impl AnalyticsClickHouse {
         params: &[(String, QueryParam)],
         settings: &[(&str, String)],
     ) -> Result<String, ClickHouseFailure> {
-        let mut search: Vec<(String, String)> = vec![("query_id".to_string(), random_query_id())];
+        self.send_with_id(&random_query_id(), query, params, settings).await
+    }
+
+    async fn send_with_id(
+        &self,
+        query_id: &str,
+        query: &str,
+        params: &[(String, QueryParam)],
+        settings: &[(&str, String)],
+    ) -> Result<String, ClickHouseFailure> {
+        let mut search: Vec<(String, String)> = vec![("query_id".to_string(), query_id.to_string())];
         for (name, value) in params {
             search.push((format!("param_{name}"), format_query_param(value, false, false)));
         }
@@ -326,6 +347,19 @@ impl AnalyticsClickHouse {
             }
         }
         Ok(rows)
+    }
+
+    /// `(await client.query({ query, format: "JSONEachRow", query_params })).json()`
+    /// with no settings, plus the `query_id` the client sent: every line through
+    /// `JSON.parse`, kept as JavaScript values.
+    pub async fn query_json_each_row(&self, spec: &QuerySpec) -> Result<(String, Vec<JsValue>), ClickHouseFailure> {
+        let query_id = random_query_id();
+        let body = self.send_with_id(&query_id, &spec.query, &spec.params, &[]).await?;
+        let mut rows = Vec::new();
+        for line in body.split('\n').filter(|line| !line.is_empty()) {
+            rows.push(js_json_parse::parse(line).map_err(|error| ClickHouseFailure::Decode { position: error.position })?);
+        }
+        Ok((query_id, rows))
     }
 
     /// `runAnalyticsQuery(spec)`: run with a 60 second cap and `processResults`.

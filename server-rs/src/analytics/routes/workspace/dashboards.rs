@@ -85,8 +85,8 @@ fn failure(err: &HandlerError, message: &str) -> Response {
     request::error(StatusCode::INTERNAL_SERVER_ERROR, message)
 }
 
-fn peer_ip(headers: &HeaderMap, connect_info: Option<ConnectInfo<SocketAddr>>) -> String {
-    let peer = connect_info.map_or_else(|| std::net::Ipv4Addr::LOCALHOST.into(), |ConnectInfo(address)| address.ip());
+fn peer_ip(headers: &HeaderMap, connect_info: ConnectInfo<SocketAddr>) -> String {
+    let peer = connect_info.0.ip();
     request::request_ip(headers, peer)
 }
 
@@ -112,7 +112,7 @@ async fn write_chain(state: &AppState, uri: &Uri, headers: &HeaderMap, site_para
 /// GET /api/sites/:siteId/dashboards
 pub async fn list(
     State(state): State<AppState>,
-    connect_info: Option<ConnectInfo<SocketAddr>>,
+    connect_info: ConnectInfo<SocketAddr>,
     method: Method,
     uri: Uri,
     headers: HeaderMap,
@@ -168,7 +168,7 @@ fn same_site(row_site: Option<i32>, site_id: f64) -> bool {
 /// GET /api/sites/:siteId/dashboards/:dashboardId
 pub async fn get_one(
     State(state): State<AppState>,
-    connect_info: Option<ConnectInfo<SocketAddr>>,
+    connect_info: ConnectInfo<SocketAddr>,
     method: Method,
     uri: Uri,
     headers: HeaderMap,

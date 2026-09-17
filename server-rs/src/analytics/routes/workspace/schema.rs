@@ -12,7 +12,7 @@ use crate::analytics::js::{
     JsObject, JsValue,
     number::number_to_string,
     string::{trim, utf16_len},
-    zod::{self, Parsed, Path, PathSegment, SizedKind, Status, ZodIssue},
+    zod::{self, Parsed, Path, SizedKind, Status, ZodIssue},
 };
 
 /// One `z.string()` check, in declaration order.
@@ -247,7 +247,7 @@ pub fn validation_error_body(issues: &[ZodIssue]) -> JsValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::analytics::js::json;
+    use crate::analytics::js::{json, zod::PathSegment};
 
     fn stringify(issues: &[ZodIssue]) -> String {
         json::stringify(&zod::issues_value(issues)).unwrap()
