@@ -37,6 +37,8 @@ pub fn router(state: AppState) -> Router {
         .route("/api/site/{siteId}/feature-flags/evaluate", post(feature_flags::evaluate_client))
         .route("/api/sites/{siteId}/feature-flags/evaluate", post(feature_flags::evaluate_server))
         .merge(crate::analytics::routes::router())
+        .merge(crate::auth::endpoints::router())
+        .merge(crate::auth::endpoints::mcp::well_known_router())
         .fallback(static_files::fallback)
         .method_not_allowed_fallback(errors::not_found)
         .with_state(state);

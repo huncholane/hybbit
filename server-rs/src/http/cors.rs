@@ -97,6 +97,9 @@ pub async fn cors(State(policy): State<Arc<CorsPolicy>>, req: Request, next: Nex
         if !trusted {
             let mut response = super::json(StatusCode::FORBIDDEN, &json!({ "error": "Origin not allowed" }));
             add_vary_origin(response.headers_mut());
+            // Fastify sends this from a hook, so the error rewrite applies even under
+            // /api/auth, whose own responses bypass it
+            response.extensions_mut().insert(super::errors::RewriteApiError);
             return response;
         }
     }
@@ -133,7 +136,15 @@ pub async fn cors(State(policy): State<Arc<CorsPolicy>>, req: Request, next: Nex
     }
 
     let mut response = next.run(req).await;
-    add_cors_headers(response.headers_mut(), origin, credentials);
+    // Better Auth sets its own Access-Control-Allow-Origin on some responses (`*` on
+    // MCP client registration); in Node it writes after @fastify/cors, so its value wins
+    if !response.headers().contains_key(header::ACCESS_CONTROL_ALLOW_ORIGIN) {
+        add_cors_headers(response.headers_mut(), origin, credentials);
+    } else if credentials {
+        response
+            .headers_mut()
+            .insert(header::ACCESS_CONTROL_ALLOW_CREDENTIALS, HeaderValue::from_static("true"));
+    }
     add_vary_origin(response.headers_mut());
     response
 }

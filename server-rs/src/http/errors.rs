@@ -100,6 +100,11 @@ pub fn normalize_api_error(status: u16, payload: Value) -> Map<String, Value> {
     existing
 }
 
+/// Marks a response produced by Fastify-level code (hooks) on a path whose handler
+/// responses skip the rewrite, so it is rewritten anyway.
+#[derive(Clone, Copy, Debug)]
+pub struct RewriteApiError;
+
 pub fn is_api_path(path: &str) -> bool {
     path == "/api" || path.starts_with("/api/")
 }
@@ -115,7 +120,8 @@ pub async fn api_error_responses(req: Request, next: Next) -> Response {
     let path = req.uri().path().to_string();
     let response = next.run(req).await;
 
-    if response.status().as_u16() < 400 || !is_api_path(&path) || is_excluded_from_rewrite(&path) {
+    let forced = response.extensions().get::<RewriteApiError>().is_some();
+    if response.status().as_u16() < 400 || !is_api_path(&path) || (is_excluded_from_rewrite(&path) && !forced) {
         return response;
     }
 
