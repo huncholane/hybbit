@@ -2,7 +2,9 @@
 //! the Better Auth 1.6.25 behaviour recorded in AUTH_COMPAT.md.
 #![allow(dead_code)] // consumed as ingest and the authenticated API are ported
 
+pub mod access;
 pub mod bearer;
+pub mod guards;
 pub mod scopes;
 pub mod session;
 
