@@ -1,6 +1,7 @@
 //! The HTTP edge shared by every route: CORS, error bodies, request logs and static
 //! files, each matching what the Node backend does around its handlers.
 
+pub mod bad_url;
 pub mod cors;
 pub mod errors;
 pub mod logging;

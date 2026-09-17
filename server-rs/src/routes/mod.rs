@@ -54,4 +54,6 @@ pub fn router(state: AppState) -> Router {
         .layer(middleware::from_fn_with_state(cors_policy, cors::cors))
         .layer(middleware::from_fn(errors::api_error_responses))
         .layer(middleware::from_fn(logging::request_log))
+        // Outermost: find-my-way rejects an undecodable URL before any Fastify hook runs
+        .layer(middleware::from_fn(crate::http::bad_url::reject_bad_url))
 }

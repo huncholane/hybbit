@@ -33,6 +33,33 @@ pub struct BearerAuthResult {
 pub struct AccessTarget<'a> {
     pub organization_id: Option<&'a str>,
     pub site_id: Option<i64>,
+    /// The `siteId` route parameter the target came from, when it did: Node binds
+    /// `Number(siteId)` to the integer column, so a value Postgres cannot read as
+    /// an integer fails the lookup (see [`SiteIdQueryFailed`])
+    pub site_param: Option<&'a str>,
+}
+
+/// The query error `resolveTargetOrganizationId` throws when `Number(siteId)` is
+/// not an integer Postgres accepts (NaN, a fraction, out of range): drizzle wraps
+/// the failure as `Failed query: <sql>\nparams: <values>`, and the guard lets it
+/// escape to Fastify's default error handler as a 500 carrying that message.
+#[derive(Debug, thiserror::Error)]
+#[error("Failed query: select \"organization_id\" from \"sites\" where \"sites\".\"site_id\" = $1 limit $2\nparams: {param},1")]
+pub struct SiteIdQueryFailed {
+    /// `String(Number(siteId))`, as node-postgres sends it
+    pub param: String,
+}
+
+impl SiteIdQueryFailed {
+    /// The error for a truthy `siteId` whose number Postgres would reject.
+    fn check(site_param: &str) -> Option<Self> {
+        use crate::analytics::js::number::{number_to_string, string_to_number};
+        if site_param.is_empty() {
+            return None;
+        }
+        let param = number_to_string(string_to_number(site_param));
+        param.parse::<i32>().is_err().then_some(Self { param })
+    }
 }
 
 /// `resolveBearerTokenFromRequest`: `Authorization: Bearer` first, then `?api_key=`
@@ -45,6 +72,10 @@ pub fn bearer_token<'a>(authorization: Option<&'a str>, query_api_key: Option<&'
 async fn target_organization_id(pg: &PgPool, target: AccessTarget<'_>) -> Result<Option<String>, sqlx::Error> {
     if let Some(organization_id) = target.organization_id.filter(|id| !id.is_empty()) {
         return Ok(Some(organization_id.to_string()));
+    }
+    if let Some(failed) = target.site_param.and_then(SiteIdQueryFailed::check) {
+        debug!(param = %failed.param, "Site id cannot bind to the integer column");
+        return Err(sqlx::Error::Encode(Box::new(failed)));
     }
     let Some(site_id) = target.site_id.filter(|id| *id != 0) else {
         return Ok(None);
@@ -149,6 +180,7 @@ mod parity {
             let target = AccessTarget {
                 organization_id: case["target"]["organizationId"].as_str(),
                 site_id: case["target"]["siteId"].as_i64(),
+                site_param: None,
             };
             let result = check_api_key(&pg, token, target).await.unwrap();
             let rows: String = sqlx::query_scalar(plan["state"].as_str().unwrap()).fetch_one(&pg).await.unwrap();
