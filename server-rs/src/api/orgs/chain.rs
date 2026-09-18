@@ -13,16 +13,19 @@
 //! all; their handlers resolve the caller themselves.
 
 use axum::{
-    http::{HeaderMap, Uri},
+    http::{HeaderMap, StatusCode, Uri},
     response::Response,
 };
+use serde_json::json;
 
 use crate::{
     analytics::{
         chain::fastify_query,
         js::{JsObject, JsValue},
+        utils::query_validation::validate_http_time_params,
     },
     auth::guards::{AuthContext, Authenticated, RouteScope},
+    http,
     state::AppState,
 };
 
@@ -36,6 +39,31 @@ pub struct Request {
 /// ignored, matching `typeof request.query.api_key === "string"`).
 fn query_api_key(query: &JsObject) -> Option<String> {
     query.get("api_key").and_then(JsValue::as_str).map(str::to_string)
+}
+
+/// `authOnlyScoped(resource, action)` on a path that carries an `:organizationId`.
+///
+/// `requireAuth` reads the organization from `request.params` and hands it to
+/// `checkApiKey`, so a bearer credential is verified against that organization: an
+/// organization key for it is admitted (subject to the scope), a user key needs a
+/// membership there, and a key for another organization is rejected. That is the
+/// difference from `analytics::chain::account_scoped`, which has no parameters to
+/// read.
+pub async fn auth_only_scoped(
+    state: &AppState,
+    headers: &HeaderMap,
+    uri: &Uri,
+    organization_id: &str,
+    route_scope: Option<RouteScope>,
+) -> Result<Request, Response> {
+    let query = fastify_query(uri);
+    let context = AuthContext::new(state, headers, query_api_key(&query));
+    let auth = context.require_auth(route_scope, Some(organization_id), None).await?;
+    // `validateTimeParams`
+    if let Some(message) = validate_http_time_params(&JsValue::Object(query.clone())) {
+        return Err(http::json(StatusCode::BAD_REQUEST, &json!({ "error": message })));
+    }
+    Ok(Request { auth, query })
 }
 
 /// `authOnlyNoScopedKeys`: `requireAuth("deny-scoped")` and nothing else.

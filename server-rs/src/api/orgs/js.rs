@@ -172,38 +172,82 @@ fn describe(value: &JsValue) -> String {
     }
 }
 
-/// One value drizzle binds into an `inArray(column, values)` list. postgres-js
-/// infers a parameter's type from the JavaScript value: booleans are sent as
-/// `bool` and everything except dates, buffers and bigints with an unspecified
-/// type, which Postgres reads as text and casts to the column's type. A boolean
-/// against a `text` or `integer` column has no operator, so that query throws.
+/// One value drizzle binds as a query parameter.
+///
+/// Probed against postgres-js 3 and this Postgres (scratchpad probe_pg.mjs). The
+/// parameter's type comes from the statement's own description, and the value is
+/// serialised for it:
+///
+/// - a `boolean` column uses `x === true ? 't' : 'f'`, so **only** `true` stores
+///   true: `"yes"`, `1` and `"true"` all store false;
+/// - every other column gets `String(value)`, so an array is its comma-joined text
+///   (`["a"]` is `"a"`), any other object is `"[object Object]"`, and a number is
+///   its decimal text;
+/// - `null` is SQL NULL;
+/// - `true`/`false` are the only values sent with a type of their own (`bool`), so
+///   they are the only ones a text or integer column rejects outright.
 pub enum Bind {
     Text(String),
     Null,
     Throws,
 }
 
-/// How postgres-js sends one element of such a list.
+/// How postgres-js sends one value to a `text` or `integer` column.
 pub fn bind_value(value: &JsValue) -> Bind {
     match value {
-        JsValue::String(text) => Bind::Text(text.clone()),
-        JsValue::Number(number) => Bind::Text(number_to_string(*number)),
         JsValue::Null | JsValue::Undefined => Bind::Null,
         JsValue::Bool(_) => Bind::Throws,
-        // objects and arrays are serialised as JSON, which neither column accepts
-        JsValue::Array(_) | JsValue::Object(_) => Bind::Throws,
+        other => Bind::Text(to_display(other)),
     }
 }
 
-/// What Postgres accepts for an `integer` column from an unspecified parameter:
-/// optional surrounding whitespace, an optional sign and digits inside the int4 range.
+/// How postgres-js sends one value to a `boolean` column.
+pub fn bind_boolean(value: &JsValue) -> Option<bool> {
+    match value {
+        JsValue::Null | JsValue::Undefined => None,
+        other => Some(other == &JsValue::Bool(true)),
+    }
+}
+
+/// What Postgres accepts for an `integer` column from an untyped parameter:
+/// surrounding whitespace, an optional sign, and decimal digits or a `0x`, `0o` or
+/// `0b` prefix, inside the int4 range. (`"0x10"` stores 16; `"1e3"` is rejected.)
 pub fn pg_int_literal(text: &str) -> Option<i32> {
     let trimmed = text.trim_matches(|c: char| c.is_ascii_whitespace());
-    let digits = trimmed.strip_prefix(['+', '-']).unwrap_or(trimmed);
-    if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
+    let (negative, digits) = match trimmed.strip_prefix('-') {
+        Some(rest) => (true, rest),
+        None => (false, trimmed.strip_prefix('+').unwrap_or(trimmed)),
+    };
+    let lower = digits.to_ascii_lowercase();
+    let (radix, body) = match lower.strip_prefix("0x") {
+        Some(rest) => (16, rest.to_string()),
+        None => match lower.strip_prefix("0o") {
+            Some(rest) => (8, rest.to_string()),
+            None => match lower.strip_prefix("0b") {
+                Some(rest) => (2, rest.to_string()),
+                None => (10, lower.clone()),
+            },
+        },
+    };
+    let body = body.replace('_', "");
+    if body.is_empty() || !body.chars().all(|c| c.is_digit(radix)) {
         return None;
     }
-    trimmed.trim_start_matches('+').parse::<i32>().ok()
+    let magnitude = i64::from_str_radix(&body, radix).ok()?;
+    let value = if negative { -magnitude } else { magnitude };
+    i32::try_from(value).ok()
+}
+
+/// `set.has(value)` for a `Set` of strings loaded from Postgres: strict equality,
+/// so only a string value can ever be a member. A numeric string that matched in
+/// SQL is still not in a `Set` of numbers, and the other way round.
+pub fn is_present_string(value: &JsValue, present: &[String]) -> bool {
+    matches!(value, JsValue::String(text) if present.iter().any(|found| found == text))
+}
+
+/// The same for a `Set` of numbers: only a number equal to one of them matches.
+pub fn is_present_number(value: &JsValue, present: &[i32]) -> bool {
+    matches!(value, JsValue::Number(number) if present.iter().any(|found| f64::from(*found) == *number))
 }
 
 /// `Array.prototype.join`: `null` and `undefined` render as the empty string.
@@ -218,7 +262,10 @@ pub fn join_display(values: &[JsValue], separator: &str) -> String {
         .join(separator)
 }
 
-/// `String(value)` for the values these handlers interpolate into messages.
+/// `String(value)`, which is both how these handlers interpolate a value into a
+/// message and how postgres-js serialises an untyped parameter. An array joins its
+/// elements with commas (nullish elements render as nothing); any other object is
+/// `"[object Object]"`.
 pub fn to_display(value: &JsValue) -> String {
     match value {
         JsValue::String(text) => text.clone(),
@@ -226,6 +273,7 @@ pub fn to_display(value: &JsValue) -> String {
         JsValue::Bool(flag) => flag.to_string(),
         JsValue::Null => "null".into(),
         JsValue::Undefined => "undefined".into(),
-        JsValue::Array(_) | JsValue::Object(_) => crate::analytics::js::json::stringify(value).unwrap_or_default(),
+        JsValue::Array(items) => join_display(items, ","),
+        JsValue::Object(_) => "[object Object]".into(),
     }
 }

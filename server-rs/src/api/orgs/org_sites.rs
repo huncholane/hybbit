@@ -497,12 +497,12 @@ async fn insert_site(
         .bind(random_site_id())
         .bind(if input.site_type == "web" { None } else { Some(input.site_type) })
         .bind(input.domain.clone())
-        .bind(bind_text(&input.name))
+        .bind(bind_text(&input.name)?)
         .bind(created_by.map(str::to_string))
         .bind(organization_id.to_string())
-        .bind(bind_bool(&input.public, false)?)
-        .bind(bind_bool(&input.salt_user_ids, false)?)
-        .bind(bind_bool(&input.block_bots, true)?);
+        .bind(bind_bool(&input.public, false))
+        .bind(bind_bool(&input.salt_user_ids, false))
+        .bind(bind_bool(&input.block_bots, true));
     for (kind, value) in &extra {
         if *kind == "json" {
             let stored = js_json::stringify(value).unwrap_or_else(|| "null".to_string());
@@ -511,7 +511,7 @@ async fn insert_site(
             }
             query = query.bind(stored);
         } else {
-            query = query.bind(bind_bool(value, false)?);
+            query = query.bind(bind_bool(value, false));
         }
     }
 
@@ -528,33 +528,24 @@ fn random_site_id() -> String {
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
-/// A text column's parameter: postgres-js sends most values with an unspecified
-/// type, so Postgres reads them as text.
-fn bind_text(value: &JsValue) -> Option<String> {
-    match value {
-        JsValue::Undefined | JsValue::Null => None,
-        other => Some(js::to_display(other)),
+/// A text column's parameter, as postgres-js serialises it (`String(value)`).
+/// `true` and `false` carry a type of their own, which the column rejects.
+fn bind_text(value: &JsValue) -> Result<Option<String>, String> {
+    match js::bind_value(value) {
+        js::Bind::Null => Ok(None),
+        js::Bind::Text(text) => Ok(Some(text)),
+        js::Bind::Throws => {
+            Err("PostgresError: column \"name\" is of type text but expression is of type boolean".into())
+        }
     }
 }
 
-/// A boolean column's parameter: `value ?? fallback`, then whatever Postgres makes
-/// of it.
-fn bind_bool(value: &JsValue, fallback: bool) -> Result<bool, String> {
-    let value = match value {
-        JsValue::Undefined | JsValue::Null => return Ok(fallback),
-        other => other,
-    };
-    match value {
-        JsValue::Bool(flag) => Ok(*flag),
-        other => {
-            let text = js::to_display(other);
-            match text.trim().to_ascii_lowercase().as_str() {
-                "t" | "true" | "y" | "yes" | "on" | "1" => Ok(true),
-                "f" | "false" | "n" | "no" | "off" | "0" => Ok(false),
-                _ => Err(format!("PostgresError: invalid input syntax for type boolean: \"{text}\"")),
-            }
-        }
-    }
+/// A boolean column's parameter: `value ?? fallback` in the lifecycle's own
+/// defaulting, then postgres-js's `x === true ? 't' : 'f'`, so anything but `true`
+/// stores false.
+fn bind_bool(value: &JsValue, fallback: bool) -> bool {
+    // `input.public ?? false` and friends replace a nullish value before binding
+    js::bind_boolean(value).unwrap_or(fallback)
 }
 
 #[cfg(test)]

@@ -239,12 +239,9 @@ async fn check_member_user_ids(
             .bind(&bound)
             .fetch_all(pg)
             .await?;
-    let invalid: Vec<JsValue> = items
-        .iter()
-        .zip(&bound)
-        .filter(|(_, bound)| !bound.as_ref().is_some_and(|value| present.iter().any(|found| found == value)))
-        .map(|(item, _)| item.clone())
-        .collect();
+    // `new Set(orgMembers.map(m => m.userId))` holds strings, and `Set.has` is
+    // strict: a number that matched in SQL is still reported as not in the org
+    let invalid: Vec<JsValue> = items.iter().filter(|item| !js::is_present_string(item, &present)).cloned().collect();
     if !invalid.is_empty() {
         return Err(Failure::Reply(request::error(
             StatusCode::BAD_REQUEST,
@@ -271,12 +268,9 @@ async fn check_site_ids(pg: &PgPool, organization_id: &str, site_ids: &ListArg<'
             .bind(&bound)
             .fetch_all(pg)
             .await?;
-    let invalid: Vec<JsValue> = items
-        .iter()
-        .zip(&bound)
-        .filter(|(_, bound)| !bound.is_some_and(|value| present.contains(&value)))
-        .map(|(item, _)| item.clone())
-        .collect();
+    // `new Set(orgSites.map(s => s.siteId))` holds numbers, and `Set.has` is strict:
+    // the string "65300" matches in SQL but is still reported as not in the org
+    let invalid: Vec<JsValue> = items.iter().filter(|item| !js::is_present_number(item, &present)).cloned().collect();
     if !invalid.is_empty() {
         return Err(Failure::Reply(request::error(
             StatusCode::BAD_REQUEST,

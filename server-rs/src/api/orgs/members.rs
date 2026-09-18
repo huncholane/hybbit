@@ -12,13 +12,13 @@ use sqlx::{PgPool, Row};
 use tracing::{debug, error, info};
 
 use super::{
-    access,
+    access, chain,
     js::{self, Bind, ListArg},
     request::{self, object, text},
 };
 use crate::{
     analytics::{
-        chain::{account_scoped, org_scoped, route_scope},
+        chain::{org_scoped, route_scope},
         js::JsValue,
     },
     auth::{
@@ -211,6 +211,18 @@ fn type_error_500(message: &str) -> Response {
     thrown_500(&format!("TypeError: {message}"))
 }
 
+/// `String(error)` for the `DrizzleQueryError` the relational user lookup throws
+/// when its parameter has a type the `email` column cannot be compared with.
+fn find_user_query_error(email: &JsValue) -> String {
+    const SQL: &str = concat!(
+        r#"select "id", "name", "username", "email", "emailVerified", "image", "createdAt", "updatedAt", "role","#,
+        r#" "displayUsername", "banned", "banReason", "banExpires", "stripeCustomerId", "overMonthlyLimit","#,
+        r#" "monthlyEventCount", "sendAutoEmailReports", "scheduled_tip_email_ids" from "user" "user""#,
+        r#" where "user"."email" = $1 limit $2"#,
+    );
+    format!("Error: Failed query: {SQL}\nparams: {},1", js::to_display(email))
+}
+
 /// `role !== "admin" && role !== "member" && role !== "owner"`
 fn known_role(role: &JsValue) -> Option<&str> {
     match role {
@@ -239,7 +251,9 @@ pub async fn add_user(
         Ok(body) => body,
         Err(response) => return response,
     };
-    let scoped = match account_scoped(&state, &headers, &uri, false, route_scope("org", "write")).await {
+    let scoped = match chain::auth_only_scoped(&state, &headers, &uri, &organization_id, route_scope("org", "write"))
+        .await
+    {
         Ok(scoped) => scoped,
         Err(response) => return response,
     };
@@ -268,8 +282,13 @@ pub async fn add_user(
         return request::error(StatusCode::FORBIDDEN, "Only an organization owner can assign the owner role");
     }
 
-    let Bind::Text(email_value) = js::bind_value(&email) else {
-        return thrown_500("operator does not exist: text = boolean");
+    // `db.query.user.findFirst({ where: eq(user.email, email) })`: postgres-js sends
+    // a boolean as `bool`, which has no operator against the text column, and drizzle
+    // wraps the failure in a `DrizzleQueryError` naming the query and its parameters
+    let email_value = match js::bind_value(&email) {
+        Bind::Text(text) => Some(text),
+        Bind::Null => None,
+        Bind::Throws => return thrown_500(&find_user_query_error(&email)),
     };
     let result: Result<Response, sqlx::Error> = async {
         let found: Option<String> = sqlx::query_scalar(r#"select "id" from "user" where "email" = $1 limit 1"#)
@@ -332,7 +351,9 @@ pub async fn create_user(
         Ok(body) => body,
         Err(response) => return response,
     };
-    let scoped = match account_scoped(&state, &headers, &uri, false, route_scope("org", "write")).await {
+    let scoped = match chain::auth_only_scoped(&state, &headers, &uri, &organization_id, route_scope("org", "write"))
+        .await
+    {
         Ok(scoped) => scoped,
         Err(response) => return response,
     };
@@ -544,12 +565,10 @@ async fn update_access(
         .fetch_all(pg)
         .await
         .map_err(|err| Err(err.to_string()))?;
-        let invalid: Vec<JsValue> = items
-            .iter()
-            .zip(&bound)
-            .filter(|(_, bound)| !bound.is_some_and(|value| present.contains(&value)))
-            .map(|(item, _)| item.clone())
-            .collect();
+        // `new Set(await siteIdsInOrganization(...))` holds numbers, and `Set.has` is
+        // strict: a numeric string matches in SQL but is still reported as invalid
+        let invalid: Vec<JsValue> =
+            items.iter().filter(|item| !js::is_present_number(item, &present)).cloned().collect();
         if !invalid.is_empty() {
             return Ok(request::error(
                 StatusCode::BAD_REQUEST,
@@ -567,7 +586,7 @@ async fn update_access(
         return Err(Err(if matches!(restricted, JsValue::Undefined) {
             "No values to set".to_string()
         } else {
-            format!("invalid input syntax for type boolean: \"{}\"", js::to_display(restricted))
+            "null value in column \"has_restricted_site_access\" violates not-null constraint".to_string()
         }));
     };
 
@@ -628,19 +647,9 @@ async fn update_access(
     ))
 }
 
-/// What Postgres accepts for a `boolean` column from the value postgres-js sends.
+/// What a `boolean` column stores: postgres-js serialises the parameter with
+/// `x === true ? 't' : 'f'`, so only `true` is true. `undefined` leaves drizzle with
+/// nothing to set and `null` violates the column's NOT NULL, both of which throw.
 fn boolean_literal(value: &JsValue) -> Option<bool> {
-    match value {
-        JsValue::Bool(flag) => Some(*flag),
-        JsValue::Undefined => None,
-        JsValue::Null => None,
-        other => {
-            let text = js::to_display(other);
-            match text.trim().to_ascii_lowercase().as_str() {
-                "t" | "true" | "y" | "yes" | "on" | "1" => Some(true),
-                "f" | "false" | "n" | "no" | "off" | "0" => Some(false),
-                _ => None,
-            }
-        }
-    }
+    js::bind_boolean(value)
 }
