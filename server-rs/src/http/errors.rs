@@ -180,7 +180,14 @@ pub async fn not_found(method: Method, uri: Uri) -> Response {
             "resolution": "Check the requested path and try again.",
         })
     };
-    super::json(StatusCode::NOT_FOUND, &body)
+    let mut response = super::json(StatusCode::NOT_FOUND, &body);
+    // This body is already in the rewritten shape. Saying so keeps the outer layer
+    // off it, which matters for a HEAD that reaches the router's fallback: axum
+    // strips the body there (setting the content-length Node sends) before the
+    // outer layer runs, which would otherwise see an empty body and answer with
+    // the generic 404 and its length.
+    response.extensions_mut().insert(Rewritten);
+    response
 }
 
 #[cfg(test)]
