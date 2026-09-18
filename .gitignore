@@ -61,3 +61,4 @@ backups/
 
 # Rust backend build output
 server-rs/target/
+.playwright-mcp/
