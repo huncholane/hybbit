@@ -269,9 +269,7 @@ async fn is_safe_target(url: &url::Url) -> bool {
 
 /// `fetchHomepage`: the site's homepage HTML, or None when it is unreachable.
 pub async fn fetch_homepage(domain: &str) -> Option<String> {
-    if HOSTNAME_PATTERN.find(domain).is_none() {
-        return None;
-    }
+    HOSTNAME_PATTERN.find(domain)?;
     let client = reqwest::Client::builder()
         .redirect(reqwest::redirect::Policy::none())
         .timeout(FETCH_TIMEOUT)

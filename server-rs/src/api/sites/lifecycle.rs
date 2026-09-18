@@ -517,4 +517,138 @@ mod tests {
         assert!(validate_mobile_features(SiteType::Mobile, Some(false), Some(false)).is_ok());
         assert!(validate_mobile_features(SiteType::Web, Some(true), Some(true)).is_ok());
     }
+
+    // ----------------------------------------------------------------------
+    // server/src/api/sites/updateSiteConfig.test.ts and
+    // server/src/services/sites/siteConfigurationLifecycle.test.ts, for the paths
+    // that survive without CLOUD.
+    //
+    // Every case in those suites that turns on a subscription (the session-replay
+    // pro gate, the AppSumo and trial tiers, the site limit) has no self-hosted
+    // equivalent: `IS_CLOUD` is false here, which is the branch the suites' own
+    // "self-hosted bypass" case pins. What is left is which fields reach the
+    // update, how the domain is cleaned and which requests are refused before any
+    // write. The ordering the lifecycle suite asserts with mocks (persist once,
+    // then invalidate, then reload; no invalidation when the write fails; replay
+    // data before the row on delete) is checked end to end by the row snapshots in
+    // parity/api-sites/writes.py.
+
+    fn columns(input: &UpdateInput) -> Vec<&'static str> {
+        direct_update_fields(input).into_iter().map(|(column, _)| column).collect()
+    }
+
+    fn value_of(fields: &[(&'static str, ColumnValue)], column: &str) -> String {
+        let (_, value) = fields.iter().find(|(name, _)| *name == column).expect("column present");
+        match value {
+            ColumnValue::Text(text) => text.clone(),
+            ColumnValue::NullText => "NULL".to_string(),
+            ColumnValue::Bool(flag) => flag.to_string(),
+            ColumnValue::Int(number) => number.to_string(),
+            ColumnValue::Json(json) => json.to_string(),
+            ColumnValue::Timestamp(text) => text.clone(),
+        }
+    }
+
+    #[test]
+    fn updates_settings_and_analytics_toggles() {
+        let input = UpdateInput {
+            name: Some("Renamed".into()),
+            public: Some(true),
+            block_bots: Some(false),
+            web_vitals: Some(true),
+            track_errors: Some(true),
+            excluded_countries: Some(vec!["US".into(), "GB".into()]),
+            tags: Some(vec!["prod".into()]),
+            ..UpdateInput::default()
+        };
+        let fields = direct_update_fields(&input);
+        assert_eq!(value_of(&fields, "name"), "Renamed");
+        assert_eq!(value_of(&fields, r#""public""#), "true");
+        assert_eq!(value_of(&fields, r#""blockBots""#), "false");
+        assert_eq!(value_of(&fields, r#""webVitals""#), "true");
+        assert_eq!(value_of(&fields, r#""trackErrors""#), "true");
+        assert_eq!(value_of(&fields, "excluded_countries"), r#"["US","GB"]"#);
+        assert_eq!(value_of(&fields, "tags"), r#"["prod"]"#);
+        // nothing else is written
+        assert_eq!(fields.len(), 7);
+    }
+
+    #[test]
+    fn writes_nothing_for_an_empty_update() {
+        assert!(columns(&UpdateInput::default()).is_empty());
+    }
+
+    #[test]
+    fn cleans_the_domain_before_storing_it() {
+        assert_eq!(normalize_domain("https://new.example.com/"), "new.example.com");
+        assert!(validate_site_identity(SiteType::Web, "new.example.com").is_ok());
+    }
+
+    #[test]
+    fn rejects_invalid_excluded_ip_patterns() {
+        let validation = validate_ip_pattern("999.999.0.1");
+        assert_eq!(validation.error, Some("Invalid IP address format"));
+        assert!(validate_ip_pattern("10.0.0.1").error.is_none());
+        // an empty or whitespace-only pattern passes, as the client allows
+        assert!(validate_ip_pattern("   ").error.is_none());
+    }
+
+    #[test]
+    fn refuses_session_replay_on_a_mobile_site_before_anything_else() {
+        let error = validate_mobile_features(SiteType::Mobile, Some(true), None).unwrap_err();
+        assert_eq!(error.status, 400);
+        assert_eq!(error.message, "Session replay and Web Vitals are only available for web sites");
+        assert_eq!(error.code, SiteLifecycleErrorCode::MobileFeatureNotSupported);
+    }
+
+    #[test]
+    fn a_mobile_site_always_stores_replay_and_vitals_off() {
+        // `updateData.sessionReplay = false` replaces the entry in place, so the
+        // column keeps its position in the statement
+        let input = UpdateInput { session_replay: Some(false), name: Some("x".into()), ..UpdateInput::default() };
+        let mut fields = direct_update_fields(&input);
+        set_or_replace(&mut fields, r#""sessionReplay""#, ColumnValue::Bool(false));
+        set_or_replace(&mut fields, r#""webVitals""#, ColumnValue::Bool(false));
+        assert_eq!(
+            fields.iter().map(|(column, _)| *column).collect::<Vec<_>>(),
+            vec!["name", r#""sessionReplay""#, r#""webVitals""#]
+        );
+        assert_eq!(value_of(&fields, r#""sessionReplay""#), "false");
+        assert_eq!(value_of(&fields, r#""webVitals""#), "false");
+    }
+
+    #[test]
+    fn refuses_a_site_id_that_is_not_a_positive_integer() {
+        for site_id in [0.0, -1.0, 1.5, f64::NAN, f64::INFINITY] {
+            let error = validate_site_id(site_id).unwrap_err();
+            assert_eq!(error.status, 400, "{site_id}");
+            assert_eq!(error.message, "Invalid site ID: must be a positive integer");
+        }
+        assert_eq!(validate_site_id(65200.0).unwrap(), 65200);
+    }
+
+    #[test]
+    fn normalize_site_type_keeps_the_stored_type_when_none_is_sent() {
+        assert_eq!(normalize_site_type(None, SiteType::Mobile), SiteType::Mobile);
+        assert_eq!(normalize_site_type(Some(None), SiteType::Mobile), SiteType::Web);
+        assert_eq!(normalize_site_type(Some(Some("mobile")), SiteType::Web), SiteType::Mobile);
+        assert_eq!(normalize_site_type(Some(Some("web")), SiteType::Mobile), SiteType::Web);
+    }
+
+    #[test]
+    fn the_private_link_key_is_six_random_bytes_in_hex() {
+        let key = random_hex_6();
+        assert_eq!(key.len(), 12);
+        assert!(key.chars().all(|character| character.is_ascii_hexdigit() && !character.is_ascii_uppercase()));
+        assert_ne!(key, random_hex_6());
+    }
+
+    #[test]
+    fn the_updated_at_value_is_an_iso_string_with_milliseconds() {
+        let now = now_iso();
+        assert_eq!(now.len(), 24, "{now}");
+        assert!(now.ends_with('Z'));
+        assert_eq!(now.as_bytes()[10], b'T');
+        assert_eq!(now.as_bytes()[19], b'.');
+    }
 }

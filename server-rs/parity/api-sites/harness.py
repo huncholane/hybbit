@@ -364,8 +364,57 @@ def build_header_cases():
             add("headers", f"GET {path} with segment_id", "GET", f"{path}{query}", "cookie-owner")
 
 
+def build_reachable_cases():
+    """check-install against domains that really resolve, so the fetch, the
+    redirect following and the SSRF guard all run. These leave the host, so they
+    are a small, separate group.
+
+    The "snippet is installed" branch is not reachable from here (none of the
+    parity domains serves the script in its HTML), so `has_hygo_script` is covered
+    by its unit test instead."""
+    now = int(time.time())
+    domains = ["example.com", "hygo.ai", "rubysair.com", "spiritfacts.com", "domhaul.com",
+               "www.example.com", "iana.org", "cloudflare.com"]
+    for index, domain in enumerate(domains):
+        signature = fixtures.sign_payload(f"check-install:65200:{domain}:{now + 3600}")
+        path = (f"/api/site/check-install?siteId=65200&domain={urllib.parse.quote(domain)}"
+                f"&exp={now + 3600}&sig={urllib.parse.quote(signature)}")
+        add("reachable", "GET /api/site/check-install (network)", "GET", path, "none",
+            headers={"X-Forwarded-For": f"192.0.2.{index + 20}"})
+
+
+def build_credential_cases():
+    """Credential shapes the guards read before they reach any of these handlers."""
+    tampered = CREDS["cookie-owner"]["Cookie"].replace("%3D", "%3d")
+    variants = {
+        "tampered cookie": {"Cookie": tampered},
+        "cookie without signature": {"Cookie": f"{fixtures.COOKIE}=paritysitesowner"},
+        "empty cookie": {"Cookie": f"{fixtures.COOKIE}="},
+        "unknown cookie name": {"Cookie": f"other={fixtures.P}s-owner"},
+        "basic auth": {"Authorization": "Basic " + fixtures.P + "t-owner"},
+        "lowercase bearer": {"Authorization": "bearer " + fixtures.P + "t-owner"},
+        "double space bearer": {"Authorization": "Bearer  " + fixtures.P + "t-owner"},
+        "bearer with no token": {"Authorization": "Bearer"},
+        "bearer plus cookie": {"Authorization": "Bearer " + fixtures.P + "t-org",
+                               "Cookie": CREDS["cookie-owner"]["Cookie"]},
+        "sysadmin cookie plus user key": {"Authorization": "Bearer " + fixtures.P + "t-outsider",
+                                          "Cookie": CREDS["cookie-sysadmin"]["Cookie"]},
+    }
+    for name, headers in variants.items():
+        for path in ["/api/sites/65200", "/api/sites/65200/excluded-ips", "/api/sites/65200/usage",
+                     "/api/sites/65200/imports", "/api/sites/65200/private-link-config",
+                     "/api/sites/65204/excluded-ips", "/api/sites/65212"]:
+            add("credentials", f"GET {path} ({name})", "GET", path, "none", headers=headers)
+    for query in ["?api_key=" + fixtures.P + "t-owner&api_key=" + fixtures.P + "t-org",
+                  "?api_key=", "?api_key", "?API_KEY=" + fixtures.P + "t-owner"]:
+        for path in ["/api/sites/65200", "/api/sites/65200/excluded-ips", "/api/sites/65200/imports"]:
+            add("credentials", f"GET {path} (?api_key shapes)", "GET", f"{path}{query}", "none")
+
+
 GROUPS = {
     "access": build_access_cases,
+    "credentials": build_credential_cases,
+    "reachable": build_reachable_cases,
     "identifiers": build_identifier_cases,
     "exclusions": build_exclusion_cases,
     "embed": build_embed_cases,

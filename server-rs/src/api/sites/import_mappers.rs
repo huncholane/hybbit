@@ -653,4 +653,431 @@ mod tests {
         // a numeric value fails the key-only z.string()
         assert!(!events_union_accepts(&[umami(json!({ "event_type": 1 }))]));
     }
+
+    // ----------------------------------------------------------------------
+    // The three vitest suites, ported case for case from
+    // server/src/services/import/mappers/{umami,plausible,simpleAnalytics}.test.ts.
+
+    /// The fixture event each suite builds, with the overrides a case applies.
+    fn event(base: &Value, overrides: Value) -> Value {
+        let mut merged = base.clone();
+        if let (Value::Object(target), Value::Object(extra)) = (&mut merged, overrides) {
+            target.extend(extra);
+        }
+        merged
+    }
+
+    mod umami_suite {
+        use super::*;
+
+        // A valid RFC4122 v4 UUID, as the suite notes
+        const SESSION: &str = "9e3779b1-3c6e-4362-8a4f-81b88c81f013";
+
+        fn base() -> Value {
+            json!({
+                "session_id": SESSION, "hostname": "example.com", "browser": "chrome", "os": "Windows 10",
+                "device": "desktop", "screen": "1920x1080", "language": "en-US", "country": "US",
+                "region": "US-CA", "city": "San Francisco", "url_path": "/blog/post-1",
+                "url_query": "utm_source=google", "referrer_path": "/search", "referrer_domain": "google.com",
+                "page_title": "Post 1", "event_type": "1", "event_name": "", "distinct_id": "visitor-1",
+                "created_at": "2024-06-15 14:30:00"
+            })
+        }
+
+        fn rows(overrides: Value, site: i64, import_id: &str) -> Vec<Value> {
+            transform(Platform::Umami, &[event(&base(), overrides)], site, import_id)
+        }
+
+        fn one(overrides: Value) -> Value {
+            let rows = rows(overrides, 1, "i");
+            assert_eq!(rows.len(), 1, "event should have been kept");
+            rows[0].clone()
+        }
+
+        #[test]
+        fn transforms_a_valid_pageview_event() {
+            let rows = rows(json!({}), 1, "import-1");
+            assert_eq!(rows.len(), 1);
+            let row = &rows[0];
+            assert_eq!(row["site_id"], json!(1));
+            assert_eq!(row["timestamp"], json!("2024-06-15 14:30:00"));
+            assert_eq!(row["session_id"], json!(SESSION));
+            assert_eq!(row["user_id"], json!("visitor-1"));
+            assert_eq!(row["hostname"], json!("example.com"));
+            assert_eq!(row["pathname"], json!("/blog/post-1"));
+            assert_eq!(row["querystring"], json!("?utm_source=google"));
+            assert_eq!(row["url_parameters"], json!({ "utm_source": "google" }));
+            assert_eq!(row["page_title"], json!("Post 1"));
+            assert_eq!(row["referrer"], json!("https://google.com/search"));
+            assert_eq!(row["browser"], json!("Chrome"));
+            assert_eq!(row["browser_version"], json!(""));
+            assert_eq!(row["operating_system"], json!("Windows"));
+            assert_eq!(row["operating_system_version"], json!("10"));
+            assert_eq!(row["language"], json!("en-US"));
+            assert_eq!(row["country"], json!("US"));
+            assert_eq!(row["region"], json!("US-CA"));
+            assert_eq!(row["city"], json!("San Francisco"));
+            assert_eq!(row["lat"], json!(0));
+            assert_eq!(row["lon"], json!(0));
+            assert_eq!(row["screen_width"], json!(1920.0));
+            assert_eq!(row["screen_height"], json!(1080.0));
+            assert_eq!(row["device_type"], json!("Desktop"));
+            assert_eq!(row["type"], json!("pageview"));
+            assert_eq!(row["event_name"], json!(""));
+            assert_eq!(row["props"], json!({}));
+            assert_eq!(row["import_id"], json!("import-1"));
+            assert_ne!(row["channel"], json!(""), "channel is truthy");
+        }
+
+        #[test]
+        fn transforms_a_custom_event() {
+            let rows = rows(json!({ "event_type": "2", "event_name": "SignUp" }), 2, "import-2");
+            assert_eq!(rows.len(), 1);
+            assert_eq!(rows[0]["type"], json!("custom_event"));
+            assert_eq!(rows[0]["event_name"], json!("SignUp"));
+        }
+
+        #[test]
+        fn clears_the_event_name_for_pageviews() {
+            assert_eq!(one(json!({ "event_type": "1", "event_name": "ShouldBeDropped" }))["event_name"], json!(""));
+        }
+
+        #[test]
+        fn maps_known_browser_keys_case_insensitively() {
+            for (input, expected) in [("chrome", "Chrome"), ("Chrome", "Chrome"), ("crios", "Mobile Chrome"),
+                                      ("edge-chromium", "Edge"), ("ios", "Mobile Safari"),
+                                      ("samsung", "Samsung Internet")] {
+                assert_eq!(one(json!({ "browser": input }))["browser"], json!(expected), "{input}");
+            }
+            assert_eq!(one(json!({ "browser": "brave" }))["browser"], json!("brave"));
+        }
+
+        #[test]
+        fn maps_known_operating_systems() {
+            for (input, expected) in [("Windows 10", "Windows"), ("Mac OS", "macOS"), ("iOS", "iOS"),
+                                      ("Android OS", "Android"), ("Linux", "Linux"), ("Chrome OS", "Chrome OS")] {
+                assert_eq!(one(json!({ "os": input }))["operating_system"], json!(expected), "{input}");
+            }
+        }
+
+        #[test]
+        fn maps_device_types() {
+            for (input, expected) in [("desktop", "Desktop"), ("laptop", "Desktop"), ("mobile", "Mobile"),
+                                      ("tablet", "Mobile")] {
+                assert_eq!(one(json!({ "device": input }))["device_type"], json!(expected), "{input}");
+            }
+        }
+
+        #[test]
+        fn derives_the_operating_system_version_case_insensitively() {
+            for os in ["Windows 10", "windows 10", "WINDOWS 10"] {
+                let row = one(json!({ "os": os }));
+                assert_eq!(row["operating_system_version"], json!("10"), "{os}");
+                assert_eq!(row["operating_system"], json!("Windows"));
+            }
+            for os in ["Windows 7", "windows 7", "wInDoWs 7"] {
+                assert_eq!(one(json!({ "os": os }))["operating_system_version"], json!("7"), "{os}");
+            }
+            for os in ["Mac OS", "Linux", "Android OS", "Windows Server 2003", "iOS"] {
+                assert_eq!(one(json!({ "os": os }))["operating_system_version"], json!(""), "{os}");
+            }
+        }
+
+        #[test]
+        fn parses_the_screen_dimensions() {
+            let row = one(json!({ "screen": "390x844" }));
+            assert_eq!(row["screen_width"], json!(390.0));
+            assert_eq!(row["screen_height"], json!(844.0));
+            let empty = one(json!({ "screen": "" }));
+            assert_eq!(empty["screen_width"], json!(0.0));
+            assert_eq!(empty["screen_height"], json!(0.0));
+        }
+
+        #[test]
+        fn handles_the_querystring() {
+            let row = one(json!({ "url_query": "a=1&b=2" }));
+            assert_eq!(row["querystring"], json!("?a=1&b=2"));
+            assert_eq!(row["url_parameters"], json!({ "a": "1", "b": "2" }));
+            let empty = one(json!({ "url_query": "" }));
+            assert_eq!(empty["querystring"], json!(""));
+            assert_eq!(empty["url_parameters"], json!({}));
+        }
+
+        #[test]
+        fn handles_the_referrer() {
+            assert_eq!(
+                one(json!({ "referrer_domain": "news.ycombinator.com", "referrer_path": "/item" }))["referrer"],
+                json!("https://news.ycombinator.com/item")
+            );
+            assert_eq!(
+                one(json!({ "referrer_domain": "example.com", "referrer_path": "/previous" }))["referrer"],
+                json!("")
+            );
+            // the site hostname loses its www prefix before the comparison
+            assert_eq!(
+                one(json!({ "hostname": "www.example.com", "referrer_domain": "example.com",
+                            "referrer_path": "/previous" }))["referrer"],
+                json!("")
+            );
+            assert_eq!(one(json!({ "referrer_domain": "", "referrer_path": "" }))["referrer"], json!(""));
+        }
+
+        #[test]
+        fn drops_invalid_rows() {
+            assert!(rows(json!({ "session_id": "not-a-uuid" }), 1, "i").is_empty());
+            for country in ["USA", "us", "1A"] {
+                assert!(rows(json!({ "country": country }), 1, "i").is_empty(), "{country}");
+            }
+            assert_eq!(one(json!({ "country": "" }))["country"], json!(""));
+            for created_at in ["2024-06-15T14:30:00", "2024-13-01 10:00:00", "2024-06-15 24:30:00",
+                               "not-a-date", ""] {
+                assert!(rows(json!({ "created_at": created_at }), 1, "i").is_empty(), "{created_at}");
+            }
+            assert!(rows(json!({ "screen": "1920*1080" }), 1, "i").is_empty());
+        }
+
+        #[test]
+        fn keeps_valid_rows_mixed_with_invalid_ones() {
+            let events = [
+                event(&base(), json!({ "url_path": "/valid" })),
+                event(&base(), json!({ "session_id": "bad" })),
+                event(&base(), json!({ "url_path": "/also-valid" })),
+            ];
+            let rows = transform(Platform::Umami, &events, 1, "i");
+            assert_eq!(rows.len(), 2);
+            assert_eq!(rows[0]["pathname"], json!("/valid"));
+            assert_eq!(rows[1]["pathname"], json!("/also-valid"));
+        }
+    }
+
+    mod plausible_suite {
+        use super::*;
+
+        const SESSION: &str = "9e3779b1-3c6e-4362-da4f-81b88c81f013";
+        const USER: &str = "12345678-90ab-cdef-1234-567890abcdef";
+
+        fn base() -> Value {
+            json!({
+                "timestamp": "2024-06-15 14:30:00", "session_id": SESSION, "user_id": USER,
+                "hostname": "example.com", "pathname": "/blog/post-1", "querystring": "?utm_source=google",
+                "referrer": "https://google.com", "browser": "Chrome", "browser_version": "125",
+                "operating_system": "Windows", "operating_system_version": "10", "device_type": "Desktop",
+                "country": "US", "region": "US-CA", "city": "San Francisco", "type": "pageview",
+                "event_name": "", "props": "{}"
+            })
+        }
+
+        fn rows(overrides: Value) -> Vec<Value> {
+            transform(Platform::Plausible, &[event(&base(), overrides)], 1, "import-1")
+        }
+
+        #[test]
+        fn transforms_a_valid_pageview_event() {
+            let rows = rows(json!({}));
+            assert_eq!(rows.len(), 1);
+            let row = &rows[0];
+            assert_eq!(row["site_id"], json!(1));
+            assert_eq!(row["timestamp"], json!("2024-06-15 14:30:00"));
+            assert_eq!(row["session_id"], json!(SESSION));
+            assert_eq!(row["user_id"], json!(USER));
+            assert_eq!(row["pathname"], json!("/blog/post-1"));
+            assert_eq!(row["querystring"], json!("?utm_source=google"));
+            assert_eq!(row["referrer"], json!("https://google.com"));
+            assert_eq!(row["browser_version"], json!("125"));
+            assert_eq!(row["operating_system_version"], json!("10"));
+            assert_eq!(row["language"], json!(""));
+            assert_eq!(row["screen_width"], json!(0.0));
+            assert_eq!(row["import_id"], json!("import-1"));
+        }
+
+        #[test]
+        fn transforms_a_custom_event() {
+            let rows = rows(json!({ "type": "custom_event", "event_name": "Signup",
+                                    "props": r#"{"plan":"pro"}"# }));
+            assert_eq!(rows[0]["type"], json!("custom_event"));
+            assert_eq!(rows[0]["event_name"], json!("Signup"));
+            assert_eq!(rows[0]["props"], json!({ "plan": "pro" }));
+        }
+
+        #[test]
+        fn skips_events_with_an_invalid_timestamp_or_type() {
+            assert!(rows(json!({ "timestamp": "2024-06-15T14:30:00" })).is_empty());
+            assert!(rows(json!({ "timestamp": "not-a-date" })).is_empty());
+            assert!(rows(json!({ "type": "click" })).is_empty());
+        }
+
+        #[test]
+        fn handles_empty_and_invalid_props() {
+            assert_eq!(rows(json!({ "props": "" }))[0]["props"], json!({}));
+            assert_eq!(rows(json!({ "props": "{invalid" }))[0]["props"], json!({}));
+        }
+
+        #[test]
+        fn skips_a_hostname_over_the_maximum_length() {
+            assert!(rows(json!({ "hostname": "x".repeat(254) })).is_empty());
+            assert_eq!(rows(json!({ "hostname": "x".repeat(253) })).len(), 1);
+        }
+
+        #[test]
+        fn handles_empty_optional_fields() {
+            let rows = rows(json!({ "querystring": "", "referrer": "", "region": "", "city": "",
+                                    "country": "", "browser_version": "", "operating_system_version": "" }));
+            assert_eq!(rows.len(), 1);
+            assert_eq!(rows[0]["querystring"], json!(""));
+            assert_eq!(rows[0]["referrer"], json!(""));
+            assert_eq!(rows[0]["url_parameters"], json!({}));
+        }
+
+        #[test]
+        fn computes_the_channel_from_the_referrer() {
+            assert_eq!(rows(json!({ "referrer": "https://google.com", "querystring": "" }))[0]["channel"],
+                       json!("Organic Search"));
+            assert_eq!(rows(json!({ "referrer": "", "querystring": "" }))[0]["channel"], json!("Direct"));
+        }
+
+        #[test]
+        fn returns_nothing_for_an_empty_input_and_filters_invalid_events() {
+            assert!(transform(Platform::Plausible, &[], 1, "i").is_empty());
+            let events = [event(&base(), json!({ "pathname": "/a" })),
+                          event(&base(), json!({ "session_id": "bad" })),
+                          event(&base(), json!({ "pathname": "/b" }))];
+            let rows = transform(Platform::Plausible, &events, 1, "i");
+            assert_eq!(rows.len(), 2);
+            assert_eq!(rows[0]["pathname"], json!("/a"));
+            assert_eq!(rows[1]["pathname"], json!("/b"));
+        }
+    }
+
+    mod simple_analytics_suite {
+        use super::*;
+
+        const SESSION: &str = "9e3779b1-3c6e-4362-8a4f-81b88c81f013";
+        const USER: &str = "12345678-90ab-4def-9234-567890abcdef";
+        const CHROME_WINDOWS_UA: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
+        const IPHONE_UA: &str = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1";
+
+        fn base() -> Value {
+            json!({
+                "added_iso": "2024-06-15T14:30:00Z", "country_code": "US", "datapoint": "pageview",
+                "document_referrer": "https://google.com/search", "hostname": "example.com",
+                "lang_language": "en", "lang_region": "us", "path": "/blog/post-1", "query": "utm_source=google",
+                "screen_height": "1080", "screen_width": "1920", "session_id": SESSION,
+                "user_agent": CHROME_WINDOWS_UA, "uuid": USER
+            })
+        }
+
+        fn rows(overrides: Value) -> Vec<Value> {
+            transform(Platform::SimpleAnalytics, &[event(&base(), overrides)], 1, "import-1")
+        }
+
+        /// The suite pins Luxon's zone to UTC; the port renders in the process's
+        /// zone, so the expectation is converted the same way.
+        fn expected_timestamp(iso: &str) -> String {
+            chrono::DateTime::parse_from_rfc3339(iso)
+                .expect("parses")
+                .with_timezone(&chrono::Local)
+                .format("%Y-%m-%d %H:%M:%S")
+                .to_string()
+        }
+
+        #[test]
+        fn transforms_a_valid_pageview_event() {
+            let rows = rows(json!({}));
+            assert_eq!(rows.len(), 1);
+            let row = &rows[0];
+            assert_eq!(row["site_id"], json!(1));
+            assert_eq!(row["timestamp"], json!(expected_timestamp("2024-06-15T14:30:00Z")));
+            assert_eq!(row["session_id"], json!(SESSION));
+            assert_eq!(row["user_id"], json!(USER));
+            assert_eq!(row["hostname"], json!("example.com"));
+            assert_eq!(row["page_title"], json!(""));
+            assert_eq!(row["region"], json!(""));
+            assert_eq!(row["city"], json!(""));
+            assert_eq!(row["browser"], json!("Chrome"));
+            assert_eq!(row["operating_system"], json!("Windows"));
+            assert_eq!(row["device_type"], json!("Desktop"));
+        }
+
+        #[test]
+        fn turns_a_non_pageview_datapoint_into_a_custom_event() {
+            let rows = rows(json!({ "datapoint": "signup" }));
+            assert_eq!(rows[0]["type"], json!("custom_event"));
+            assert_eq!(rows[0]["event_name"], json!("signup"));
+        }
+
+        #[test]
+        fn reformats_the_timestamp_and_drops_fractional_seconds() {
+            assert_eq!(rows(json!({ "added_iso": "2023-01-05T09:07:03Z" }))[0]["timestamp"],
+                       json!(expected_timestamp("2023-01-05T09:07:03Z")));
+            assert_eq!(rows(json!({ "added_iso": "2024-06-15T14:30:00.123Z" }))[0]["timestamp"],
+                       json!(expected_timestamp("2024-06-15T14:30:00Z")));
+        }
+
+        #[test]
+        fn drops_rows_with_non_iso_timestamps() {
+            for added_iso in ["2024-06-15 14:30:00", "2024-06-15T14:30:00", "2024-06-15T14:30:00+02:00",
+                              "not-a-date", ""] {
+                assert!(rows(json!({ "added_iso": added_iso })).is_empty(), "{added_iso}");
+            }
+        }
+
+        #[test]
+        fn reads_the_user_agent() {
+            let iphone = rows(json!({ "user_agent": IPHONE_UA, "screen_width": "390", "screen_height": "844" }));
+            assert_eq!(iphone.len(), 1);
+            assert_eq!(iphone[0]["operating_system"], json!("iOS"));
+            assert_eq!(iphone[0]["device_type"], json!("Mobile"));
+
+            let empty = rows(json!({ "user_agent": "" }));
+            assert_eq!(empty.len(), 1);
+            assert_eq!(empty[0]["browser"], json!(""));
+            assert_eq!(empty[0]["browser_version"], json!(""));
+            assert_eq!(empty[0]["operating_system"], json!(""));
+            assert_eq!(empty[0]["operating_system_version"], json!(""));
+            // 1920x1080, so the larger dimension puts it on Desktop
+            assert_eq!(empty[0]["device_type"], json!("Desktop"));
+        }
+
+        #[test]
+        fn combines_the_language_and_region() {
+            assert_eq!(rows(json!({ "lang_language": "pt", "lang_region": "br" }))[0]["language"], json!("pt-BR"));
+            assert_eq!(rows(json!({ "lang_language": "de", "lang_region": "" }))[0]["language"], json!("de"));
+        }
+
+        #[test]
+        fn handles_the_querystring_and_referrer() {
+            assert_eq!(rows(json!({ "query": "a=1" }))[0]["querystring"], json!("?a=1"));
+            assert_eq!(rows(json!({ "query": "" }))[0]["querystring"], json!(""));
+            assert_eq!(rows(json!({ "document_referrer": "https://example.com/previous" }))[0]["referrer"], json!(""));
+            assert_eq!(rows(json!({ "document_referrer": "https://news.ycombinator.com/item" }))[0]["referrer"],
+                       json!("https://news.ycombinator.com/item"));
+            assert_eq!(rows(json!({ "document_referrer": "" }))[0]["referrer"], json!(""));
+        }
+
+        #[test]
+        fn drops_rows_that_fail_the_schema() {
+            for overrides in [json!({ "screen_width": "abc" }), json!({ "screen_width": "" }),
+                              json!({ "screen_height": "1080.5" }), json!({ "screen_height": "" })] {
+                assert!(rows(overrides.clone()).is_empty(), "{overrides}");
+            }
+            for country in ["USA", "us", "1A"] {
+                assert!(rows(json!({ "country_code": country })).is_empty(), "{country}");
+            }
+            assert_eq!(rows(json!({ "country_code": "" }))[0]["country"], json!(""));
+            assert!(rows(json!({ "session_id": "not-a-uuid" })).is_empty());
+            assert!(rows(json!({ "uuid": "not-a-uuid" })).is_empty());
+        }
+
+        #[test]
+        fn keeps_valid_rows_mixed_with_invalid_ones() {
+            let events = [event(&base(), json!({ "path": "/valid" })),
+                          event(&base(), json!({ "added_iso": "bad" })),
+                          event(&base(), json!({ "path": "/also-valid" }))];
+            let rows = transform(Platform::SimpleAnalytics, &events, 1, "i");
+            assert_eq!(rows.len(), 2);
+            assert_eq!(rows[0]["pathname"], json!("/valid"));
+            assert_eq!(rows[1]["pathname"], json!("/also-valid"));
+            assert!(transform(Platform::SimpleAnalytics, &[], 1, "i").is_empty());
+        }
+    }
 }

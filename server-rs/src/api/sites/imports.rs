@@ -266,7 +266,15 @@ pub async fn create(
 /// `canImportBatch` with an unlimited quota: the indices whose timestamp parses
 /// and is not in the future.
 fn allowed_indices(timestamps: &[String]) -> Vec<usize> {
-    let now = chrono::Utc::now().naive_utc();
+    allowed_indices_at(timestamps, chrono::Utc::now().naive_utc())
+}
+
+/// [`allowed_indices`] against a fixed instant, so the rules are testable without
+/// a clock. `DateTime.fromFormat(timestamp, "yyyy-MM-dd HH:mm:ss", { zone: "utc" })`
+/// is invalid for anything the format does not describe exactly (an ISO `T`
+/// separator, an out-of-range month, hour or day-of-month), and `dt > now` is
+/// false when the two are equal, so a timestamp at the current instant passes.
+fn allowed_indices_at(timestamps: &[String], now: chrono::NaiveDateTime) -> Vec<usize> {
     timestamps
         .iter()
         .enumerate()
@@ -546,5 +554,71 @@ mod tests {
             "2024-02-29 23:59:59".to_string(),
         ];
         assert_eq!(allowed_indices(&timestamps), vec![0, 4]);
+    }
+
+    /// The `canImportBatch` half of
+    /// server/src/services/import/importQuotaTracker.test.ts, for the tracker
+    /// `create` builds without CLOUD: no usage, an unlimited monthly limit and the
+    /// `190001` window. The quota and historical-window cases from that suite have
+    /// no self-hosted equivalent (an unlimited limit skips both), so what remains
+    /// is the timestamp validation, which the suite asserts still applies.
+    mod import_quota_tracker {
+        use super::*;
+
+        fn at(text: &str) -> chrono::NaiveDateTime {
+            chrono::NaiveDateTime::parse_from_str(text, "%Y-%m-%d %H:%M:%S").expect("parses")
+        }
+
+        fn batch(timestamps: &[&str]) -> Vec<usize> {
+            let owned: Vec<String> = timestamps.iter().map(|value| (*value).to_string()).collect();
+            // The suite's fake clock
+            allowed_indices_at(&owned, at("2024-06-15 12:00:00"))
+        }
+
+        #[test]
+        fn allows_every_timestamp_when_unlimited() {
+            assert_eq!(batch(&["2024-06-01 10:00:00", "2024-06-02 10:00:00"]), vec![0, 1]);
+        }
+
+        #[test]
+        fn returns_an_empty_array_for_an_empty_batch() {
+            assert_eq!(batch(&[]), Vec::<usize>::new());
+        }
+
+        #[test]
+        fn rejects_future_timestamps() {
+            assert_eq!(batch(&["2024-06-15 12:00:01", "2025-01-01 00:00:00"]), Vec::<usize>::new());
+        }
+
+        #[test]
+        fn allows_a_timestamp_exactly_at_the_current_time() {
+            // `dt > now` is false when equal, so it is not treated as future
+            assert_eq!(batch(&["2024-06-15 12:00:00"]), vec![0]);
+        }
+
+        #[test]
+        fn rejects_invalid_timestamp_strings() {
+            assert_eq!(
+                batch(&["not-a-date", "2024-06-15T10:00:00", "", "2024-13-01 10:00:00"]),
+                Vec::<usize>::new()
+            );
+        }
+
+        #[test]
+        fn keeps_valid_events_interleaved_with_rejected_ones() {
+            assert_eq!(batch(&["2024-06-01 10:00:00", "garbage", "2024-06-02 10:00:00"]), vec![0, 2]);
+        }
+
+        #[test]
+        fn still_rejects_malformed_and_future_timestamps_when_unlimited() {
+            assert_eq!(batch(&["not-a-date", "2099-01-01 00:00:00", "2024-06-01 10:00:00"]), vec![2]);
+        }
+
+        #[test]
+        fn ignores_the_historical_window_when_unlimited() {
+            // The window is tier derived, so self-hosted imports reach as far back
+            // as the data goes
+            assert_eq!(batch(&["2020-01-01 00:00:00"]), vec![0]);
+        }
     }
 }

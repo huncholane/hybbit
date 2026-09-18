@@ -204,6 +204,16 @@ pub async fn move_site(
     }
 }
 
+/// server/src/api/sites/moveSite.test.ts.
+///
+/// The suite's cloud site-limit cases have no self-hosted equivalent (the branch
+/// sits behind `IS_CLOUD`, and its own "skips the subscription check entirely
+/// when self-hosted" case is what this port implements). Its authorization cases
+/// all turn on Postgres state, so they are checked end to end by the `move` group
+/// in parity/api-sites/writes.py, which sends every target organization (one the
+/// caller admins, one they are only a member of, one they do not belong to, one
+/// that does not exist and the site's own) under every credential and diffs the
+/// resulting rows. What is testable without a store is the request schema.
 #[cfg(test)]
 mod tests {
     use super::*;

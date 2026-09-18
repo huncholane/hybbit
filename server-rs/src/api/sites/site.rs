@@ -42,7 +42,7 @@ fn nullable_text(row: &sqlx::postgres::PgRow, column: &str) -> Result<Value, sql
 }
 
 fn nullable_int(row: &sqlx::postgres::PgRow, column: &str) -> Result<Value, sqlx::Error> {
-    Ok(row.try_get::<Option<i32>, _>(column)?.map_or(Value::Null, |value| Value::from(value)))
+    Ok(row.try_get::<Option<i32>, _>(column)?.map_or(Value::Null, Value::from))
 }
 
 pub async fn get_site(State(state): State<AppState>, method: Method, uri: Uri, headers: HeaderMap) -> Response {

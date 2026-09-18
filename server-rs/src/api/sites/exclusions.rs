@@ -93,34 +93,64 @@ enum Loaded {
     Failed,
 }
 
-/// `loadSiteConfigForSettings`
-async fn load_site_config(state: &AppState, site_id: &str) -> Loaded {
+/// What the two `:siteId` checks in `loadSiteConfigForSettings` decide, before
+/// anything is read.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum SettingsSiteId {
+    /// The id to `reload` with
+    Numeric(i32),
+    /// `siteParamsSchema` rejected it: 400 with the flattened issue
+    SchemaError,
+    /// Not a positive integer: 400 with the plain message
+    NotPositive,
+    /// A positive integer Postgres cannot bind, so `reload` throws and the caller
+    /// answers with its own 500
+    OutOfRange,
+}
+
+/// The pure half of `loadSiteConfigForSettings`, so the two checks are testable
+/// without a store.
+fn settings_site_id(site_id: &str) -> SettingsSiteId {
     // `siteParamsSchema` = `z.object({ siteId: z.string().min(1) })`
     if request::string_length(site_id) < 1 {
-        let mut issues = Issues::default();
-        issues.field("siteId", request::string_too_small(1));
-        return Loaded::Replied(request::send(
-            StatusCode::BAD_REQUEST,
-            &object(vec![
-                ("success", Value::Bool(false)),
-                ("error", Value::String("Invalid site ID".into())),
-                ("details", issues.flatten()),
-            ]),
-        ));
+        return SettingsSiteId::SchemaError;
     }
-
     let numeric = request::js_number(site_id);
     if !request::positive_integer(numeric) {
-        return Loaded::Replied(request::failure(
-            StatusCode::BAD_REQUEST,
-            "Invalid site ID: must be a positive integer",
-        ));
+        return SettingsSiteId::NotPositive;
     }
-    let Some(numeric) = request::pg_int(numeric) else {
-        // Outside int4 Postgres refuses the bind and `reload` lets the throw out,
-        // which the caller reports as its own 500
-        error!(site_id, "Site id is not a Postgres integer; Node's reload throws here");
-        return Loaded::Failed;
+    match request::pg_int(numeric) {
+        Some(numeric) => SettingsSiteId::Numeric(numeric),
+        None => SettingsSiteId::OutOfRange,
+    }
+}
+
+/// `loadSiteConfigForSettings`
+async fn load_site_config(state: &AppState, site_id: &str) -> Loaded {
+    let numeric = match settings_site_id(site_id) {
+        SettingsSiteId::Numeric(numeric) => numeric,
+        SettingsSiteId::SchemaError => {
+            let mut issues = Issues::default();
+            issues.field("siteId", request::string_too_small(1));
+            return Loaded::Replied(request::send(
+                StatusCode::BAD_REQUEST,
+                &object(vec![
+                    ("success", Value::Bool(false)),
+                    ("error", Value::String("Invalid site ID".into())),
+                    ("details", issues.flatten()),
+                ]),
+            ));
+        }
+        SettingsSiteId::NotPositive => {
+            return Loaded::Replied(request::failure(
+                StatusCode::BAD_REQUEST,
+                "Invalid site ID: must be a positive integer",
+            ));
+        }
+        SettingsSiteId::OutOfRange => {
+            error!(site_id, "Site id is not a Postgres integer; Node's reload throws here");
+            return Loaded::Failed;
+        }
     };
 
     match state.site_config.reload(&SiteRef::Number(i64::from(numeric))).await {
@@ -227,6 +257,98 @@ pub async fn organization_excluded_ips(
         Err(Ok(response)) => response,
         Err(Err(())) => {
             request::failure(StatusCode::INTERNAL_SERVER_ERROR, "Failed to get organization excluded IPs")
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// server/src/api/sites/getSiteExclusions.test.ts: each endpoint answers under
+    /// its own field name, taken from the same `SiteConfigData` key it reads, and
+    /// the failure message reads as prose.
+    #[test]
+    fn every_endpoint_answers_under_its_own_field_name() {
+        let fields = [
+            (ExclusionField::Ips, "excludedIPs", "excluded IPs"),
+            (ExclusionField::Countries, "excludedCountries", "excluded countries"),
+            (ExclusionField::Paths, "excludedPaths", "excluded paths"),
+            (ExclusionField::Hostnames, "excludedHostnames", "excluded hostnames"),
+            (ExclusionField::UserAgents, "excludedUserAgents", "excluded user agents"),
+            (ExclusionField::Asns, "excludedASNs", "excluded ASNs"),
+            (ExclusionField::QueryParams, "excludedQueryParams", "excluded query params"),
+        ];
+        let mut config = blank_config();
+        config.excluded_ips = vec!["10.0.0.1".into()];
+        config.excluded_countries = vec!["DE".into()];
+        config.excluded_paths = vec!["/admin".into()];
+        config.excluded_hostnames = vec!["staging.example.com".into()];
+        config.excluded_user_agents = vec!["curl".into()];
+        config.excluded_asns = vec!["AS13335".into()];
+        config.excluded_query_params = vec!["fbclid".into()];
+        let expected = [
+            "10.0.0.1", "DE", "/admin", "staging.example.com", "curl", "AS13335", "fbclid",
+        ];
+        for ((field, name, label), value) in fields.into_iter().zip(expected) {
+            assert_eq!(field.name(), name);
+            assert_eq!(field.label(), label);
+            assert_eq!(field.values(&config), &vec![value.to_string()]);
+            assert_eq!(format!("Failed to get {}", field.label()), format!("Failed to get {label}"));
+        }
+    }
+
+    /// The same suite: `getSiteExcludedCountries` used to skip the positive-integer
+    /// guard and pass NaN into the query, so these ids must not reach the store.
+    #[test]
+    fn rejects_site_ids_that_are_not_positive_integers() {
+        for site_id in ["abc", "0", "-1", "1.5"] {
+            assert_eq!(settings_site_id(site_id), SettingsSiteId::NotPositive, "{site_id}");
+        }
+        assert_eq!(settings_site_id(""), SettingsSiteId::SchemaError);
+        assert_eq!(settings_site_id("123"), SettingsSiteId::Numeric(123));
+        // `Number(" 123 ")` is 123, as the handler reads it
+        assert_eq!(settings_site_id(" 123 "), SettingsSiteId::Numeric(123));
+        assert_eq!(settings_site_id("99999999999999999999"), SettingsSiteId::OutOfRange);
+    }
+
+    fn blank_config() -> SiteConfigData {
+        SiteConfigData {
+            id: None,
+            site_id: 123,
+            organization_id: None,
+            site_type: crate::site_config::SiteType::Web,
+            public: false,
+            embed_enabled: false,
+            salt_user_ids: false,
+            domain: String::new(),
+            block_bots: true,
+            first_party_proxy: false,
+            excluded_ips: Vec::new(),
+            use_organization_excluded_ips: true,
+            organization_excluded_ips: Vec::new(),
+            excluded_countries: Vec::new(),
+            excluded_paths: Vec::new(),
+            excluded_hostnames: Vec::new(),
+            excluded_user_agents: Vec::new(),
+            excluded_asns: Vec::new(),
+            excluded_query_params: Vec::new(),
+            private_link_key: None,
+            session_replay: false,
+            web_vitals: false,
+            track_errors: false,
+            track_outbound: true,
+            track_url_params: true,
+            track_initial_page_view: true,
+            track_spa_navigation: true,
+            track_ip: false,
+            track_button_clicks: false,
+            track_copy: false,
+            track_form_interactions: false,
+            track_heartbeat: false,
+            heartbeat_interval: 15,
+            bounce_threshold: 10,
+            tags: Vec::new(),
         }
     }
 }

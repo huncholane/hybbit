@@ -87,12 +87,11 @@ impl StringChecks {
         {
             issues.field(field, request::string_too_big(maximum));
         }
-        if let Some(exact) = self.length {
-            if length > exact {
-                issues.field(field, format!("String must contain exactly {exact} character(s)"));
-            } else if length < exact {
-                issues.field(field, format!("String must contain exactly {exact} character(s)"));
-            }
+        // `.length(n)` reports too_big or too_small, both with `exact: true`, which
+        // the default error map renders the same way
+        if self.length.is_some_and(|exact| length != exact) {
+            let exact = self.length.unwrap_or_default();
+            issues.field(field, format!("String must contain exactly {exact} character(s)"));
         }
         Some(text)
     }
@@ -117,14 +116,11 @@ fn string_array(
     }
     let mut parsed = Vec::with_capacity(items.len());
     for item in items {
-        match checks.parse(Some(item), issues, field) {
-            Some(text) => {
-                element_extra(&text, issues, field);
-                parsed.push(text);
-            }
-            // The element aborted; zod keeps parsing the rest and the array's own
-            // value is INVALID, which only matters because the whole parse fails
-            None => {}
+        // A `None` element aborted; zod keeps parsing the rest, and the array's own
+        // value being INVALID only matters because the whole parse then fails
+        if let Some(text) = checks.parse(Some(item), issues, field) {
+            element_extra(&text, issues, field);
+            parsed.push(text);
         }
     }
     Some(parsed)
@@ -284,8 +280,10 @@ pub fn parse_update_body(body: Option<&Value>) -> Result<UpdateInput, Value> {
                     Some(found) => text[found.range().end..].to_string(),
                     None => text.to_string(),
                 };
+                // `Number(...) <= 4294967295` is false for NaN too, which is how a
+                // value the regex already refused still reaches this message
                 let number = request::js_number(&without_prefix);
-                if !(number <= 4_294_967_295.0) {
+                if !matches!(number.partial_cmp(&4_294_967_295.0), Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)) {
                     issues.field(field, ASN_RANGE_MESSAGE);
                 }
             },
