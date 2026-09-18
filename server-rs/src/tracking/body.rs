@@ -120,7 +120,9 @@ enum BodyParser {
 
 /// Everything Fastify decides from the headers alone, before reading the body:
 /// `Ok(None)` means there is no body to read (`request.body` stays `undefined`).
-fn choose_parser(headers: &BodyHeaders) -> Result<Option<BodyParser>, BodyRejection> {
+/// `limit` is the route's `bodyLimit` (the server default unless the route sets
+/// its own, as `/imports/:importId/events` does).
+fn choose_parser(headers: &BodyHeaders, limit: usize) -> Result<Option<BodyParser>, BodyRejection> {
     let Some(content_type) = headers.content_type.as_deref() else {
         let empty = !headers.transfer_encoding && headers.content_length.as_deref().is_none_or(|length| length == "0");
         if empty {
@@ -136,7 +138,7 @@ fn choose_parser(headers: &BodyHeaders) -> Result<Option<BodyParser>, BodyReject
         _ => return Err(FastifyBodyError::InvalidMediaType.rejection(false)),
     };
 
-    if headers.declared_length().is_some_and(|length| length > TRACK_BODY_LIMIT_BYTES as f64) {
+    if headers.declared_length().is_some_and(|length| length > limit as f64) {
         return Err(FastifyBodyError::BodyTooLarge.rejection(true));
     }
     Ok(Some(parser))
@@ -147,7 +149,13 @@ fn choose_parser(headers: &BodyHeaders) -> Result<Option<BodyParser>, BodyReject
 /// this first, then read at most `TRACK_BODY_LIMIT_BYTES + 1` bytes (answering
 /// [`body_too_large`] past that) and hand them to [`parse_track_body`].
 pub fn reject_before_reading(headers: &BodyHeaders) -> Option<BodyRejection> {
-    choose_parser(headers).err()
+    choose_parser(headers, TRACK_BODY_LIMIT_BYTES).err()
+}
+
+/// [`reject_before_reading`] for a route registered with its own `bodyLimit`
+/// (`/api/sites/:siteId/imports/:importId/events` raises it to 50 MB).
+pub fn reject_before_reading_with_limit(headers: &BodyHeaders, limit: usize) -> Option<BodyRejection> {
+    choose_parser(headers, limit).err()
 }
 
 /// The rejection for a body that grew past the limit while being read.
@@ -168,18 +176,29 @@ pub fn parse_body_with_depth(
     raw: &[u8],
     keep_depth: usize,
 ) -> Result<Option<JsValue>, BodyRejection> {
-    let Some(parser) = choose_parser(headers)? else {
+    parse_body_with_limit(headers, raw, keep_depth, TRACK_BODY_LIMIT_BYTES)
+}
+
+/// [`parse_body_with_depth`] for a route registered with its own `bodyLimit`
+/// (`/api/sites/:siteId/imports/:importId/events` raises it to 50 MB).
+pub fn parse_body_with_limit(
+    headers: &BodyHeaders,
+    raw: &[u8],
+    keep_depth: usize,
+    limit: usize,
+) -> Result<Option<JsValue>, BodyRejection> {
+    let Some(parser) = choose_parser(headers, limit)? else {
         return Ok(None);
     };
 
-    if raw.len() > TRACK_BODY_LIMIT_BYTES {
+    if raw.len() > limit {
         return Err(body_too_large());
     }
 
     // `payload.setEncoding('utf8')`: invalid sequences become U+FFFD, and the length
     // checks below count the re-encoded text, not the bytes received
     let text = String::from_utf8_lossy(raw);
-    if text.len() > TRACK_BODY_LIMIT_BYTES {
+    if text.len() > limit {
         return Err(body_too_large());
     }
     if let Some(declared) = headers.declared_length()
