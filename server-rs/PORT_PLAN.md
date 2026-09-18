@@ -99,7 +99,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | /api/site/check-install | HMAC + 5/min per IP | api/sites/checkInstall.ts | rust |
 | GET | /api/user/unsubscribe-marketing-oneclick | HMAC | api/user/unsubscribeMarketing.ts | rust |
 | POST | /api/user/unsubscribe-marketing-oneclick | none | api/user/unsubscribeMarketing.ts | rust |
-| POST | /api/admin/telemetry | 403 unless CLOUD | api/admin/collectTelemetry.ts | node |
+| POST | /api/admin/telemetry | 403 unless CLOUD | api/admin/collectTelemetry.ts | rust |
 
 ### Dashboard client (formerly the `client` container)
 
@@ -218,16 +218,16 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/feature-flags | authFlagsRead | api/featureFlags/index.ts | node |
-| POST | …/feature-flags | adminFlagsWrite | api/featureFlags/index.ts | node |
-| PUT | …/feature-flags/:flagId | adminFlagsWrite | api/featureFlags/index.ts | node |
-| DELETE | …/feature-flags/:flagId | adminFlagsWrite | api/featureFlags/index.ts | node |
+| GET | …/feature-flags | authFlagsRead | api/featureFlags/index.ts | rust |
+| POST | …/feature-flags | adminFlagsWrite | api/featureFlags/index.ts | rust |
+| PUT | …/feature-flags/:flagId | adminFlagsWrite | api/featureFlags/index.ts | rust |
+| DELETE | …/feature-flags/:flagId | adminFlagsWrite | api/featureFlags/index.ts | rust |
 | POST | …/feature-flags/evaluate | authFlagsRead | api/featureFlags/index.ts | rust |
-| GET | …/experiments | authExperimentsRead | api/experiments/getExperiments.ts | node |
-| POST | …/experiments | adminExperimentsWrite | api/experiments/createExperiment.ts | node |
-| PUT | …/experiments/:experimentId | adminExperimentsWrite | api/experiments/updateExperiment.ts | node |
-| DELETE | …/experiments/:experimentId | adminExperimentsWrite | api/experiments/deleteExperiment.ts | node |
-| GET | …/experiments/:experimentId/results | authExperimentsRead | api/experiments/getExperimentResults.ts | node |
+| GET | …/experiments | authExperimentsRead | api/experiments/getExperiments.ts | rust |
+| POST | …/experiments | adminExperimentsWrite | api/experiments/createExperiment.ts | rust |
+| PUT | …/experiments/:experimentId | adminExperimentsWrite | api/experiments/updateExperiment.ts | rust |
+| DELETE | …/experiments/:experimentId | adminExperimentsWrite | api/experiments/deleteExperiment.ts | rust |
+| GET | …/experiments/:experimentId/results | authExperimentsRead | api/experiments/getExperimentResults.ts | rust |
 
 ### Session replay reads (`api/sessionReplay/`)
 
@@ -303,18 +303,18 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Node handler | Status |
 |---|---|---|---|
-| GET | /api/admin/clickhouse-stats | getClickhouseStats.ts | node |
-| GET | /api/admin/clickhouse-query-log | getClickhouseQueryLog.ts | node |
-| GET | /api/admin/sites | getAdminSites.ts | node |
-| PUT | /api/admin/sites/:siteId/move | adminMoveSite.ts | node |
-| GET | /api/admin/organizations | getAdminOrganizations.ts | node |
-| GET | /api/admin/organization-options | adminOrganizationManagement.ts | node |
-| GET | /api/admin/subscription-plans | adminOrganizationManagement.ts | node |
-| PUT | /api/admin/organizations/:organizationId/subscription-override | adminOrganizationManagement.ts | node |
-| GET | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | node |
-| PATCH | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | node |
-| DELETE | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | node |
-| GET | /api/admin/service-event-count | getAdminServiceEventCount.ts | node |
+| GET | /api/admin/clickhouse-stats | getClickhouseStats.ts | rust |
+| GET | /api/admin/clickhouse-query-log | getClickhouseQueryLog.ts | rust |
+| GET | /api/admin/sites | getAdminSites.ts | rust |
+| PUT | /api/admin/sites/:siteId/move | adminMoveSite.ts | rust |
+| GET | /api/admin/organizations | getAdminOrganizations.ts | rust |
+| GET | /api/admin/organization-options | adminOrganizationManagement.ts | rust |
+| GET | /api/admin/subscription-plans | adminOrganizationManagement.ts | rust |
+| PUT | /api/admin/organizations/:organizationId/subscription-override | adminOrganizationManagement.ts | rust |
+| GET | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | rust |
+| PATCH | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | rust |
+| DELETE | /api/admin/organizations/:organizationId/members/:memberId | adminOrganizationManagement.ts | rust |
+| GET | /api/admin/service-event-count | getAdminServiceEventCount.ts | rust |
 
 ### Stripe and AppSumo (registered only when `CLOUD=true`; not ported, see Decisions)
 
