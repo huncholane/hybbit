@@ -460,3 +460,147 @@ async fn run(
         )]),
     ))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::analytics::js::{JsObject, json::parse};
+
+    const CAMPAIGN_FILTER: &str = r#"[{"parameter":"utm_campaign","type":"equals","value":["recipe_book_2026"]}]"#;
+    const GOAL_CONDITION: &str =
+        "type = 'form_submit' AND JSONExtractString(toString(props), 'formId') = 'gform_115'";
+
+    /// The same inputs getExperimentResults.test.ts builds its queries from.
+    fn queries() -> ResultQueries {
+        let query: JsObject = [
+            ("filters".to_string(), JsValue::String(CAMPAIGN_FILTER.to_string())),
+            ("start_date".to_string(), JsValue::String(String::new())),
+            ("end_date".to_string(), JsValue::String(String::new())),
+            ("time_zone".to_string(), JsValue::String("UTC".to_string())),
+        ]
+        .into_iter()
+        .collect();
+        let window = TimeWindowParams::from_object(&query);
+        let time_statement = get_time_statement(&window, "timestamp").expect("all-time window");
+        let filters = query.get_or_undefined("filters").clone();
+        let cte = build_filtered_sessions_cte(&filters, 1, &time_statement, "FilteredSessions")
+            .expect("the campaign filter parses");
+        build_experiment_result_queries(
+            &filters,
+            &time_statement,
+            cte.as_deref(),
+            1.0,
+            "recipe_book_test",
+            GOAL_CONDITION,
+        )
+    }
+
+    fn occurrences(text: &str, needle: &str) -> usize {
+        text.matches(needle).count()
+    }
+
+    // Ported from server/src/api/experiments/getExperimentResults.test.ts
+    #[test]
+    fn the_session_is_qualified_by_its_landing_campaign_before_later_events() {
+        let exposure = queries().exposure_query;
+        assert!(exposure.contains("FilteredSessions AS"));
+        assert!(exposure.contains("argMin(url_parameters, timestamp)['utm_campaign'] AS utm_campaign"));
+        assert!(exposure.contains("WHERE 1 = 1 AND utm_campaign = 'recipe_book_2026'"));
+        assert_eq!(occurrences(&exposure, "INNER JOIN FilteredSessions USING (session_id)"), 2);
+        assert!(exposure.contains("event_name = 'feature_flag_exposure'"));
+        assert!(exposure.contains("type = 'form_submit'"));
+        // The campaign condition belongs only to FilteredSessions, not separately
+        // to the exposure and goal event rows
+        assert_eq!(occurrences(&exposure, "utm_campaign = 'recipe_book_2026'"), 1);
+    }
+
+    #[test]
+    fn the_assignment_fallback_uses_the_same_campaign_qualified_sessions() {
+        let assignment = queries().assignment_query;
+        assert!(assignment.contains("FilteredSessions AS"));
+        assert!(assignment.contains("WHERE 1 = 1 AND utm_campaign = 'recipe_book_2026'"));
+        assert_eq!(occurrences(&assignment, "INNER JOIN FilteredSessions USING (session_id)"), 2);
+        assert!(assignment.contains("feature_flags['recipe_book_test'] != ''"));
+        assert!(assignment.contains("type = 'form_submit'"));
+        assert_eq!(occurrences(&assignment, "utm_campaign = 'recipe_book_2026'"), 1);
+    }
+
+    #[test]
+    fn a_session_is_attributed_to_its_first_exposure_variant() {
+        let exposure = queries().exposure_query;
+        assert!(exposure.contains("argMin(JSONExtractString(toString(props), 'value'), timestamp) AS variant"));
+        assert!(!exposure.contains("GROUP BY session_id, variant"));
+    }
+
+    #[test]
+    fn the_fallback_is_attributed_to_the_first_assigned_variant() {
+        let assignment = queries().assignment_query;
+        assert!(assignment.contains("argMin(feature_flags['recipe_book_test'], timestamp) AS variant"));
+        assert!(!assignment.contains("GROUP BY session_id, variant"));
+    }
+
+    #[test]
+    fn a_request_with_no_filters_builds_no_cte() {
+        let queries = build_experiment_result_queries(&JsValue::Undefined, "", None, 7.0, "flag", GOAL_CONDITION);
+        assert!(!queries.exposure_query.contains("FilteredSessions"));
+        assert!(queries.exposure_query.contains("WHERE site_id = 7"));
+    }
+
+    // `getExperimentVariantKeys` (server/src/api/experiments/utils.ts)
+    fn variant_keys(flag: &str) -> Vec<String> {
+        experiment_variant_keys(&parse(flag).expect("valid JSON"))
+            .ok()
+            .expect("no null container")
+            .into_iter()
+            .map(|key| key.to_js_string())
+            .collect()
+    }
+
+    #[test]
+    fn variant_keys_take_condition_sets_first_then_the_flag() {
+        assert_eq!(
+            variant_keys(
+                r#"{"conditionSets":[{"variants":[{"key":"eu_a"},{"key":"control"}]}],"variants":[{"key":"control"},{"key":"treatment"}]}"#
+            ),
+            vec!["eu_a", "control", "treatment"]
+        );
+        assert_eq!(variant_keys(r#"{"conditionSets":null,"variants":null}"#), Vec::<String>::new());
+        assert!(experiment_variant_keys(&parse(r#"{"variants":[null]}"#).unwrap()).is_err());
+    }
+
+    // `buildExperimentResults` (server/src/api/experiments/utils.ts)
+    fn results(variants: &[&str], text: &str) -> String {
+        let variants: Vec<JsValue> = variants.iter().map(|key| JsValue::String((*key).to_string())).collect();
+        let rows: Vec<Map<String, Value>> = serde_json::from_str(text).expect("rows");
+        crate::analytics::js::json::stringify(&JsValue::Array(build_experiment_results(&variants, &rows)))
+            .expect("results")
+    }
+
+    #[test]
+    fn results_lift_is_measured_against_the_control() {
+        assert_eq!(
+            results(
+                &["control", "treatment"],
+                r#"[{"variant":"control","sessions":10,"exposures":12,"conversions":2},
+                    {"variant":"treatment","sessions":10,"exposures":11,"conversions":3}]"#
+            ),
+            concat!(
+                r#"[{"variant":"control","sessions":10,"exposures":12,"conversions":2,"conversionRate":0.2,"lift":0,"isControl":true},"#,
+                r#"{"variant":"treatment","sessions":10,"exposures":11,"conversions":3,"conversionRate":0.3,"lift":0.4999999999999999,"isControl":false}]"#
+            )
+        );
+    }
+
+    #[test]
+    fn results_keep_variants_with_no_rows_and_rows_with_no_variant() {
+        assert_eq!(
+            results(&["a"], r#"[{"variant":"b","sessions":4,"exposures":4,"conversions":1}]"#),
+            concat!(
+                r#"[{"variant":"a","sessions":0,"exposures":0,"conversions":0,"conversionRate":0,"lift":null,"isControl":true},"#,
+                r#"{"variant":"b","sessions":4,"exposures":4,"conversions":1,"conversionRate":0.25,"lift":null,"isControl":false}]"#
+            )
+        );
+        // No variants and no rows: there is no control and nothing is marked
+        assert_eq!(results(&[], "[]"), "[]");
+    }
+}
