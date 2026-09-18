@@ -149,6 +149,10 @@ def normalize(text):
 
 def comparable(response, mask_new_ids):
     headers = {name: response["headers"].get(name) for name in INTERESTING_HEADERS}
+    # Content-Length is only comparable where the body is compared byte for byte; a
+    # masked body hides the generated ids and countdowns whose width differs
+    if not mask_new_ids:
+        headers["content-length"] = response["headers"].get("content-length")
     if headers["connection"] and headers["connection"].lower() != "close":
         headers["connection"] = None
     if headers["vary"]:

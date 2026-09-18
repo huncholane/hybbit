@@ -101,7 +101,7 @@ async fn build_organizations(state: &AppState, user_id: &str, include_members: b
                 let granted_member_ids =
                     if membership.has_restricted_site_access { vec![membership.id.clone()] } else { Vec::new() };
                 let grants =
-                    resolve_member_site_grants(pg, user_id, &[org.id.clone()], &granted_member_ids).await?;
+                    resolve_member_site_grants(pg, user_id, std::slice::from_ref(&org.id), &granted_member_ids).await?;
                 sites
                     .into_iter()
                     .filter(|site| {

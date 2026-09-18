@@ -168,10 +168,11 @@ pub async fn one_click_unsubscribe(
     headers: HeaderMap,
     body: Body,
 ) -> Response {
-    if method != Method::GET && method != Method::HEAD {
-        if let Err(response) = request::read_body(&headers, body).await {
-            return response;
-        }
+    if method != Method::GET
+        && method != Method::HEAD
+        && let Err(response) = request::read_body(&headers, body).await
+    {
+        return response;
     }
     let query = chain::unguarded(&uri);
     let email = query.get_or_undefined("email").clone();

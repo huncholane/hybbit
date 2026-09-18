@@ -21,6 +21,7 @@ use crate::{
 };
 
 /// One recorded issue with the path it was recorded at, which `flatten()` needs.
+#[derive(Debug)]
 pub struct Issue {
     pub path: Path,
     pub issue: ZodIssue,
@@ -152,6 +153,7 @@ pub fn excluded_ips(body: &JsValue) -> Result<Vec<String>, Vec<Issue>> {
 // createApiKeyBodySchema / createOrgApiKeyBodySchema
 
 /// The parsed body of both API key routes.
+#[derive(Debug)]
 pub struct ApiKeyBody {
     pub name: String,
     pub expires_in: Option<f64>,

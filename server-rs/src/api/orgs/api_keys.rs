@@ -151,7 +151,7 @@ fn validate_key_input(name: &str, expires_in: Option<f64>) -> Result<(), ApiKeyE
         }
     }
     let length = crate::analytics::js::string::utf16_len(name);
-    if length < MIN_NAME_LENGTH || length > MAX_NAME_LENGTH {
+    if !(MIN_NAME_LENGTH..=MAX_NAME_LENGTH).contains(&length) {
         return Err(ApiKeyError { status: StatusCode::BAD_REQUEST, message: codes::INVALID_NAME_LENGTH });
     }
     Ok(())

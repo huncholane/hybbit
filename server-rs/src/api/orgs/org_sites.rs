@@ -479,13 +479,11 @@ async fn insert_site(
         r#""blockBots""#.into(),
     ];
     let mut placeholders: Vec<String> = (1..=columns.len()).map(|index| format!("${index}")).collect();
-    let mut position = columns.len() + 1;
     let mut extra: Vec<(&str, JsValue)> = Vec::new();
-    for (column, kind, value) in &input.optional {
+    for (position, (column, kind, value)) in (columns.len() + 1..).zip(input.optional.iter()) {
         columns.push(format!("\"{column}\""));
         placeholders.push(if *kind == "json" { format!("${position}::jsonb") } else { format!("${position}") });
         extra.push((kind, value.clone()));
-        position += 1;
     }
 
     let sql = format!(

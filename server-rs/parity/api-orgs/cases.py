@@ -147,9 +147,10 @@ def organization_listings():
     for who in P:
         out.append(case("GET /organizations", "GET", "/api/organizations", who))
         out.append(case("GET /user/organizations", "GET", "/api/user/organizations", who))
-    for method in ["POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]:
-        out.append(case("GET /organizations", method, "/api/organizations", "cookie:ownerA"))
-        out.append(case("GET /user/organizations", method, "/api/user/organizations", "cookie:ownerA"))
+    for method in ["POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "TRACE"]:
+        for who in ["cookie:ownerA", "anon", "bearer:ownerA"]:
+            out.append(case("GET /organizations", method, "/api/organizations", who))
+            out.append(case("GET /user/organizations", method, "/api/user/organizations", who))
     # The query string is parsed before the handler on every route
     for query in ["?api_key=" + K["ownerA"], "?api_key=x&api_key=y", "?startDate=nope&endDate=2026-01-01", "?"]:
         out.append(case("GET /organizations", "GET", "/api/organizations" + query, "anon"))
@@ -177,8 +178,10 @@ def org_reads():
         for label, org in ORG_IDS.items():
             if label == "A":
                 continue
-            for who in CORE:
+            for who in P:
                 out.append(case(route, "GET", f"/api/organizations/{org}/{suffix}", who))
+        for who in CORE:
+            out.append(case(route, "HEAD", f"/api/organizations/{O['A']}/{suffix}", who))
         for method in ["POST", "PUT", "DELETE", "PATCH"]:
             if (route.endswith("sites") and method == "POST") or (route.endswith("excluded-ips") and method == "PUT"):
                 continue
@@ -683,6 +686,20 @@ API_KEY_BODIES = [
 ]
 
 
+def deny_scoped_reads():
+    """`authOnlyNoScopedKeys` and `orgAdminNoScopedKeys` reject scoped and
+    organization-owned credentials outright; every principal is tried on both."""
+    out = []
+    for who in P:
+        out.append(case("POST /user/account-settings", "POST", "/api/user/account-settings", who, js({"sendAutoEmailReports": True}), write=True))
+        out.append(case("POST /user/api-keys", "POST", "/api/user/api-keys", who, js({"name": "Scope"}), write=True))
+        out.append(case("POST /organizations/:id/api-keys", "POST", f"/api/organizations/{O['A']}/api-keys", who, js({"name": "Scope"}), write=True))
+        out.append(case("POST /user/unsubscribe-marketing", "POST", "/api/user/unsubscribe-marketing", who, js({}), write=True))
+    for who in P:
+        out.append(case("POST /user/account-settings", "POST", "/api/user/account-settings?api_key=" + K["ownerA"], who, js({"sendAutoEmailReports": True}), write=True))
+    return out
+
+
 def api_key_writes():
     out = []
     for body in API_KEY_BODIES:
@@ -799,4 +816,5 @@ def all_cases():
         + api_key_writes()
         + routing_cases()
         + snapshot_reads()
+        + deny_scoped_reads()
     )

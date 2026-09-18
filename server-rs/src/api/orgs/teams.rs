@@ -146,7 +146,7 @@ async fn list_teams(pg: &PgPool, organization_id: &str, user_id: Option<&str>) -
             .bind(user_id)
             .fetch_all(pg)
             .await?;
-        teams.retain(|team| own.iter().any(|id| *id == team.id));
+        teams.retain(|team| own.contains(&team.id));
     }
     if teams.is_empty() {
         return Ok(object(vec![("teams", JsValue::Array(Vec::new()))]));
