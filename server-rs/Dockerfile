@@ -61,6 +61,9 @@ RUN mkdir -p server-rs/src \
  && rm -rf src target/release/hygo-backend target/release/deps/hygo_backend-*
 
 COPY server/package.json server/package.json
+# The drizzle migrations are embedded in the binary, so the image needs no
+# drizzle-kit and no separate migrate step
+COPY server/drizzle server/drizzle
 COPY server-rs/src server-rs/src
 RUN cd server-rs && touch src/main.rs && cargo build --release --locked
 

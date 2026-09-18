@@ -11,6 +11,7 @@ mod bot;
 mod clickhouse;
 mod config;
 mod datacenter_asns;
+mod db_init;
 mod email;
 mod error;
 mod feature_flags;
@@ -42,6 +43,8 @@ async fn main() -> anyhow::Result<()> {
     let config = Config::from_env().context("reading configuration")?;
     let port = config.port;
     let state = AppState::connect(config).await.context("connecting to data stores")?;
+    // Before anything is served and before the queues open, as in Node
+    db_init::run(&state.pg, &state.clickhouse, &state.config).await.context("initializing the databases")?;
     state.ingest.start(state.redis.clone(), state.clickhouse.clone());
 
     let app = routes::router(state.clone());
