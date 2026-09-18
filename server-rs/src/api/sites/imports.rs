@@ -386,12 +386,13 @@ pub async fn batch_events(
     if f64::from(import.site_id) != site_id {
         return request::error(StatusCode::BAD_REQUEST, "Import does not belong to this site");
     }
-    let organization_id = match site_organization(&state, numeric).await {
-        Ok(organization_id) => organization_id,
-        Err(Some(response)) => return response,
-        Err(None) => return request::error(StatusCode::INTERNAL_SERVER_ERROR, "Internal server error"),
-    };
-    let _ = organization_id;
+    // Node reads the Site's organization only to gate on the plan and to release
+    // the concurrency slot, neither of which exists here; the 404 it answers when
+    // the Site has none is still observable, so the read stays.
+    if let Err(response) = site_organization(&state, numeric).await {
+        return response
+            .unwrap_or_else(|| request::error(StatusCode::INTERNAL_SERVER_ERROR, "Internal server error"));
+    }
 
     let Some(platform) = Platform::from_str(&import.platform) else {
         return request::error(StatusCode::BAD_REQUEST, "Unsupported platform");
