@@ -363,7 +363,8 @@ def admin_cases():
             "/api/admin/sites/abc/move",
             "/api/admin/sites/0/move",
             "/api/admin/sites/-1/move",
-            "/api/admin/sites/1.5/move",
+            # `parseInt` stops at the dot, so this is site a1 and not a snapshot Site
+            f"/api/admin/sites/{S['a1']}.5/move",
             "/api/admin/sites/99999999999/move",
             "/api/admin/sites//move",
             "/api/admin/sites/%20/move",
@@ -828,7 +829,9 @@ def experiment_cases():
                     who,
                 )
             )
-    for who in ["s:sysadmin", "k:sysadmin", "none"]:
+    # The snapshot Site, whose events carry real feature flag assignments: these
+    # principals actually reach it, so the results run over production data
+    for who in ["s:kbOwner", "s:kbMember", "k:kbOrg", "k:kbOrg_exp_read", "k:kbOrg_flags_read", "s:sysadmin", "none"]:
         for query in RESULTS_QUERIES:
             cases.append(
                 case(
@@ -838,6 +841,8 @@ def experiment_cases():
                     who,
                 )
             )
+        cases.append(case("experiments/list", "GET", f"/api/sites/{S['real']}/experiments", who))
+        cases.append(case("flags/list", "GET", f"/api/sites/{S['real']}/feature-flags", who))
 
     for method in ["PUT", "DELETE", "PATCH", "HEAD"]:
         cases.append(case("experiments/list", method, f"/api/sites/{S['a1']}/experiments", "s:ownerA", write=False))

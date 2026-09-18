@@ -131,9 +131,11 @@ def _reset_writable():
         for name, goal_id in cur.fetchall():
             ids["goals"][name[len(P) :]] = goal_id
         cur.execute(f"DELETE FROM experiments WHERE site_id IN ({SITE_LIST}) OR name LIKE '{P}%'")
+        # On the snapshot Site only our own keys go: the fixtures, and anything a
+        # create case may have written (they all start "pa_")
         cur.execute(
             f"DELETE FROM feature_flags WHERE site_id IN ({SITE_LIST}) "
-            f"OR (site_id = {F.REAL_SITE} AND key IN ({FLAG_KEY_LIST}))"
+            f"OR (site_id = {F.REAL_SITE} AND (key IN ({FLAG_KEY_LIST}) OR key LIKE 'pa\\_%'))"
         )
         cur.execute(f"DELETE FROM telemetry WHERE instance_id LIKE '{P}%'")
         cur.execute(f"DELETE FROM member_site_access WHERE member_id LIKE '{P}%' OR site_id IN ({SITE_LIST})")
@@ -199,7 +201,8 @@ def _reset_writable():
                 "UPDATE sites SET organization_id = %s, updated_at = %s WHERE site_id = %s",
                 (ORGS[org] if org else None, f"2026-06-{10 + index:02d} 07:30:00.25", F.SITE_IDS[key]),
             )
-        # Members: the role, restriction and grants a member write changes
+        # Members: a delete case removes the row outright, so they are rebuilt
+        cur.execute(f"DELETE FROM member WHERE id LIKE '{P}%'")
         for user, org, role, restricted in [
             ("ownerA", "A", "owner", False),
             ("adminA", "A", "admin", False),
@@ -212,8 +215,9 @@ def _reset_writable():
             ("ownerB", "F", "owner", False),
         ]:
             cur.execute(
-                'UPDATE member SET role = %s, has_restricted_site_access = %s WHERE id = %s',
-                (role, restricted, f"{P}m-{user}-{org}"),
+                'INSERT INTO member (id, "organizationId", "userId", role, "createdAt", has_restricted_site_access) '
+                "VALUES (%s, %s, %s, %s, %s, %s)",
+                (f"{P}m-{user}-{org}", ORGS[org], USERS[user], role, "2026-05-02 09:00:00", restricted),
             )
         cur.execute(
             "INSERT INTO member_site_access (member_id, site_id, created_at) VALUES (%s, %s, %s)",
@@ -323,7 +327,8 @@ SNAPSHOT_TABLES = [
     (
         "feature_flags",
         "flag_id",
-        f"site_id IN ({SITE_LIST}) OR (site_id = {F.REAL_SITE} AND key IN ({FLAG_KEY_LIST})) OR key LIKE '{P}%'",
+        f"site_id IN ({SITE_LIST}) OR key LIKE '{P}%' "
+        f"OR (site_id = {F.REAL_SITE} AND (key IN ({FLAG_KEY_LIST}) OR key LIKE 'pa\\_%'))",
     ),
     ("experiments", "experiment_id", f"site_id IN ({SITE_LIST}) OR name LIKE '{P}%'"),
     ("member", "id", f"id LIKE '{P}%'"),

@@ -29,6 +29,14 @@ CH_HEADERS = {"X-ClickHouse-User": "default", "X-ClickHouse-Key": "hygo"}
 REAL_SITE = 4
 REAL_FLAG_KEY = "checkout"
 REAL_GOAL_EVENT = "checkout_started"
+# Snapshot users who can reach REAL_SITE, so the results endpoint runs over real
+# production events. Only sessions and API keys are added for them; the user rows
+# themselves are never touched.
+REAL_USERS = {
+    "kbOwner": "XoNIxodDwuJOefJZebreRpXzn7Sq3hlL",
+    "kbMember": "ZDZZHJlo6olnWqliEC5t0kHoxcurXqBM",
+}
+REAL_ORG = "kb0biUnGlr3qcPEnKUTeqjv0TyGK2eHE"
 
 SITE_IDS = {
     "a1": 65400,  # org A, no type, private, session replay on
@@ -69,7 +77,7 @@ def cleanup(cur):
     # The flag on the snapshot Site is ours too, and its key carries no prefix
     cur.execute(
         f"DELETE FROM feature_flags WHERE site_id IN ({site_list}) OR key LIKE '{P}%' "
-        f"OR (site_id = {REAL_SITE} AND key IN ({real_keys}))"
+        f"OR (site_id = {REAL_SITE} AND (key IN ({real_keys}) OR key LIKE 'pa\\_%'))"
     )
     cur.execute(f"DELETE FROM goals WHERE site_id IN ({site_list}) OR name LIKE '{P}%'")
     cur.execute(f"DELETE FROM funnels WHERE site_id IN ({site_list})")
@@ -420,7 +428,9 @@ def setup_principals(cur):
         )
         creds["experiments"][key] = cur.fetchone()[0]
 
-    for name, uid in creds["users"].items():
+    session_users = dict(creds["users"])
+    session_users.update(REAL_USERS)
+    for name, uid in session_users.items():
         token = "patok" + name
         cur.execute(
             'INSERT INTO session (id, "expiresAt", token, "createdAt", "updatedAt", "ipAddress", "userAgent", "userId") '
@@ -438,6 +448,9 @@ def setup_principals(cur):
         ("orgA_exp_write", "org", creds["orgs"]["A"], {"experiments": ["write"]}),
         ("orgA_wrong", "org", creds["orgs"]["A"], {"funnels": ["read"]}),
         ("orgB", "org", creds["orgs"]["B"], None),
+        ("kbOrg", "org", REAL_ORG, None),
+        ("kbOrg_exp_read", "org", REAL_ORG, {"experiments": ["read"]}),
+        ("kbOrg_flags_read", "org", REAL_ORG, {"flags": ["read"]}),
         ("sysadmin", "default", creds["users"]["sysadmin"], None),
         ("memberA", "default", creds["users"]["memberA"], None),
         ("adminA", "default", creds["users"]["adminA"], None),
