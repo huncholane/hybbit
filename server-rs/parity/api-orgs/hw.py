@@ -104,6 +104,14 @@ def mask_value(value):
     return value
 
 
+# `deleteAllExpiredApiKeys` is fire-and-forget and throttled to once per ten
+# seconds *per process*, so whether the expired fixture key is still there depends
+# on each backend's own timer. Its row is dropped from the snapshot; the key still
+# earns its place by proving that an expired credential neither authenticates nor
+# holds a slot against the creation cap.
+SWEPT = P + "k-ownerA_expired"
+
+
 def snapshot():
     """Every row this harness owns, with volatile columns masked."""
     out = {}
@@ -113,6 +121,8 @@ def snapshot():
             rows = []
             for (text,) in cur.fetchall():
                 row = json.loads(text)
+                if table == "apikey" and row.get("id") == SWEPT:
+                    continue
                 for column in VOLATILE[table]:
                     if column in row and row[column] is not None:
                         row[column] = f"<{column}>"

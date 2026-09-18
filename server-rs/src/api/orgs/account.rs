@@ -202,13 +202,15 @@ pub async fn one_click_unsubscribe(
     }
 
     let result: Result<(), sqlx::Error> = async {
-        let JsValue::String(address) = &email else {
-            // A repeated `email` parameter is an array, which postgres-js sends as an
-            // array parameter: the comparison against a text column throws
-            return Err(sqlx::Error::Protocol("operator does not exist: text = text[]".into()));
+        // A repeated `email` parameter is an array, which postgres-js sends as
+        // `String(value)`: `?email=a&email=b` looks up the text "a,b" and finds
+        // nobody, rather than failing
+        let address = match super::js::bind_value(&email) {
+            super::js::Bind::Text(text) => Some(text),
+            super::js::Bind::Null | super::js::Bind::Throws => None,
         };
         let found: Option<String> = sqlx::query_scalar(r#"select "id" from "user" where "email" = $1"#)
-            .bind(address)
+            .bind(&address)
             .fetch_optional(&state.pg)
             .await?;
         if let Some(user_id) = found {

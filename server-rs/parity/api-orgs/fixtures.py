@@ -128,8 +128,32 @@ def cleanup(cur):
     cur.execute(f"DELETE FROM \"user\" WHERE email LIKE '%{EMAIL_DOMAIN}%'")
 
 
+class Batch:
+    """Collects statements and sends them in one round trip. The runner resets the
+    fixtures twice per write case, so the round trips dominate the run."""
+
+    def __init__(self, cur):
+        self.cur = cur
+        self.statements = []
+
+    def execute(self, sql, params=None):
+        self.statements.append(self.cur.mogrify(sql, params).decode() if params else sql)
+
+    def flush(self):
+        if self.statements:
+            self.cur.execute(";\n".join(self.statements))
+            self.statements = []
+
+
 def build(cur):
-    cleanup(cur)
+    batch = Batch(cur)
+    cleanup(batch)
+    creds = build_rows(batch)
+    batch.flush()
+    return creds
+
+
+def build_rows(cur):
     creds = {"sessions": {}, "keys": {}, "sites": {}, "orgs": dict(ORGS), "users": {}, "members": {}, "teams": {}}
 
     for name, role in USERS:
