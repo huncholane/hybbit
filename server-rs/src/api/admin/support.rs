@@ -97,6 +97,14 @@ pub fn clickhouse_exception(route: &str, err: &ClickHouseFailure) -> Response {
     uncaught_exception(route, code.as_deref(), &err.message())
 }
 
+/// `DrizzleQueryError.message` (drizzle 0.45.2 wraps every driver failure):
+/// the statement it tried and the parameters it bound, joined as `String(array)`
+/// joins them. This is what Fastify prints for a query that escapes a handler
+/// with no catch block.
+pub fn drizzle_query_error(query: &str, params: &[String]) -> String {
+    format!("Failed query: {query}\nparams: {}", params.join(","))
+}
+
 /// A JavaScript object literal from ordered fields.
 pub fn object(fields: Vec<(&str, JsValue)>) -> JsValue {
     JsValue::Object(fields.into_iter().map(|(name, value)| (name.to_string(), value)).collect())
@@ -321,6 +329,17 @@ pub fn with_empty_params(
 /// Route every method the path does not register to the 404 handler, because
 /// axum's method-not-allowed fallback would add an `Allow` header Node never sends.
 pub fn complete(handlers: MethodRouter<AppState>, registered: &[&str]) -> MethodRouter<AppState> {
+    complete_except(handlers, registered, &[])
+}
+
+/// [`complete`] leaving `owned_elsewhere` alone, for a path another module also
+/// registers: axum merges two method routers for the same path but panics if both
+/// claim a method.
+pub fn complete_except(
+    handlers: MethodRouter<AppState>,
+    registered: &[&str],
+    owned_elsewhere: &[&str],
+) -> MethodRouter<AppState> {
     let all = [
         ("GET", MethodFilter::GET),
         ("HEAD", MethodFilter::HEAD),
@@ -333,7 +352,9 @@ pub fn complete(handlers: MethodRouter<AppState>, registered: &[&str]) -> Method
         ("CONNECT", MethodFilter::CONNECT),
     ];
     // HEAD is answered by the GET handler wherever one is registered
-    let answered = |name: &str| registered.contains(&name) || (name == "HEAD" && registered.contains(&"GET"));
+    let answered = |name: &str| {
+        registered.contains(&name) || owned_elsewhere.contains(&name) || (name == "HEAD" && registered.contains(&"GET"))
+    };
     all.into_iter()
         .filter(|(name, _)| !answered(name))
         .fold(handlers, |handlers, (_, filter)| handlers.on(filter, http::errors::not_found))

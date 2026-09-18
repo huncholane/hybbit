@@ -111,6 +111,15 @@ pub fn router() -> Router<AppState> {
         put(flags::update).delete(flags::delete),
         &["PUT", "DELETE"],
     );
+    // find-my-way falls back to the parametric sibling when the static node has no
+    // handler for the method, so PUT and DELETE on `.../feature-flags/evaluate`
+    // reach the `:flagId` handlers with "evaluate" as the id (a 400). POST there
+    // belongs to `crate::routes::feature_flags`, which registers it on the same
+    // path; axum merges the two method routers as long as neither claims POST twice.
+    router = router.route(
+        "/api/sites/{siteId}/feature-flags/evaluate",
+        support::complete_except(put(flags::update).delete(flags::delete), &["PUT", "DELETE"], &["POST"]),
+    );
 
     // Experiments
     router = route(

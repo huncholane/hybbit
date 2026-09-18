@@ -18,7 +18,7 @@ use tracing::{debug, error, info, warn};
 use crate::{
     analytics::{
         chain::{ChainSteps, SiteGuard, route_scope, site_scoped},
-        js::{JsObject, JsValue, json as js_json, number::parse_int_10},
+        js::{JsObject, JsValue, json as js_json, number::{number_to_string, parse_int_10}},
         sql_string::{escape_number, escape_string},
         utils::analytics_query::QuerySpec,
     },
@@ -30,7 +30,8 @@ use crate::{
 };
 
 use super::support::{
-    admin_clickhouse, object, param, path_params, pg_int4, read_body, send_error, send_error_details, send_js,
+    admin_clickhouse, drizzle_query_error, object, param, path_params, pg_int4, read_body, send_error,
+    send_error_details, send_js,
 };
 
 /// `parseSiteId`: `parseInt(raw, 10)`, positive or a 400.
@@ -51,12 +52,13 @@ fn parse_flag_id(raw: &str) -> Result<f64, Response> {
     Ok(flag_id)
 }
 
-/// Postgres' unique-violation code, which both write handlers translate.
-const UNIQUE_VIOLATION: &str = "23505";
-
-fn is_duplicate_key(err: &sqlx::Error) -> bool {
-    matches!(err, sqlx::Error::Database(db) if db.code().as_deref() == Some(UNIQUE_VIOLATION))
-}
+/// `getDuplicateKeyMessage(error)` reads `error.code === "23505"`, but drizzle
+/// 0.45.2 wraps every driver failure in a `DrizzleQueryError`, which carries the
+/// `PostgresError` as `cause` and has no `code` of its own. The check therefore
+/// never matches: a duplicate key answers 500 like any other write failure, in
+/// Node as here, and the 409 branch is dead on both sides.
+const DUPLICATE_KEY_IS_UNREACHABLE: &str =
+    "drizzle wraps the PostgresError, so error.code is undefined and the 409 branch never runs";
 
 /// Every column of `feature_flags`, named so a row reads back in schema order.
 const FLAG_COLUMNS: &str = r#""flag_id", "site_id", "key", "description", "enabled", "runtime", "flag_type",
@@ -298,7 +300,8 @@ pub async fn create(
         Err(response) => return response,
     };
 
-    let parsed = match parse_feature_flag_body(Some(&body.to_serde())) {
+    let body_json = (!body.is_undefined()).then(|| body.to_serde());
+    let parsed = match parse_feature_flag_body(body_json.as_ref()) {
         Ok(parsed) => parsed,
         Err(issues) => {
             debug!("Feature flag create body failed validation");
@@ -342,11 +345,10 @@ pub async fn create(
 
     let created = match inserted {
         Ok(row) => row,
-        Err(err) if is_duplicate_key(&err) => {
-            debug!("Rejected a duplicate feature flag key");
-            return send_error(StatusCode::CONFLICT, "A feature flag with this key already exists");
+        Err(err) => {
+            debug!(reason = DUPLICATE_KEY_IS_UNREACHABLE, "Feature flag insert failed");
+            return failed(&err.to_string());
         }
-        Err(err) => return failed(&err.to_string()),
     };
 
     invalidate_feature_flag_definitions(&state, bound_site_id).await;
@@ -392,7 +394,8 @@ pub async fn update(
         Err(response) => return response,
     };
 
-    let parsed = match parse_feature_flag_update(Some(&body.to_serde())) {
+    let body_json = (!body.is_undefined()).then(|| body.to_serde());
+    let parsed = match parse_feature_flag_update(body_json.as_ref()) {
         Ok(parsed) => parsed,
         Err(issues) => {
             debug!("Feature flag update body failed validation");
@@ -543,10 +546,10 @@ pub async fn update(
     let updated = match query.fetch_optional(&state.pg).await {
         Ok(Some(row)) => row,
         Ok(None) => return send_error(StatusCode::NOT_FOUND, "Feature flag not found"),
-        Err(err) if is_duplicate_key(&err) => {
-            return send_error(StatusCode::CONFLICT, "A feature flag with this key already exists");
+        Err(err) => {
+            debug!(reason = DUPLICATE_KEY_IS_UNREACHABLE, "Feature flag update failed");
+            return failed(&err.to_string());
         }
-        Err(err) => return failed(&err.to_string()),
     };
 
     invalidate_feature_flag_definitions(&state, bound_site_id).await;
@@ -585,6 +588,12 @@ fn column_for(field: &str) -> &'static str {
 // DELETE /api/sites/:siteId/feature-flags/:flagId
 // ---------------------------------------------------------------------------------
 
+/// The statement drizzle renders for the delete, which its error message quotes.
+const DELETE_FLAG_SQL: &str = concat!(
+    r#"delete from "feature_flags" where ("feature_flags"."site_id" = $1 and "#,
+    r#""feature_flags"."flag_id" = $2) returning "flag_id""#
+);
+
 /// `deleteFeatureFlag`
 pub async fn delete(
     State(state): State<AppState>,
@@ -610,8 +619,12 @@ pub async fn delete(
         Err(response) => return response,
     };
     let (Some(bound_site_id), Some(bound_flag_id)) = (pg_int4(site_id), pg_int4(flag_id)) else {
-        // No catch block here, so the statement failure escapes to Fastify
-        return super::support::uncaught_exception("feature-flags", None, "value out of range for type integer");
+        // No catch block here, so drizzle's wrapper escapes to Fastify verbatim
+        return super::support::uncaught_exception(
+            "feature-flags",
+            None,
+            &drizzle_query_error(DELETE_FLAG_SQL, &[number_to_string(site_id), number_to_string(flag_id)]),
+        );
     };
 
     let deleted: Result<Option<i32>, sqlx::Error> = sqlx::query_scalar(

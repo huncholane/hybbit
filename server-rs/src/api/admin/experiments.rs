@@ -16,13 +16,15 @@ use tracing::{debug, error, info};
 use crate::{
     analytics::{
         chain::{ChainSteps, SiteGuard, route_scope, site_scoped},
-        js::{JsObject, JsValue, json as js_json, number::parse_int_10},
+        js::{JsObject, JsValue, json as js_json, number::{number_to_string, parse_int_10}},
     },
     state::AppState,
 };
 
 use super::{
-    support::{object, param, path_params, pg_int4, read_body, send_error, send_error_details, send_js},
+    support::{
+        drizzle_query_error, object, param, path_params, pg_int4, read_body, send_error, send_error_details, send_js,
+    },
     zod::{parse_experiment_body, parse_experiment_update},
 };
 
@@ -44,9 +46,12 @@ pub(super) fn parse_experiment_id(raw: &str) -> Result<f64, Response> {
     Ok(experiment_id)
 }
 
-fn is_duplicate_key(err: &sqlx::Error) -> bool {
-    matches!(err, sqlx::Error::Database(db) if db.code().as_deref() == Some("23505"))
-}
+/// `getDuplicateExperimentMessage(error)` reads `error.code === "23505"`, but
+/// drizzle 0.45.2 wraps every driver failure in a `DrizzleQueryError` that carries
+/// the `PostgresError` as `cause` and has no `code`. The check never matches, so a
+/// second experiment for the same flag answers 500 rather than 409, in Node too.
+const DUPLICATE_KEY_IS_UNREACHABLE: &str =
+    "drizzle wraps the PostgresError, so error.code is undefined and the 409 branch never runs";
 
 const EXPERIMENT_COLUMNS: &str = r#""e"."experiment_id", "e"."site_id", "e"."feature_flag_id", "e"."primary_goal_id",
        "e"."name", "e"."description", "e"."hypothesis", "e"."status", "e"."winning_variant",
@@ -377,11 +382,10 @@ pub async fn create(
 
     let experiment_id = match created {
         Ok(id) => id,
-        Err(err) if is_duplicate_key(&err) => {
-            debug!("Rejected a second experiment for the same feature flag");
-            return send_error(StatusCode::CONFLICT, "An experiment already exists for this feature flag");
+        Err(err) => {
+            debug!(reason = DUPLICATE_KEY_IS_UNREACHABLE, "Experiment insert failed");
+            return failed(&err.to_string());
         }
-        Err(err) => return failed(&err.to_string()),
     };
 
     let record = match experiment_with_relations(&state.pg, bound_site_id, experiment_id).await {
@@ -441,7 +445,8 @@ pub async fn update(
 
     // The existence check runs before the body is validated
     let existing = sqlx::query(
-        r#"select "feature_flag_id", "primary_goal_id", "started_at", "ended_at" from "experiments"
+        r#"select "feature_flag_id", "primary_goal_id", "started_at"::text as "started_at",
+                  "ended_at"::text as "ended_at" from "experiments"
            where "experiments"."site_id" = $1 and "experiments"."experiment_id" = $2 limit 1"#,
     )
     .bind(bound_site_id)
@@ -566,10 +571,10 @@ pub async fn update(
         Ok(Some(id)) => id,
         // `updated.experimentId` on an undefined row throws, and the catch answers
         Ok(None) => return failed("the experiment disappeared between the read and the write"),
-        Err(err) if is_duplicate_key(&err) => {
-            return send_error(StatusCode::CONFLICT, "An experiment already exists for this feature flag");
+        Err(err) => {
+            debug!(reason = DUPLICATE_KEY_IS_UNREACHABLE, "Experiment update failed");
+            return failed(&err.to_string());
         }
-        Err(err) => return failed(&err.to_string()),
     };
 
     let record = match experiment_with_relations(&state.pg, bound_site_id, updated).await {
@@ -587,6 +592,12 @@ pub async fn update(
 // ---------------------------------------------------------------------------------
 // DELETE /api/sites/:siteId/experiments/:experimentId
 // ---------------------------------------------------------------------------------
+
+/// The statement drizzle renders for the delete, which its error message quotes.
+const DELETE_EXPERIMENT_SQL: &str = concat!(
+    r#"delete from "experiments" where ("experiments"."site_id" = $1 and "#,
+    r#""experiments"."experiment_id" = $2) returning "experiment_id""#
+);
 
 /// `deleteExperiment`
 pub async fn delete(
@@ -613,7 +624,15 @@ pub async fn delete(
         Err(response) => return response,
     };
     let (Some(bound_site_id), Some(bound_experiment_id)) = (pg_int4(site_id), pg_int4(experiment_id)) else {
-        return super::support::uncaught_exception("experiments", None, "value out of range for type integer");
+        // No catch block here, so drizzle's wrapper escapes to Fastify verbatim
+        return super::support::uncaught_exception(
+            "experiments",
+            None,
+            &drizzle_query_error(
+                DELETE_EXPERIMENT_SQL,
+                &[number_to_string(site_id), number_to_string(experiment_id)],
+            ),
+        );
     };
 
     let deleted: Result<Option<i32>, sqlx::Error> = sqlx::query_scalar(
