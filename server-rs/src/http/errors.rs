@@ -105,6 +105,10 @@ pub fn normalize_api_error(status: u16, payload: Value) -> Map<String, Value> {
 #[derive(Clone, Copy, Debug)]
 pub struct RewriteApiError;
 
+/// Marks a response this layer already rewrote, so the outer copy leaves it alone.
+#[derive(Clone, Copy, Debug)]
+struct Rewritten;
+
 pub fn is_api_path(path: &str) -> bool {
     path == "/api" || path.starts_with("/api/")
 }
@@ -125,6 +129,9 @@ pub async fn api_error_responses(req: Request, next: Next) -> Response {
         || !is_api_path(&path)
         || (is_excluded_from_rewrite(&path) && !forced)
         || response.extensions().get::<super::RawFrameworkResponse>().is_some()
+        // Already rewritten by the inner copy of this layer, which runs before
+        // axum discards a HEAD response's body
+        || response.extensions().get::<Rewritten>().is_some()
     {
         return response;
     }
@@ -147,6 +154,7 @@ pub async fn api_error_responses(req: Request, next: Next) -> Response {
         .headers
         .insert(header::X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff"));
     parts.headers.remove(header::CONTENT_LENGTH);
+    parts.extensions.insert(Rewritten);
 
     Response::from_parts(parts, Body::from(serde_json::to_vec(&normalized).unwrap_or_default()))
 }

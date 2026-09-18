@@ -47,6 +47,11 @@ pub fn router(state: AppState) -> Router {
         // Everything else outside /api is the dashboard's static export
         .fallback(client_app::fallback)
         .method_not_allowed_fallback(errors::not_found)
+        // Also inside routing: axum answers HEAD by running the GET handler and
+        // dropping the body, so the rewrite has to see the body here to send Node's
+        // content-length. The outer copy (for the fallback and the hook responses)
+        // skips what this one already rewrote.
+        .route_layer(middleware::from_fn(errors::api_error_responses))
         .with_state(state);
 
     // The middleware wraps the whole router rather than each route: layered per
