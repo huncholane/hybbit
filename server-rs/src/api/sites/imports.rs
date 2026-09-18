@@ -28,7 +28,9 @@ use crate::{
     analytics::{
         chain::{ChainSteps, SiteGuard, SiteRequest, route_scope, site_scoped},
         routes::people::common::path_params,
+        utils::analytics_query::parse_clickhouse_error,
     },
+    clickhouse::ClickHouseError,
     state::AppState,
 };
 
@@ -40,6 +42,16 @@ const OLDEST_ALLOWED_MONTH: &str = "190001";
 
 /// `getImportsForSite`'s limit.
 const IMPORT_LIST_LIMIT: i64 = 10;
+
+/// The message `@clickhouse/client` puts on the error it throws, which
+/// `batchImportEvents` interpolates into its 500. The client parses the server's
+/// body down to the text after `Exception:`, so the raw response would not match.
+fn clickhouse_message(error: &ClickHouseError) -> String {
+    match error {
+        ClickHouseError::Server { body, .. } => parse_clickhouse_error(body).message,
+        other => other.to_string(),
+    }
+}
 
 /// `{ error: "Validation error" }`, the one body every schema failure here sends.
 fn validation_error() -> Response {
@@ -298,7 +310,7 @@ async fn import_by_id(state: &AppState, import_id: &str) -> Result<Option<Import
 
 /// `completeImport`: `DateTime.utc().toISO()` into the `completed_at` column.
 async fn complete_import(state: &AppState, import_id: &str) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE import_status SET completed_at = $1 WHERE import_id = $2::uuid")
+    sqlx::query("UPDATE import_status SET completed_at = $1::timestamp WHERE import_id = $2::uuid")
         .bind(super::lifecycle::now_iso())
         .bind(import_id)
         .execute(&state.pg)
@@ -388,11 +400,7 @@ pub async fn batch_events(
     // import when this is the last batch, then answers 500 with the message
     let outcome: Result<(), String> = async {
         if !within_quota.is_empty() {
-            state
-                .clickhouse
-                .insert("events", &within_quota)
-                .await
-                .map_err(|error| error.to_string())?;
+            state.clickhouse.insert("events", &within_quota).await.map_err(|error| clickhouse_message(&error))?;
         }
         sqlx::query(
             r#"UPDATE import_status SET imported_events = imported_events + $1,

@@ -61,7 +61,9 @@ async fn apply_site_move(
     target_organization_id: &str,
 ) -> Result<(), sqlx::Error> {
     let mut tx = state.pg.begin().await?;
-    sqlx::query("UPDATE sites SET organization_id = $1, updated_at = $2 WHERE site_id = $3")
+    // `$2::timestamp`: postgres-js sends the ISO string untyped and lets Postgres
+    // parse it, sqlx sends typed binary
+    sqlx::query("UPDATE sites SET organization_id = $1, updated_at = $2::timestamp WHERE site_id = $3")
         .bind(target_organization_id)
         .bind(now_iso())
         .bind(site_id)
@@ -151,7 +153,10 @@ pub async fn move_site(
     let result: Result<Response, sqlx::Error> = async {
         let source: Option<Option<String>> =
             sqlx::query_scalar("SELECT organization_id FROM sites WHERE site_id = $1 LIMIT 1")
-                .bind(site_id)
+                // i64 like the identical statement in auth and the analytics chain: sqlx
+                // caches prepared statements per connection by SQL text, and an int4 bound
+                // to the cached int8 one fails
+                .bind(i64::from(site_id))
                 .fetch_optional(&state.pg)
                 .await?;
         let Some(source_organization_id) = source else {

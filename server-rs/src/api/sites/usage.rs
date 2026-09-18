@@ -148,7 +148,10 @@ pub async fn get_site_usage(
 
     let organization_id: Result<Option<Option<String>>, sqlx::Error> =
         sqlx::query_scalar("SELECT organization_id FROM sites WHERE site_id = $1 LIMIT 1")
-            .bind(numeric)
+            // i64 like the identical statement in auth and the analytics chain: sqlx
+            // caches prepared statements per connection by SQL text, and an int4 bound
+            // to the cached int8 one fails
+            .bind(i64::from(numeric))
             .fetch_optional(&state.pg)
             .await;
     let organization_id = match organization_id {

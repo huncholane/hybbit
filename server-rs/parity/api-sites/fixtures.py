@@ -326,7 +326,33 @@ def setup():
                 "'', 'parity', %s)",
                 (session_id, token, user_id),
             )
+    setup_events()
     print(f"{len(USERS)} users, {len(ORGS)} orgs, {len(SITES)} sites, {len(KEYS)} keys, {len(SESSIONS)} sessions")
+
+
+# Events for embed-stats and usage. Placed two hours back so the 30-minute window
+# stays empty and the 24-hour and 7-day windows stay stable while the harness runs,
+# and their hour and day buckets do not move either.
+EVENT_SITES = [65201, 65203]
+
+
+def setup_events():
+    ch("DELETE FROM events WHERE site_id >= 65200")
+    for site in EVENT_SITES:
+        ch(
+            f"""INSERT INTO events (site_id, timestamp, session_id, user_id, type, pathname, hostname, country, tag)
+                SELECT {site} AS site_id,
+                  now() - toIntervalMinute(120 + intDiv(number, 4) * 60) AS timestamp,
+                  concat('parity-sites-s', toString(number)) AS session_id,
+                  concat('parity-sites-u', toString(number % 5)) AS user_id,
+                  arrayElement(['pageview', 'custom_event', 'performance', 'copy'], toInt32(number % 4) + 1) AS type,
+                  '/p' AS pathname, 'parity.example.com' AS hostname,
+                  -- distinct per-country session counts, so ORDER BY users DESC has no ties
+                  multiIf(number < 16, 'US', number < 26, 'GB', number < 33, 'DE', number < 38, 'FR', 'JP') AS country,
+                  'parity-sites' AS tag
+                FROM numbers(40)"""
+        )
+    print(ch("SELECT site_id, count() FROM events WHERE site_id >= 65200 GROUP BY site_id ORDER BY site_id FORMAT TSV").strip())
 
 
 def cleanup():

@@ -211,6 +211,10 @@ pub enum ColumnValue {
     /// A jsonb column; drizzle hands postgres-js `JSON.stringify(value)` and
     /// sqlx encodes the same array of strings
     Json(Value),
+    /// An ISO string for a `timestamp without time zone` column. postgres-js sends
+    /// it untyped and lets Postgres parse it; sqlx sends typed binary, so the
+    /// placeholder carries an explicit `::timestamp` cast to get the same row.
+    Timestamp(String),
 }
 
 /// `UpdateSiteConfigurationInput` after the route's zod schema, as the fields the
@@ -383,10 +387,16 @@ pub async fn update(
     if fields.is_empty() {
         return Err(SiteLifecycleError::new(SiteLifecycleErrorCode::EmptyUpdate, 400, "No fields to update").into());
     }
-    fields.push(("updated_at", ColumnValue::Text(now_iso())));
+    fields.push(("updated_at", ColumnValue::Timestamp(now_iso())));
 
-    let assignments: Vec<String> =
-        fields.iter().enumerate().map(|(index, (column, _))| format!("{column} = ${}", index + 1)).collect();
+    let assignments: Vec<String> = fields
+        .iter()
+        .enumerate()
+        .map(|(index, (column, value))| {
+            let cast = if matches!(value, ColumnValue::Timestamp(_)) { "::timestamp" } else { "" };
+            format!("{column} = ${}{cast}", index + 1)
+        })
+        .collect();
     let sql = format!("UPDATE sites SET {} WHERE site_id = ${}", assignments.join(", "), fields.len() + 1);
     let mut query = sqlx::query(&sql);
     for (_, value) in &fields {
@@ -396,6 +406,7 @@ pub async fn update(
             ColumnValue::Bool(flag) => query.bind(*flag),
             ColumnValue::Int(number) => query.bind(*number),
             ColumnValue::Json(json) => query.bind(json.clone()),
+            ColumnValue::Timestamp(text) => query.bind(text.clone()),
         };
     }
     if let Err(error) = query.bind(site.site_id).execute(&state.pg).await {
