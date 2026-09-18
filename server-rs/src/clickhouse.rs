@@ -55,6 +55,19 @@ impl ClickHouse {
             .collect()
     }
 
+    /// Run a statement that returns no rows (`clickhouse.command` in Node, which
+    /// sends `wait_end_of_query=1` so the server buffers the whole response before
+    /// answering). `{name:Type}` placeholders bind from `params`, so request input
+    /// is never spliced into SQL.
+    pub async fn command(&self, sql: &str, params: &[(&str, String)]) -> Result<(), ClickHouseError> {
+        let mut query = vec![
+            ("database".to_string(), self.database.clone()),
+            ("wait_end_of_query".to_string(), "1".to_string()),
+        ];
+        query.extend(params.iter().map(|(name, value)| (format!("param_{name}"), value.clone())));
+        self.send(&query, sql.to_string()).await.map(|_| ())
+    }
+
     /// Insert rows as JSONEachRow, each line spelled the way `JSON.stringify` spells
     /// it (as @clickhouse/client sends it). `table` must be a fixed table name from
     /// this codebase, never request input.

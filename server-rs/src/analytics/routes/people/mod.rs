@@ -20,7 +20,9 @@ use axum::{
 
 use crate::state::AppState;
 
-mod common;
+// Public so the settings-side groups (api::sites) reuse this plumbing rather than
+// keeping a second copy of find-my-way's parameter decoding and Fastify's body parsing
+pub mod common;
 pub mod errors;
 pub mod events;
 pub mod sessions;

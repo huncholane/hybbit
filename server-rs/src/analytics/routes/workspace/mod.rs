@@ -24,7 +24,9 @@ use axum::{
 
 use crate::{http::errors, state::AppState};
 
-mod access;
+// Public so the settings-side groups (api::sites) ask the same request-scoped
+// access questions rather than keeping a second copy of them
+pub mod access;
 mod annotation_schema;
 mod annotations;
 mod custom_query;
@@ -34,7 +36,9 @@ mod generate;
 mod luxon;
 mod openrouter;
 mod rate_limit;
-mod request;
+// Public for the same reason as `access`: api::sites reuses `request_ip` rather
+// than keeping a second port of Fastify's `trustProxy` address resolution
+pub mod request;
 mod schema;
 mod segments;
 
