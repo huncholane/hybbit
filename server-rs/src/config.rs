@@ -103,6 +103,14 @@ pub struct ClickHouseConfig {
     pub database: String,
     pub user: String,
     pub password: String,
+    /// Least-privilege user for user-authored SQL (CLICKHOUSE_QUERY_USER)
+    pub query_user: String,
+    pub query_password: String,
+    /// The database `provisionQueryUser` names in its GRANT. It reads CLICKHOUSE_DB
+    /// itself and falls back to "default", not to the connection's "analytics", so a
+    /// deployment that leaves CLICKHOUSE_DB unset grants on a database it never uses.
+    /// Kept as Node has it so the two backends provision the same grant.
+    pub query_grant_database: String,
 }
 
 #[derive(Clone)]
@@ -145,6 +153,10 @@ impl Config {
                 // only so a local setup can differ
                 user: env_or("CLICKHOUSE_USER", "default"),
                 password: env_or("CLICKHOUSE_PASSWORD", ""),
+                query_user: env_or("CLICKHOUSE_QUERY_USER", "hygo_query"),
+                query_password: env_opt("CLICKHOUSE_QUERY_PASSWORD")
+                    .unwrap_or_else(|| env_or("CLICKHOUSE_PASSWORD", "")),
+                query_grant_database: env_or("CLICKHOUSE_DB", "default"),
             },
             redis: RedisConfig {
                 host: env_or("REDIS_HOST", "redis"),

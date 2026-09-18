@@ -54,19 +54,17 @@ const QUERY_CLIENT_TIMEOUT: Duration = Duration::from_millis(30_000);
 
 static QUERY_CLIENT: OnceLock<Option<AnalyticsClickHouse>> = OnceLock::new();
 
-fn env_nonempty(name: &str) -> Option<String> {
-    std::env::var(name).ok().filter(|value| !value.is_empty())
-}
-
 /// `clickhouseQuery`: `CLICKHOUSE_QUERY_USER || "hygo_query"`, with
-/// `CLICKHOUSE_QUERY_PASSWORD || CLICKHOUSE_PASSWORD`.
+/// `CLICKHOUSE_QUERY_PASSWORD || CLICKHOUSE_PASSWORD`. The same two settings decide
+/// which user startup provisions (`db_init::query_user`), so both read them from the
+/// one place that parses them.
 fn query_client(state: &AppState) -> Option<&'static AnalyticsClickHouse> {
     QUERY_CLIENT
         .get_or_init(|| {
             let config = &state.config.clickhouse;
-            let user = env_nonempty("CLICKHOUSE_QUERY_USER").unwrap_or_else(|| "hygo_query".to_string());
-            let password = env_nonempty("CLICKHOUSE_QUERY_PASSWORD").unwrap_or_else(|| config.password.clone());
-            match AnalyticsClickHouse::from_parts_with_timeout(&config.url, &config.database, &user, &password, QUERY_CLIENT_TIMEOUT) {
+            let user = &config.query_user;
+            let password = &config.query_password;
+            match AnalyticsClickHouse::from_parts_with_timeout(&config.url, &config.database, user, password, QUERY_CLIENT_TIMEOUT) {
                 Ok(client) => {
                     info!(user = %user, "Custom query ClickHouse client ready");
                     Some(client)

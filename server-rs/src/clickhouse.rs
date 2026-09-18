@@ -68,6 +68,15 @@ impl ClickHouse {
         self.send(&query, sql.to_string()).await.map(|_| ())
     }
 
+    /// Run a statement with per-statement ClickHouse settings (`clickhouse.exec` in
+    /// Node). Startup DDL uses this; unlike `command` it does not ask the server to
+    /// buffer the response, because a DDL statement returns nothing either way.
+    pub async fn exec(&self, sql: &str, settings: &[(&str, String)]) -> Result<(), ClickHouseError> {
+        let mut query = vec![("database".to_string(), self.database.clone())];
+        query.extend(settings.iter().map(|(name, value)| ((*name).to_string(), value.clone())));
+        self.send(&query, sql.to_string()).await.map(|_| ())
+    }
+
     /// Insert rows as JSONEachRow, each line spelled the way `JSON.stringify` spells
     /// it (as @clickhouse/client sends it). `table` must be a fixed table name from
     /// this codebase, never request input.
