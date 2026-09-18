@@ -1,0 +1,70 @@
+api-admin differential run, 2026-09-18
+Node (npx tsx src/index.ts) on :3001 against the parity stores, Rust on :3103.
+
+  PARITY_ADMIN_OUT=<dir> fixtures.py setup > <dir>/creds.json
+  PARITY_ADMIN_OUT=<dir> run.py
+  PARITY_ADMIN_OUT=<dir> system_tables.py 20
+  fixtures.py cleanup
+
+route                         pairs   identical
+admin/clickhouse-query-log      114         114
+admin/clickhouse-stats           60          60
+admin/member-delete              35          35
+admin/member-get                 35          35
+admin/member-patch              259         259
+admin/move-site                 169         169
+admin/organization-options       90          90
+admin/organizations              24          24
+admin/service-event-count        99          99
+admin/sites                      24          24
+admin/subscription-override     193         193
+admin/subscription-plans         24          24
+admin/telemetry                  36          36
+experiments/create              141         141
+experiments/delete               49          49
+experiments/list                182         182
+experiments/results             357         357
+experiments/update              148         148
+flags/create                    223         223
+flags/delete                     81          81
+flags/evaluate-path               3           3
+flags/list                      182         182
+flags/update                    168         168
+TOTAL                          2696        2696   (read retries: 0)
+
+Every write case also compared the resulting rows of feature_flags, experiments,
+member, member_site_access, organization, sites, segments and telemetry; all
+matched.
+
+What the comparison masks, and why
+- Generated ids (flagId, featureFlagId, experimentId, goalId, primaryGoalId) and
+  the `salt` a flag insert takes from the column default: the two runs of a write
+  case draw different sequence values by construction.
+- Timestamps within fifteen minutes of now (createdAt, updatedAt, startedAt,
+  endedAt): the two runs stamp their own.
+- `toDateTime('...')` inside the ClickHouse error that GET /api/admin/sites
+  answers with: the bounds come from `DateTime.now()`, so they differ by the
+  seconds between the two calls. Everything else in that 500, the error code and
+  the echoed query included, is compared verbatim.
+- The rows of /api/admin/clickhouse-stats and /api/admin/clickhouse-query-log:
+  both read system tables that move while the run is going (every request either
+  backend makes lands in system.query_log, and parts merge in the background), so
+  the sweep compares their shape plus the exact scalars (page, pageSize,
+  unavailable, unavailableFeatures). system_tables.py measures what is left:
+  20 rounds per path, sent to both backends at the same moment.
+
+    /api/admin/clickhouse-stats                     20/20 byte identical
+    /api/admin/clickhouse-stats?days=0              20/20 byte identical
+    /api/admin/clickhouse-query-log?pageSize=5      20/20 byte identical
+    /api/admin/clickhouse-query-log?sortBy=read_rows&sortOrder=asc&pageSize=3
+                                                    19/20 byte identical
+
+  The one miss is a page ordered by read_rows where the backends' own queries
+  landed in the log between the two calls.
+
+Not covered, on purpose
+- A query string with raw braces or quotes (`?filters=[{"a":1}]` unencoded).
+  Node's parser accepts it; hyper answers 400 with an empty body before any
+  middleware runs. That is an HTTP edge difference shared by every Rust route,
+  not an admin one, so the sweep sends the percent encoded form the dashboard
+  sends and the raw form is reported separately.
