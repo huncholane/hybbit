@@ -2,7 +2,7 @@
 
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "../../../../../lib/utils";
 import { useConfigs } from "../../../../../lib/configs";
@@ -22,6 +22,10 @@ export function UserLocationMap({ lat, lon, className }: UserLocationMapProps) {
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const { configs } = useConfigs();
   const { resolvedTheme } = useTheme();
+  // A browser without a usable WebGL context (hardware acceleration off, or too
+  // many live contexts) makes Mapbox throw. Thrown from an effect, that took the
+  // whole user page down, so the locator drops out instead.
+  const [unavailable, setUnavailable] = useState(false);
 
   const style = resolvedTheme === "dark" ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11";
 
@@ -36,19 +40,26 @@ export function UserLocationMap({ lat, lon, className }: UserLocationMapProps) {
 
     mapboxgl.accessToken = configs.mapboxToken;
 
-    const map = new mapboxgl.Map({
-      container: containerRef.current,
-      style,
-      center: [lon, lat],
-      zoom: 4,
-      pitch: 0,
-      bearing: 0,
-      antialias: true,
-      attributionControl: false,
-      // Static locator: panning/zooming a thumbnail this small only steals the
-      // page's scroll wheel
-      interactive: false,
-    });
+    let map: mapboxgl.Map;
+    try {
+      map = new mapboxgl.Map({
+        container: containerRef.current,
+        style,
+        center: [lon, lat],
+        zoom: 4,
+        pitch: 0,
+        bearing: 0,
+        antialias: true,
+        attributionControl: false,
+        // Static locator: panning/zooming a thumbnail this small only steals the
+        // page's scroll wheel
+        interactive: false,
+      });
+    } catch (error) {
+      console.error("[UserLocationMap] Mapbox could not start", error);
+      setUnavailable(true);
+      return;
+    }
 
     map.on("error", event => console.error("[UserLocationMap] Mapbox error", event.error));
 
@@ -63,6 +74,10 @@ export function UserLocationMap({ lat, lon, className }: UserLocationMapProps) {
       mapRef.current = null;
     };
   }, [configs?.mapboxToken, lat, lon, style]);
+
+  if (unavailable) {
+    return null;
+  }
 
   return (
     <div

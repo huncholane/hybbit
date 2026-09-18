@@ -53,17 +53,25 @@ export function useMapbox(containerRef: React.RefObject<HTMLDivElement | null>, 
 
     mapboxgl.accessToken = configs.mapboxToken;
 
-    const mapInstance = new mapboxgl.Map({
-      container: containerRef.current,
-      style: mapStyle,
-      projection: { name: "globe" },
-      zoom: 1.5,
-      center: [0, 20],
-      pitch: 0,
-      bearing: 0,
-      antialias: true,
-      attributionControl: false,
-    });
+    // Mapbox throws when the browser has no usable WebGL context; from an effect
+    // that would crash the page rather than leave the globe empty.
+    let mapInstance: mapboxgl.Map;
+    try {
+      mapInstance = new mapboxgl.Map({
+        container: containerRef.current,
+        style: mapStyle,
+        projection: { name: "globe" },
+        zoom: 1.5,
+        center: [0, 20],
+        pitch: 0,
+        bearing: 0,
+        antialias: true,
+        attributionControl: false,
+      });
+    } catch (error) {
+      console.error("[useMapbox] Mapbox could not start", error);
+      return;
+    }
 
     map.current = mapInstance;
 
