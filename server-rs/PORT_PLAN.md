@@ -80,14 +80,14 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | /api/health | none | index.ts (text `OK`) | node |
+| GET | /api/health | none | index.ts (text `OK`) | rust |
 | GET | /api/config | none | api/getConfig.ts | rust |
 | GET | /api/version | none | api/getConfig.ts | rust |
 | GET | /api/script.js, /api/replay.js, /api/metrics.js | none | index.ts sendFile | rust |
-| GET/HEAD | /* (public/: script.js, script-full.js, rrweb.min.js, web-vitals.iife.js) | none | @fastify/static | node |
-| GET | /api/site/check-install | HMAC + 5/min per IP | api/sites/checkInstall.ts | node |
-| GET | /api/user/unsubscribe-marketing-oneclick | HMAC | api/user/unsubscribeMarketing.ts | node |
-| POST | /api/user/unsubscribe-marketing-oneclick | none | api/user/unsubscribeMarketing.ts | node |
+| GET/HEAD | /* (public/: script.js, script-full.js, rrweb.min.js, web-vitals.iife.js) | none | @fastify/static | rust |
+| GET | /api/site/check-install | HMAC + 5/min per IP | api/sites/checkInstall.ts | rust |
+| GET | /api/user/unsubscribe-marketing-oneclick | HMAC | api/user/unsubscribeMarketing.ts | rust |
+| POST | /api/user/unsubscribe-marketing-oneclick | none | api/user/unsubscribeMarketing.ts | rust |
 | POST | /api/admin/telemetry | 403 unless CLOUD | api/admin/collectTelemetry.ts | node |
 
 ### Dashboard client (formerly the `client` container)
@@ -106,7 +106,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 |---|---|---|---|---|
 | ALL | /api/auth/* (the 64 paths in `auth::endpoints::ported_paths`: sign-in/up/out, session, user, email OTP, organizations, admin, api-key list/delete, MCP OAuth) | Better Auth | lib/auth.ts | rust (2026-09-17, Caddy `@rustAuth`) |
 | ALL | /api/auth/* (everything else: teams, account linking, api-key create/get/update, reset-password, dash, events) | Better Auth | lib/auth.ts | node (dash and events blocked at Caddy) |
-| ALL | /auth/* | Better Auth | lib/auth.ts | node |
+| ALL | /auth/* | Better Auth | lib/auth.ts | dropped (unreachable: /auth/* is a dashboard page) |
 
 ### Analytics reads (`api/analytics/`, guard publicAnalyticsRead unless noted)
 
@@ -230,63 +230,63 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | /api/sites/:siteId | publicSitesRead | getSite.ts | node |
-| PUT | …/config | adminSitesWrite | updateSiteConfig.ts | node |
-| PUT | …/move | adminSitesWrite | moveSite.ts | node |
-| DELETE | /api/sites/:siteId | adminSitesWrite | deleteSite.ts | node |
-| GET | …/private-link-config | adminSitesWrite | getSitePrivateLinkConfig.ts | node |
-| POST | …/private-link-config | adminSitesWrite | updateSitePrivateLinkConfig.ts | node |
+| GET | /api/sites/:siteId | publicSitesRead | getSite.ts | rust |
+| PUT | …/config | adminSitesWrite | updateSiteConfig.ts | rust |
+| PUT | …/move | adminSitesWrite | moveSite.ts | rust |
+| DELETE | /api/sites/:siteId | adminSitesWrite | deleteSite.ts | rust |
+| GET | …/private-link-config | adminSitesWrite | getSitePrivateLinkConfig.ts | rust |
+| POST | …/private-link-config | adminSitesWrite | updateSitePrivateLinkConfig.ts | rust |
 | GET | …/has-data | publicSitesRead | getSiteHasData.ts | rust |
 | GET | …/is-public | publicSitesRead | getSiteIsPublic.ts | rust |
-| GET | …/excluded-ips | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/excluded-countries | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/excluded-paths | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/excluded-hostnames | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/excluded-user-agents | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/excluded-asns | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/excluded-query-params | authSitesRead | getSiteExclusions.ts | node |
-| GET | …/organization-excluded-ips | authSitesRead | api/organizationExclusions/organizationExcludedIPs.ts | node |
-| GET | …/usage | authSitesRead | getSiteUsage.ts | node |
-| GET | …/embed-stats | resolveSiteId only | getEmbedStats.ts | node |
-| GET | …/imports | adminSitesRead | getSiteImports.ts | node |
-| POST | …/imports | adminSitesWrite | createSiteImport.ts | node |
-| POST | …/imports/:importId/events | adminSitesWrite, 50 MB body | batchImportEvents.ts | node |
-| DELETE | …/imports/:importId | adminSitesWrite | deleteSiteImport.ts | node |
+| GET | …/excluded-ips | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/excluded-countries | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/excluded-paths | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/excluded-hostnames | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/excluded-user-agents | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/excluded-asns | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/excluded-query-params | authSitesRead | getSiteExclusions.ts | rust |
+| GET | …/organization-excluded-ips | authSitesRead | api/organizationExclusions/organizationExcludedIPs.ts | rust |
+| GET | …/usage | authSitesRead | getSiteUsage.ts | rust |
+| GET | …/embed-stats | resolveSiteId only | getEmbedStats.ts | rust |
+| GET | …/imports | adminSitesRead | getSiteImports.ts | rust |
+| POST | …/imports | adminSitesWrite | createSiteImport.ts | rust |
+| POST | …/imports/:importId/events | adminSitesWrite, 50 MB body | batchImportEvents.ts | rust |
+| DELETE | …/imports/:importId | adminSitesWrite | deleteSiteImport.ts | rust |
 
 ### Organizations, teams, account, API keys
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | /api/organizations | none (resolves user itself) | api/user/getMyOrganizations.ts | node |
-| GET | /api/organizations/:organizationId/sites | orgOrgRead | api/sites/getSitesFromOrg.ts | node |
-| POST | /api/organizations/:organizationId/sites | orgAdminSitesWrite | api/sites/addSite.ts | node |
-| GET | /api/organizations/:organizationId/members | orgOrgRead | api/user/listOrganizationMembers.ts | node |
-| POST | /api/organizations/:organizationId/members | authOrgWrite | api/user/addUserToOrganization.ts | node |
-| POST | /api/organizations/:organizationId/users | authOrgWrite | api/user/createUserInOrganization.ts | node |
-| PUT | /api/organizations/:organizationId/members/:memberId/sites | orgAdminOrgWrite | api/memberAccess/updateMemberSiteAccess.ts | node |
-| GET | /api/organizations/:organizationId/excluded-ips | orgOrgRead | api/organizationExclusions/organizationExcludedIPs.ts | node |
-| PUT | /api/organizations/:organizationId/excluded-ips | orgAdminOrgWrite | api/organizationExclusions/organizationExcludedIPs.ts | node |
-| GET | /api/organizations/:organizationId/teams | orgOrgRead | api/teams/listTeams.ts | node |
-| POST | /api/organizations/:organizationId/teams | orgAdminOrgWrite | api/teams/createTeam.ts | node |
-| PUT | /api/organizations/:organizationId/teams/:teamId | orgAdminOrgWrite | api/teams/updateTeam.ts | node |
-| DELETE | /api/organizations/:organizationId/teams/:teamId | orgAdminOrgWrite | api/teams/deleteTeam.ts | node |
-| GET | /api/user/organizations | authOrgRead | api/user/getUserOrganizations.ts | node |
-| POST | /api/user/account-settings | authOnlyNoScopedKeys | api/user/updateAccountSettings.ts | node |
-| POST | /api/user/unsubscribe-marketing | authOnlyNoScopedKeys | api/user/unsubscribeMarketing.ts | node |
-| POST | /api/user/api-keys | authOnlyNoScopedKeys | api/user/createApiKey.ts | node |
-| POST | /api/organizations/:organizationId/api-keys | orgAdminNoScopedKeys | api/user/createOrgApiKey.ts | node |
-| GET | /api/organizations/:organizationId/api-usage | orgOrgRead | api/user/getOrgApiUsage.ts | node |
+| GET | /api/organizations | none (resolves user itself) | api/user/getMyOrganizations.ts | rust |
+| GET | /api/organizations/:organizationId/sites | orgOrgRead | api/sites/getSitesFromOrg.ts | rust |
+| POST | /api/organizations/:organizationId/sites | orgAdminSitesWrite | api/sites/addSite.ts | rust |
+| GET | /api/organizations/:organizationId/members | orgOrgRead | api/user/listOrganizationMembers.ts | rust |
+| POST | /api/organizations/:organizationId/members | authOrgWrite | api/user/addUserToOrganization.ts | rust |
+| POST | /api/organizations/:organizationId/users | authOrgWrite | api/user/createUserInOrganization.ts | rust |
+| PUT | /api/organizations/:organizationId/members/:memberId/sites | orgAdminOrgWrite | api/memberAccess/updateMemberSiteAccess.ts | rust |
+| GET | /api/organizations/:organizationId/excluded-ips | orgOrgRead | api/organizationExclusions/organizationExcludedIPs.ts | rust |
+| PUT | /api/organizations/:organizationId/excluded-ips | orgAdminOrgWrite | api/organizationExclusions/organizationExcludedIPs.ts | rust |
+| GET | /api/organizations/:organizationId/teams | orgOrgRead | api/teams/listTeams.ts | rust |
+| POST | /api/organizations/:organizationId/teams | orgAdminOrgWrite | api/teams/createTeam.ts | rust |
+| PUT | /api/organizations/:organizationId/teams/:teamId | orgAdminOrgWrite | api/teams/updateTeam.ts | rust |
+| DELETE | /api/organizations/:organizationId/teams/:teamId | orgAdminOrgWrite | api/teams/deleteTeam.ts | rust |
+| GET | /api/user/organizations | authOrgRead | api/user/getUserOrganizations.ts | rust |
+| POST | /api/user/account-settings | authOnlyNoScopedKeys | api/user/updateAccountSettings.ts | rust |
+| POST | /api/user/unsubscribe-marketing | authOnlyNoScopedKeys | api/user/unsubscribeMarketing.ts | rust |
+| POST | /api/user/api-keys | authOnlyNoScopedKeys | api/user/createApiKey.ts | rust |
+| POST | /api/organizations/:organizationId/api-keys | orgAdminNoScopedKeys | api/user/createOrgApiKey.ts | rust |
+| GET | /api/organizations/:organizationId/api-usage | orgOrgRead | api/user/getOrgApiUsage.ts | rust |
 
 ### Search Console (`api/gsc/`)
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/gsc/connect | adminGscWrite | connect.ts | node |
+| GET | …/gsc/connect | adminGscWrite | connect.ts | dropped (Coming soon in the dashboard) |
 | GET | /api/gsc/callback | signed state | callback.ts | dropped |
-| GET | …/gsc/status | publicGscRead | status.ts | node |
-| DELETE | …/gsc/disconnect | adminGscWrite | disconnect.ts | node |
-| POST | …/gsc/select-property | adminGscWrite | selectProperty.ts | node |
-| GET | …/gsc/data | publicGscRead | getData.ts | node |
+| GET | …/gsc/status | publicGscRead | status.ts | dropped (Coming soon in the dashboard) |
+| DELETE | …/gsc/disconnect | adminGscWrite | disconnect.ts | dropped (Coming soon in the dashboard) |
+| POST | …/gsc/select-property | adminGscWrite | selectProperty.ts | dropped (Coming soon in the dashboard) |
+| GET | …/gsc/data | publicGscRead | getData.ts | dropped (Coming soon in the dashboard) |
 
 ### Admin (`api/admin/`, guard adminOnly)
 
@@ -326,9 +326,9 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 |---|---|---|---|---|
 | POST | /api/mcp | own bearer auth, 1 MB body | mcp/index.ts | dropped |
 | GET, DELETE | /api/mcp | none (405) | mcp/index.ts | dropped |
-| GET | /.well-known/oauth-authorization-server, …/oauth-authorization-server/api/mcp | none | mcp/wellKnown.ts | node |
-| GET | /.well-known/openid-configuration, …/openid-configuration/api/mcp | none | mcp/wellKnown.ts | node |
-| GET | /.well-known/oauth-protected-resource, …/oauth-protected-resource/api/mcp | none | mcp/wellKnown.ts | node |
+| GET | /.well-known/oauth-authorization-server, …/oauth-authorization-server/api/mcp | none | mcp/wellKnown.ts | rust |
+| GET | /.well-known/openid-configuration, …/openid-configuration/api/mcp | none | mcp/wellKnown.ts | rust |
+| GET | /.well-known/oauth-protected-resource, …/oauth-protected-resource/api/mcp | none | mcp/wellKnown.ts | rust |
 
 ## Background work
 
