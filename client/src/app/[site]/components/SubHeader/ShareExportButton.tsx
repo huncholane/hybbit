@@ -80,8 +80,9 @@ export function ShareExportButton() {
   };
 
   const isExporting = isExportingCsv || isExportingPdf;
-  const canExportPdf =
-    subscription?.planName !== "free" && !["appsumo-1", "appsumo-2"].includes(subscription?.planName ?? "");
+  // PDF reports are not part of the Rust backend yet (they were rendered with a
+  // headless browser); the entry stays visible, disabled, so it can come back.
+  const canExportPdf = false;
 
   return (
     <div className={canShare ? undefined : "hidden md:block"}>
@@ -150,10 +151,16 @@ export function ShareExportButton() {
               <DropdownMenuSeparator />
             </>
           )}
-          {canExportPdf && (
+          {canExportPdf ? (
             <DropdownMenuItem onClick={handleExportPdf} disabled={isExportingPdf}>
               <FileText className="h-4 w-4 mr-2" />
               {isExportingPdf ? t("Generating PDF...") : t("Export as PDF Report")}
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem disabled>
+              <FileText className="h-4 w-4 mr-2" />
+              {t("Export as PDF Report")}
+              <span className="ml-2 text-xs text-neutral-500 dark:text-neutral-400">{t("Coming soon")}</span>
             </DropdownMenuItem>
           )}
           <DropdownMenuItem onClick={handleExportCsv} disabled={isExportingCsv}>

@@ -16,6 +16,7 @@ import { Events } from "./components/sections/Events";
 import { Pages } from "./components/sections/Pages";
 import { PagesLite } from "./components/sections/PagesLite";
 import { Referrers } from "./components/sections/Referrers";
+import { ComingSoonCard } from "../../../components/ComingSoonCard";
 import { SearchConsole } from "./components/sections/SearchConsole";
 import { Weekdays } from "./components/sections/Weekdays";
 
@@ -89,11 +90,15 @@ function MainPageContent() {
         <LazySection>
           <Weekdays />
         </LazySection>
-        {IS_CLOUD && (
-          <LazySection>
+        <LazySection>
+          {IS_CLOUD ? (
             <SearchConsole />
-          </LazySection>
-        )}
+          ) : (
+            // Search Console is not served by the Rust backend yet; the card shows
+            // where it lands rather than disappearing from the dashboard
+            <ComingSoonCard title="Search Console" description="Keywords, pages and impressions from Google Search." />
+          )}
+        </LazySection>
       </div>
     </div>
   );
