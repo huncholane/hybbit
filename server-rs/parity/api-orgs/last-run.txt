@@ -1,0 +1,48 @@
+0/3983 0s mismatches=0
+250/3983 6s mismatches=0
+500/3983 12s mismatches=0
+750/3983 19s mismatches=0
+1000/3983 24s mismatches=0
+1250/3983 30s mismatches=0
+1500/3983 34s mismatches=0
+1750/3983 42s mismatches=0
+2000/3983 46s mismatches=0
+2250/3983 53s mismatches=0
+2500/3983 59s mismatches=0
+2750/3983 63s mismatches=1
+3000/3983 77s mismatches=2
+3250/3983 112s mismatches=2
+3500/3983 128s mismatches=2
+3750/3983 144s mismatches=2
+route	pairs	identical
+DELETE /organizations/:id/teams/:teamId	59	59
+GET /organizations	67	67
+GET /organizations/:id/api-usage	487	487
+GET /organizations/:id/excluded-ips	486	486
+GET /organizations/:id/members	487	487
+GET /organizations/:id/sites	486	486
+GET /organizations/:id/teams	497	497
+GET /user/organizations	71	71
+GET|POST /user/unsubscribe-marketing-oneclick	41	41
+POST /organizations/:id/api-keys	138	138
+POST /organizations/:id/members	116	116
+POST /organizations/:id/sites	93	93
+POST /organizations/:id/teams	96	96
+POST /organizations/:id/users	71	71
+POST /user/account-settings	148	148
+POST /user/api-keys	128	128
+POST /user/unsubscribe-marketing	88	88
+PUT /organizations/:id/excluded-ips	85	84
+PUT /organizations/:id/members/:memberId/sites	81	81
+PUT /organizations/:id/teams/:teamId	69	69
+body parsing	9	9
+cors	12	11
+routing	72	72
+snapshot GET /organizations	8	8
+snapshot GET /organizations/:id/api-usage	16	16
+snapshot GET /organizations/:id/excluded-ips	16	16
+snapshot GET /organizations/:id/members	16	16
+snapshot GET /organizations/:id/sites	16	16
+snapshot GET /organizations/:id/teams	16	16
+snapshot GET /user/organizations	8	8
+TOTAL 3983 3981

@@ -52,7 +52,7 @@ fn references_organization(config_id: Option<&str>) -> bool {
 static LAST_EXPIRED_SWEEP: LazyLock<Mutex<Option<Instant>>> = LazyLock::new(|| Mutex::new(None));
 
 /// `deleteAllExpiredApiKeys`: at most once every 10 seconds per process, fire and forget
-fn sweep_expired_keys(pg: &PgPool) {
+pub fn sweep_expired_keys(pg: &PgPool) {
     {
         let mut last = LAST_EXPIRED_SWEEP.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
         if last.is_some_and(|at| at.elapsed() < Duration::from_secs(10)) {
