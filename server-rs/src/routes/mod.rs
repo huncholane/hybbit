@@ -39,6 +39,7 @@ pub fn router(state: AppState) -> Router {
         .route("/api/site/{siteId}/feature-flags/evaluate", post(feature_flags::evaluate_client))
         .route("/api/sites/{siteId}/feature-flags/evaluate", post(feature_flags::evaluate_server))
         .merge(crate::analytics::routes::router())
+        .merge(crate::api::router())
         .merge(crate::replay::router())
         .merge(crate::auth::endpoints::router())
         .merge(crate::auth::endpoints::mcp::well_known_router())

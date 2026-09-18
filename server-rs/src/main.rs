@@ -5,6 +5,7 @@
 //! PORT_PLAN.md for what is ported and what must match Node exactly.
 
 mod analytics;
+mod api;
 mod auth;
 mod bot;
 mod clickhouse;
