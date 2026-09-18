@@ -6,6 +6,7 @@ The Fastify backend in `../server` is being rewritten in Rust (this crate), rout
 
 - **Cutover:** route by route. The Rust container runs next to Node on the rybbit box; Caddy sends ported paths to Rust and everything else to Node until nothing is left, then Node is removed.
 - **Scope:** everything, including features with no production data (Search Console, session replay, imports, feature flags, experiments, goals, segments, dashboards, annotations, identify, MCP, PDF export).
+- **Dropped with billing** (user, 2026-09-18: "im not all too worried about search console, mcp, and pdf"): Search Console (`api/gsc/*`), the MCP server (`POST /api/mcp`; the MCP OAuth endpoints under /api/auth stay, they are already ported) and PDF export (`…/export/pdf`) are not ported. The Search Console card is already cloud-gated in the client, the MCP server has no UI, and the client's "Export as PDF Report" menu item is removed when Node is switched off.
 - **No billing** (user, 2026-09-17: "we don't really need stripe"): Stripe and AppSumo routes, the Stripe webhook, the usage cron and plan lookups are not ported. They were only registered with `CLOUD=true`, which production never set, so nothing live changes. Wherever Node consults a plan (import quotas, PDF export, replay entitlement, API key limits, over-limit checks), Rust implements the self-hosted answer Node gives without `CLOUD`.
 - **Logins keep working:** `/api/auth/*` is reimplemented wire-compatible with the Better Auth 1.6.25 subset the client uses, reading and writing the same Postgres rows, so no user is logged out and no password changes.
 - **PDF export:** drawn with the `pdf-writer` crate, no Chromium.
@@ -125,7 +126,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | GET | …/bots/time-series | | bots/getBotTimeSeries.ts | rust |
 | GET | …/bots/by-dimension | | bots/getBotDimension.ts | rust |
 | GET | …/bots/ai-summary | | bots/getBotAiSummary.ts | rust |
-| GET | …/export/pdf | authAnalyticsRead | generatePdfReport.ts | node |
+| GET | …/export/pdf | authAnalyticsRead | generatePdfReport.ts | dropped |
 | GET | /api/org-event-count/:organizationId | orgAnalyticsRead | getOrgEventCount.ts | rust |
 | GET | …/errors/names | | getErrorNames.ts | rust |
 | GET | …/errors/events | | getErrorEvents.ts | rust |
@@ -281,7 +282,7 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
 | GET | …/gsc/connect | adminGscWrite | connect.ts | node |
-| GET | /api/gsc/callback | signed state | callback.ts | node |
+| GET | /api/gsc/callback | signed state | callback.ts | dropped |
 | GET | …/gsc/status | publicGscRead | status.ts | node |
 | DELETE | …/gsc/disconnect | adminGscWrite | disconnect.ts | node |
 | POST | …/gsc/select-property | adminGscWrite | selectProperty.ts | node |
@@ -323,8 +324,8 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| POST | /api/mcp | own bearer auth, 1 MB body | mcp/index.ts | node |
-| GET, DELETE | /api/mcp | none (405) | mcp/index.ts | node |
+| POST | /api/mcp | own bearer auth, 1 MB body | mcp/index.ts | dropped |
+| GET, DELETE | /api/mcp | none (405) | mcp/index.ts | dropped |
 | GET | /.well-known/oauth-authorization-server, …/oauth-authorization-server/api/mcp | none | mcp/wellKnown.ts | node |
 | GET | /.well-known/openid-configuration, …/openid-configuration/api/mcp | none | mcp/wellKnown.ts | node |
 | GET | /.well-known/oauth-protected-resource, …/oauth-protected-resource/api/mcp | none | mcp/wellKnown.ts | node |
