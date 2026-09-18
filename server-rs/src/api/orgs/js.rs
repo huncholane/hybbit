@@ -49,6 +49,7 @@ pub fn destructure<'a>(body: &'a JsValue, first: &str) -> Result<Fields<'a>, Str
 }
 
 /// The destructured properties of a body.
+#[derive(Debug)]
 pub struct Fields<'a> {
     object: Option<&'a JsObject>,
 }
@@ -275,5 +276,132 @@ pub fn to_display(value: &JsValue) -> String {
         JsValue::Undefined => "undefined".into(),
         JsValue::Array(items) => join_display(items, ","),
         JsValue::Object(_) => "[object Object]".into(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::analytics::js::json;
+
+    fn parse(text: &str) -> JsValue {
+        json::parse(text).unwrap()
+    }
+
+    /// Probed against Node (scratchpad probe_js.mjs).
+    #[test]
+    fn destructuring_only_throws_for_nullish_bodies() {
+        assert!(destructure(&JsValue::Undefined, "name").is_err());
+        assert_eq!(
+            destructure(&JsValue::Undefined, "name").unwrap_err(),
+            "Cannot destructure property 'name' of 'request.body' as it is undefined."
+        );
+        assert_eq!(
+            destructure(&JsValue::Null, "email").unwrap_err(),
+            "Cannot destructure property 'email' of 'request.body' as it is null."
+        );
+        // A primitive or an array is boxed, so every property is undefined
+        for body in ["5", "\"text\"", "true", "[]"] {
+            let value = parse(body);
+            let fields = destructure(&value, "name").unwrap();
+            assert_eq!(fields.get("name"), &JsValue::Undefined, "{body}");
+        }
+        assert_eq!(destructure(&parse(r#"{"name":"x"}"#), "name").unwrap().get("name"), &JsValue::String("x".into()));
+    }
+
+    #[test]
+    fn trim_throws_for_everything_but_a_string() {
+        assert_eq!(trim_call(&parse(r#"" x ""#), "name").unwrap(), "x");
+        assert_eq!(trim_call(&parse("5"), "name").unwrap_err(), "name.trim is not a function");
+        assert_eq!(trim_call(&parse("true"), "name").unwrap_err(), "name.trim is not a function");
+        assert_eq!(trim_call(&parse("[]"), "name").unwrap_err(), "name.trim is not a function");
+        assert_eq!(
+            trim_call(&JsValue::Null, "name").unwrap_err(),
+            "Cannot read properties of null (reading 'trim')"
+        );
+    }
+
+    #[test]
+    fn list_arguments_answer_like_javascript() {
+        let empty_object = parse("{}");
+        let list = ListArg::new(&empty_object);
+        // `{}.length` is undefined, so `length > 0` is false and `[...{}]` throws
+        assert!(!list.has_items());
+        assert!(list.spread().is_err());
+
+        let number = parse("0");
+        let list = ListArg::new(&number);
+        assert!(!list.has_items());
+        assert_eq!(list.spread().unwrap(), Vec::new(), "a falsy value spreads as []");
+
+        let text = parse(r#""ab""#);
+        let list = ListArg::new(&text);
+        assert!(list.has_items());
+        assert_eq!(list.spread().unwrap().len(), 2, "a string is iterable");
+
+        let array = parse(r#"["a","b"]"#);
+        let list = ListArg::new(&array);
+        assert!(list.has_items());
+        assert_eq!(list.items().unwrap().len(), 2);
+        assert_eq!(list.or_empty_array(), array);
+
+        let fake = parse(r#"{"length":2}"#);
+        assert!(ListArg::new(&fake).has_items(), "a length property is enough for the guard");
+    }
+
+    /// Probed against postgres-js and this Postgres (scratchpad probe_pg.mjs).
+    #[test]
+    fn parameters_serialise_like_postgres_js() {
+        let text = |value: &JsValue| match bind_value(value) {
+            Bind::Text(text) => Some(text),
+            _ => None,
+        };
+        assert_eq!(text(&parse(r#""a""#)).unwrap(), "a");
+        assert_eq!(text(&parse("5")).unwrap(), "5");
+        assert_eq!(text(&parse(r#"["a"]"#)).unwrap(), "a");
+        assert_eq!(text(&parse("[1,2]")).unwrap(), "1,2");
+        assert_eq!(text(&parse("[]")).unwrap(), "");
+        assert_eq!(text(&parse("[null]")).unwrap(), "");
+        assert_eq!(text(&parse(r#"{"a":1}"#)).unwrap(), "[object Object]");
+        assert!(matches!(bind_value(&JsValue::Null), Bind::Null));
+        assert!(matches!(bind_value(&parse("true")), Bind::Throws));
+
+        // Only `true` stores true in a boolean column
+        assert_eq!(bind_boolean(&parse("true")), Some(true));
+        for value in ["false", r#""yes""#, r#""true""#, "1", "0", r#""""#] {
+            assert_eq!(bind_boolean(&parse(value)), Some(false), "{value}");
+        }
+        assert_eq!(bind_boolean(&JsValue::Undefined), None);
+        assert_eq!(bind_boolean(&JsValue::Null), None);
+    }
+
+    #[test]
+    fn integer_columns_read_what_postgres_reads() {
+        assert_eq!(pg_int_literal("65300"), Some(65300));
+        assert_eq!(pg_int_literal(" 65300 "), Some(65300));
+        assert_eq!(pg_int_literal("-7"), Some(-7));
+        assert_eq!(pg_int_literal("+7"), Some(7));
+        assert_eq!(pg_int_literal("0x10"), Some(16));
+        assert_eq!(pg_int_literal("0b101"), Some(5));
+        assert_eq!(pg_int_literal("1e3"), None);
+        assert_eq!(pg_int_literal("1.5"), None);
+        assert_eq!(pg_int_literal("a"), None);
+        assert_eq!(pg_int_literal(""), None);
+        assert_eq!(pg_int_literal("2147483648"), None, "outside int4");
+    }
+
+    #[test]
+    fn set_membership_is_strict() {
+        let numbers = [65300];
+        assert!(is_present_number(&parse("65300"), &numbers));
+        assert!(!is_present_number(&parse(r#""65300""#), &numbers), "a numeric string is not in a Set of numbers");
+        let strings = ["u1".to_string()];
+        assert!(is_present_string(&parse(r#""u1""#), &strings));
+        assert!(!is_present_string(&parse("5"), &strings));
+    }
+
+    #[test]
+    fn join_renders_nullish_entries_as_nothing() {
+        assert_eq!(join_display(&[parse("1"), JsValue::Null, parse(r#""x""#)], ", "), "1, , x");
     }
 }

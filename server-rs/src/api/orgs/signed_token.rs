@@ -33,33 +33,61 @@ pub fn verify_expiring_payload(secret: &str, payload: &str, exp: &JsValue, signa
     verify_signed_payload(secret, &format!("{payload}:{seconds}"), signature)
 }
 
+/// `signExpiringPayload(payload, ttlSeconds)`. Nothing here builds a link yet (the
+/// mails that do are not ported), so only the tests use it; it stays because the
+/// signing half is what the verification above has to match.
+#[cfg(test)]
+pub fn sign_expiring_payload(secret: &str, payload: &str, ttl_seconds: i64, now_ms: f64) -> (i64, String) {
+    let exp = (now_ms / 1000.0).floor() as i64 + ttl_seconds;
+    (exp, sign_payload(secret, &format!("{payload}:{exp}")))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const SECRET: &str = "parity-local-secret-not-for-production";
+    /// The suite in server/src/lib/signedToken.test.ts, with its secret.
+    const SECRET: &str = "test-secret";
+    const NOW: f64 = 1_700_000_000_000.0;
 
-    #[test]
-    fn signatures_round_trip() {
-        let signature = sign_payload(SECRET, "unsubscribe:a@b.test:2000000000");
-        assert!(!signature.contains('='));
-        assert!(verify_signed_payload(SECRET, "unsubscribe:a@b.test:2000000000", &signature));
-        assert!(!verify_signed_payload(SECRET, "unsubscribe:a@b.test:2000000001", &signature));
-        assert!(!verify_signed_payload(SECRET, "unsubscribe:a@b.test:2000000000", &signature[1..]));
+    fn exp(value: i64) -> JsValue {
+        JsValue::Number(value as f64)
     }
 
     #[test]
-    fn expiry_is_part_of_the_signature() {
-        let now = 1_700_000_000_000.0;
-        let signature = sign_payload(SECRET, "unsubscribe:a@b.test:2000000000");
-        let exp = JsValue::String("2000000000".into());
-        assert!(verify_expiring_payload(SECRET, "unsubscribe:a@b.test", &exp, &signature, now));
-        // A fractional expiry signs the floored value
-        let fractional = JsValue::String("2000000000.9".into());
-        assert!(verify_expiring_payload(SECRET, "unsubscribe:a@b.test", &fractional, &signature, now));
-        let past = JsValue::String("1000".into());
-        assert!(!verify_expiring_payload(SECRET, "unsubscribe:a@b.test", &past, &signature, now));
-        let nonsense = JsValue::String("later".into());
-        assert!(!verify_expiring_payload(SECRET, "unsubscribe:a@b.test", &nonsense, &signature, now));
+    fn round_trips_a_plain_payload_and_rejects_tampering() {
+        let signature = sign_payload(SECRET, "unsubscribe:a@b.com");
+        assert!(!signature.contains('='), "base64url without padding");
+        assert!(verify_signed_payload(SECRET, "unsubscribe:a@b.com", &signature));
+        assert!(!verify_signed_payload(SECRET, "unsubscribe:evil@b.com", &signature));
+        assert!(!verify_signed_payload(SECRET, "unsubscribe:a@b.com", &format!("{signature}x")));
+        assert!(!verify_signed_payload(SECRET, "unsubscribe:a@b.com", ""));
+    }
+
+    #[test]
+    fn expiring_tokens_verify_within_the_ttl_and_fail_after_it() {
+        let (expiry, signature) = sign_expiring_payload(SECRET, "check-install:42:acme.com", 3600, NOW);
+        assert!(verify_expiring_payload(SECRET, "check-install:42:acme.com", &exp(expiry), &signature, NOW));
+        assert!(!verify_expiring_payload(SECRET, "check-install:43:acme.com", &exp(expiry), &signature, NOW));
+
+        // A signature over an already-past expiry never verifies
+        let past = (NOW / 1000.0) as i64 - 10;
+        let stale = sign_payload(SECRET, &format!("check-install:42:acme.com:{past}"));
+        assert!(!verify_expiring_payload(SECRET, "check-install:42:acme.com", &exp(past), &stale, NOW));
+    }
+
+    #[test]
+    fn rejects_a_forged_expiry_because_it_is_inside_the_signed_payload() {
+        let (expiry, signature) = sign_expiring_payload(SECRET, "unsubscribe:a@b.com", 60, NOW);
+        assert!(!verify_expiring_payload(SECRET, "unsubscribe:a@b.com", &exp(expiry + 999_999), &signature, NOW));
+        let nonsense = JsValue::String("not-a-number".into());
+        assert!(!verify_expiring_payload(SECRET, "unsubscribe:a@b.com", &nonsense, &signature, NOW));
+    }
+
+    #[test]
+    fn a_fractional_expiry_signs_the_floored_value() {
+        let (expiry, signature) = sign_expiring_payload(SECRET, "unsubscribe:a@b.com", 3600, NOW);
+        let fractional = JsValue::String(format!("{expiry}.9"));
+        assert!(verify_expiring_payload(SECRET, "unsubscribe:a@b.com", &fractional, &signature, NOW));
     }
 }
