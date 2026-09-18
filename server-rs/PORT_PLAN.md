@@ -179,28 +179,28 @@ Status: `node` (served by Node), `rust` (Caddy sends it to Rust). `…` = `/api/
 | POST | …/goals | authGoalsWrite | goals/createGoal.ts | rust |
 | DELETE | …/goals/:goalId | authGoalsWrite | goals/deleteGoal.ts | rust |
 | PUT | …/goals/:goalId | authGoalsWrite | goals/updateGoal.ts | rust |
-| GET | …/annotations | publicAnnotationsRead | annotations/getAnnotations.ts | node |
-| POST | …/annotations | authAnnotationsWrite | annotations/createAnnotation.ts | node |
-| PUT | …/annotations/:annotationId | authAnnotationsWrite | annotations/updateAnnotation.ts | node |
-| DELETE | …/annotations/:annotationId | authAnnotationsWrite | annotations/deleteAnnotation.ts | node |
+| GET | …/annotations | publicAnnotationsRead | annotations/getAnnotations.ts | rust |
+| POST | …/annotations | authAnnotationsWrite | annotations/createAnnotation.ts | rust |
+| PUT | …/annotations/:annotationId | authAnnotationsWrite | annotations/updateAnnotation.ts | rust |
+| DELETE | …/annotations/:annotationId | authAnnotationsWrite | annotations/deleteAnnotation.ts | rust |
 
 ### Dashboards, segments, custom SQL (`api/analytics/`)
 
 | Method | Path | Guard | Node handler | Status |
 |---|---|---|---|---|
-| GET | …/dashboards | authDashboardsRead | dashboards/getDashboards.ts | node |
-| GET | …/dashboards/:dashboardId | authDashboardsRead | dashboards/getDashboard.ts | node |
-| POST | …/dashboards | authDashboardsWrite | dashboards/createDashboard.ts | node |
-| PUT | …/dashboards/:dashboardId | authDashboardsWrite | dashboards/updateDashboard.ts | node |
-| DELETE | …/dashboards/:dashboardId | authDashboardsWrite | dashboards/deleteDashboard.ts | node |
-| POST | …/dashboards/run-card | authDashboardsRead + 60/min | runDashboardCardQuery.ts | node |
-| GET | …/segments | publicSegmentsRead | segments/getSegments.ts | node |
-| GET | …/segments/:segmentId | publicSegmentsRead | segments/getSegment.ts | node |
-| POST | …/segments | authSegmentsWrite | segments/createSegment.ts | node |
-| PUT | …/segments/:segmentId | authSegmentsWrite | segments/updateSegment.ts | node |
-| DELETE | …/segments/:segmentId | authSegmentsWrite | segments/deleteSegment.ts | node |
-| POST | /api/organizations/:organizationId/analytics/query | orgSqlRead + 60/min | runCustomQuery.ts | node |
-| POST | /api/organizations/:organizationId/analytics/query/generate | orgSqlRead + 20/min | generateCustomQuery.ts | node |
+| GET | …/dashboards | authDashboardsRead | dashboards/getDashboards.ts | rust |
+| GET | …/dashboards/:dashboardId | authDashboardsRead | dashboards/getDashboard.ts | rust |
+| POST | …/dashboards | authDashboardsWrite | dashboards/createDashboard.ts | rust |
+| PUT | …/dashboards/:dashboardId | authDashboardsWrite | dashboards/updateDashboard.ts | rust |
+| DELETE | …/dashboards/:dashboardId | authDashboardsWrite | dashboards/deleteDashboard.ts | rust |
+| POST | …/dashboards/run-card | authDashboardsRead + 60/min | runDashboardCardQuery.ts | rust |
+| GET | …/segments | publicSegmentsRead | segments/getSegments.ts | rust |
+| GET | …/segments/:segmentId | publicSegmentsRead | segments/getSegment.ts | rust |
+| POST | …/segments | authSegmentsWrite | segments/createSegment.ts | rust |
+| PUT | …/segments/:segmentId | authSegmentsWrite | segments/updateSegment.ts | rust |
+| DELETE | …/segments/:segmentId | authSegmentsWrite | segments/deleteSegment.ts | rust |
+| POST | /api/organizations/:organizationId/analytics/query | orgSqlRead + 60/min | runCustomQuery.ts | rust |
+| POST | /api/organizations/:organizationId/analytics/query/generate | orgSqlRead + 20/min | generateCustomQuery.ts | rust |
 
 ### Feature flags and experiments
 
